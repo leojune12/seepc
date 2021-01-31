@@ -30995,9 +30995,15 @@ var render = function() {
                                               staticClass:
                                                 "h-8 w-8 rounded-full object-cover",
                                               attrs: {
-                                                src:
+                                                src: [
                                                   _vm.$page.props.user
-                                                    .profile_photo_url,
+                                                    .profile_photo_path
+                                                    ? "https://webdevstacks.000webhostapp.com/" +
+                                                      _vm.$page.props.user
+                                                        .profile_photo_path
+                                                    : _vm.$page.props.user
+                                                        .profile_photo_url
+                                                ],
                                                 alt: _vm.$page.props.user.name
                                               }
                                             })
@@ -31249,7 +31255,12 @@ var render = function() {
                               staticClass:
                                 "h-10 w-10 rounded-full object-cover",
                               attrs: {
-                                src: _vm.$page.props.user.profile_photo_url,
+                                src: [
+                                  _vm.$page.props.user.profile_photo_path
+                                    ? "https://webdevstacks.000webhostapp.com/" +
+                                      _vm.$page.props.user.profile_photo_path
+                                    : _vm.$page.props.user.profile_photo_url
+                                ],
                                 alt: _vm.$page.props.user.name
                               }
                             })
@@ -34412,7 +34423,12 @@ var render = function() {
                         _c("img", {
                           staticClass: "rounded-full h-20 w-20 object-cover",
                           attrs: {
-                            src: _vm.user.profile_photo_url,
+                            src: [
+                              _vm.$page.props.user.profile_photo_path
+                                ? "https://webdevstacks.000webhostapp.com/" +
+                                  _vm.$page.props.user.profile_photo_path
+                                : _vm.$page.props.user.profile_photo_url
+                            ],
                             alt: _vm.user.name
                           }
                         })

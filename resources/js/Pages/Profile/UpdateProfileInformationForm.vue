@@ -20,7 +20,7 @@
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" v-show="! photoPreview">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    <img :src="[ $page.props.user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->

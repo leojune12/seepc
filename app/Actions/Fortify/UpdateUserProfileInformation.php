@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -25,7 +26,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
-            $user->updateProfilePhoto($input['photo']);
+            // $user->updateProfilePhoto($input['photo'])
+            $path = Storage::disk('ftp')->put('/profile-photos', $input['photo']);
+            if (isset($user->profile_photo_path)) {
+                Storage::disk('ftp')->delete($user->profile_photo_path);
+            }
+            $user->profile_photo_path = $path;
         }
 
         if ($input['email'] !== $user->email &&
