@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Spatie\Permission\Models\Role;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -27,10 +28,23 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        //Check if first user
+        if (User::all()->count() == 1) {
+            //Create roles
+            Role::create(['name' => 'admin']);
+            Role::create(['name' => 'user']);
+            //Assign user with roles
+            $user->assignRole('user', 'admin');
+        } else {
+            $user->assignRole('user');
+        }
+
+        return $user;
     }
 }
