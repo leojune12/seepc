@@ -5,6 +5,8 @@ import Vue from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue';
 import PortalVue from 'portal-vue';
 import { InertiaProgress } from '@inertiajs/progress'
+import 'es6-promise/auto'
+import store from './store/index'
 
 InertiaProgress.init()
 
@@ -22,4 +24,5 @@ new Vue({
                 resolveComponent: (name) => require(`./Pages/${name}`).default,
             },
         }),
+    store
 }).$mount(app);
