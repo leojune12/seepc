@@ -1,5 +1,5 @@
 let state = {
-    testVariable: 'Test Variable',
+    ftpUrl: 'https://webdevstacks.000webhostapp.com/'
 }
 
 export default state

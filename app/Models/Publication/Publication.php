@@ -2,6 +2,7 @@
 
 namespace App\Models\Publication;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,5 +20,10 @@ class Publication extends Model
     public function specification()
     {
         return $this->hasOne(Specification::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

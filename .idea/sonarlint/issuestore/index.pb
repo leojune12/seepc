@@ -91,3 +91,9 @@ Edatabase/migrations/2021_02_02_005924_create_specifications_table.php,d\4\d48b
 .app/Http/Controllers/PublicationController.php,9\b\9b9c9aec3d2d000bd4f7eb06b28f2df510e79736
 Y
 )resources/js/Pages/Publication/Create.vue,a\6\a6babb20f1c9330dd4c9684bce3c2e6ea074f3d2
+\
+,app/Http/Resources/SpecificationResource.php,c\f\cf4d804401e911828c163eb74bd2ef6a1a229ce9
+Z
+*app/Http/Resources/PublicationResource.php,5\a\5a789976206f3161eff700a055c379dc237d539c
+[
++resources/js/Components/PublicationCard.vue,c\5\c52228eb0214e1bc401cbb281af40ae7751f06f2

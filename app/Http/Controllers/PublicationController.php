@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PublicationCollection;
+use App\Http\Resources\PublicationResource;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ class PublicationController extends Controller
     public function index()
     {
         return Inertia::render('Publication/Publication', [
-            'publications' => Publication::all()
+            'publications' => PublicationResource::collection(Publication::with(['specification', 'user'])->orderByDesc('created_at')->paginate())
         ]);
     }
 

@@ -18,9 +18,9 @@
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                                <!--<jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
-                                </jet-nav-link>
+                                </jet-nav-link>-->
                                 <jet-nav-link :href="route('publication')" :active="route().current('publication')">
                                     Publication
                                 </jet-nav-link>
@@ -85,11 +85,11 @@
 
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
-                                <jet-dropdown align="right" width="48">
+                                <jet-dropdown v-if="$page.props.user" align="right" width="48">
                                     <template #trigger>
                                         <div class="flex">
                                             <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
-                                                <img class="h-8 w-8 rounded-full object-cover" :src="[ $page.props.user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
+                                                <img class="h-10 w-10 rounded-full object-cover border border-gray-300" :src="[ $page.props.user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
                                             </button>
 
                                             <span class="inline-flex rounded-md">
@@ -152,10 +152,10 @@
                     </div>-->
 
                     <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200">
+                    <div v-if="$page.props.user" class="pt-4 pb-1 border-t border-gray-200">
                         <div class="flex items-center px-4">
                             <div v-if="$page.props.jetstream.managesProfilePhotos" class="flex-shrink-0 mr-3" >
-                                <img class="h-10 w-10 rounded-full object-cover" :src="[ $page.props.user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
+                                <img class="h-10 w-10 rounded-full object-cover border border-gray-300" :src="[ $page.props.user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
                             </div>
 
                             <div>
@@ -165,6 +165,9 @@
                         </div>
 
                         <div class="mt-3 space-y-1">
+                            <jet-responsive-nav-link :href="route('publication')" :active="route().current('publication')">
+                                Publications
+                            </jet-responsive-nav-link>
                             <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
                                 Profile
                             </jet-responsive-nav-link>
