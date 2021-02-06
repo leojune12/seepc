@@ -20,7 +20,7 @@ class PublicationController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Publication/Publication', [
+        return Inertia::render('Publication/Publications', [
             'publications' => PublicationResource::collection(Publication::with(['specification', 'user'])->orderByDesc('created_at')->paginate())
         ]);
     }
@@ -45,7 +45,7 @@ class PublicationController extends Controller
     {
         Validator::make($request->all(), [
             'user_id' => ['required', 'integer'],
-            'photo' => ['required', 'image', 'max:2048'],
+            'photo' => ['required', 'image', 'max:1024'],
             'description' => ['required', 'string', 'max:255'],
             'motherboard' => ['nullable', 'string', 'max:255'],
             'cpu' => ['nullable', 'string', 'max:255'],
@@ -77,18 +77,22 @@ class PublicationController extends Controller
             'mouse' => $request->mouse
         ]);
 
-        return redirect()->route('publication');
+        return redirect()->route('publications');
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function show($id)
     {
-        //
+        $publication = new PublicationResource(Publication::find($id));
+
+        return Inertia::render('Publication/Show', [
+            'publication' => $publication
+        ]);
     }
 
     /**

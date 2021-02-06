@@ -69,8 +69,6 @@ s
 Cdatabase/migrations/2021_02_02_003606_create_publications_table.php,0\e\0e81ad954dcb362749eb2ce92d08ffe9a51fba93
 X
 (app/Models/Publication/Specification.php,d\4\d43e78327497860951665a2a258f8f21459c2243
-^
-.resources/js/Pages/Publication/Publication.vue,e\6\e6affab9ec37aa88ee140d50b3b7c426c0279882
 P
  resources/js/Jetstream/Input.vue,f\7\f73bff4c66bc2ce91dc68be9e617dbc00aac6fe0
 V
@@ -97,3 +95,15 @@ Z
 *app/Http/Resources/PublicationResource.php,5\a\5a789976206f3161eff700a055c379dc237d539c
 [
 +resources/js/Components/PublicationCard.vue,c\5\c52228eb0214e1bc401cbb281af40ae7751f06f2
+\
+,resources/js/Jetstream/ResponsiveNavLink.vue,f\9\f99f429a548adbef32cc4653428082e23327c7c0
+W
+'resources/js/Jetstream/DropdownLink.vue,7\e\7e18918a87b667dfde2ec73adfaa86a4a7d71e41
+Y
+)resources/js/Components/PublishButton.vue,c\3\c3207c5da000eb34d93d1035da9db427e9b55d52
+_
+/resources/js/Pages/Publication/Publications.vue,c\6\c6bf8aa473188be6d6a6ee8f2a2944b68412fb0c
+W
+'resources/js/Pages/Publication/Show.vue,7\b\7b766c2e62ae797d315717dff0cb796f1aa90a17
+M
+resources/views/app.blade.php,7\a\7a5a172478a3864465de17eec09536649e33d223

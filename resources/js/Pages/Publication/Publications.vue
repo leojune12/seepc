@@ -23,7 +23,7 @@
     import PublishButton from "@/Components/PublishButton";
 
     export default {
-        name: "Publication",
+        name: "Publications",
         components: {
             AppLayout,
             PublicationCard,

@@ -14,6 +14,16 @@ class SpecificationResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        //return parent::toArray($request)
+        return [
+            'motherboard' => $this->motherboard,
+            'cpu' => $this->cpu,
+            'ram' => $this->ram,
+            'graphics' => $this->graphics,
+            'storage' => $this->storage,
+            'display' => $this->display,
+            'keyboard' => $this->keyboard,
+            'mouse' => $this->mouse
+        ];
     }
 }

@@ -10,7 +10,7 @@
             </inertia-link>
 
             <inertia-link
-                :href="route('publication.create')"
+                :href="route('publications.create')"
                 class="border border-blue-100 rounded-full px-4 py-2 hover:bg-gray-100 flex-grow flex text-blue-500"
             >
                 <svg style="width:24px;height:24px" viewBox="0 0 24 24">

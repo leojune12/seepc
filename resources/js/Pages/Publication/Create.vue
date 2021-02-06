@@ -169,7 +169,7 @@
                         this.form.photo = this.$refs.photo.files[0]
                     }
 
-                    this.form.post(route('publication.store'), {
+                    this.form.post(route('publications.store'), {
                         preserveScroll: true
                     });
                 } else {

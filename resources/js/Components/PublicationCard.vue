@@ -25,7 +25,8 @@
             <img
                 :src="ftpUrl+publication.photo_path"
                 alt="image"
-                class="w-full h-96 object-cover"
+                class="w-full h-96 object-cover md:cursor-pointer"
+                @click="visitPublication(publication.id)"
             >
         </div>
         <div class="px-4 py-2 flex">
@@ -63,7 +64,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
 
     export default {
         name: "PublicationCard",
@@ -91,6 +91,10 @@
 
             getDateTime (dateTime) {
                 return moment(dateTime).fromNow();
+            },
+
+            visitPublication (id) {
+                this.$inertia.get('publications/show/'+id)
             }
         }
     }

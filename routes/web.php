@@ -14,14 +14,16 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/publication', [PublicationController::class, 'index'])->name('publication');
+Route::get('/publications', [PublicationController::class, 'index'])->name('publications');
+
+Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->name('publications.show');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/publication/create', [PublicationController::class, 'create'])->name('publication.create');
+    Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 
-    Route::post('/publication/store', [PublicationController::class, 'store'])->name('publication.store');
+    Route::post('/publications/store', [PublicationController::class, 'store'])->name('publications.store');
 });
