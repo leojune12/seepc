@@ -1,11 +1,11 @@
 <template>
-    <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="flex flex-col md:flex-row min-h-screen tracking-tight">
         <div class="md:flex-grow bg-black">
             <span
                 class="absolute top-3 md:top-8 left-3 md:left-8 rounded-full bg-gray-200 hover:bg-gray-300 md:h-10 md:w-10 w-8 h-8 flex justify-center items-center md:cursor-pointer"
                 @click="goBack"
             >
-                <svg style="width:32px;height:32px" viewBox="0 0 24 24">
+                <svg style="width:20px;height:20px" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
                 </svg>
             </span>
@@ -13,7 +13,7 @@
         </div>
         <div :class="{ 'hidden md:block' : !showDescription }" class="w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white">
             <div class="">
-                <div class="flex flex-row px-4 pt-3 items-center pb-1">
+                <div class="flex flex-row px-4 py-3 items-center">
                     <div class="mr-2">
                         <img
                             :src="getProfilePhoto()"
@@ -35,13 +35,13 @@
                     </div>
                 </div>
                 <div class="px-3 md:px-4 space-y-6 md:text-gray-800 text-white md:mb-0 mb-3 overflow-y-auto max-h-52 md:max-h-96 overflow-y-auto">
-                    <div class="whitespace-pre-line md:text-base text-xs">
-                        {{ publication.data.description }}
+                    <div class="md:text-base text-sm">
+                        <div v-for="description in descriptionArray" class="leading-tight">
+                            {{ description.length ? description : '&nbsp;' }}
+                        </div>
                     </div>
 
                     <div v-show="!isSpecsEmpty()" class="flex flex-col">
-                        <span class="font-semibold mb-1 md:text-base text-xs">Specs Provided</span>
-
                         <ul class="space-y-1 md:text-sm text-xs">
                             <li v-for="specs in specsNames()" :class="{ hidden : publication.data.specifications[specs] === null }">
                             <span class="font-bold uppercase mr-2">
@@ -104,6 +104,10 @@
         computed: {
             ftpUrl () {
                 return this.$store.state.ftpUrl
+            },
+
+            descriptionArray () {
+                return this.publication.data.description.split('\n')
             }
         },
         data () {

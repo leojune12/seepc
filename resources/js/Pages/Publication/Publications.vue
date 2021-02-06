@@ -1,8 +1,9 @@
 <template>
     <app-layout>
-        <div class="flex justify-center">
+        <div class="flex justify-center tracking-tight">
             <div
-                class="space-y-6 card-container w-full pt-0 pb-6 md:pt-6"
+                class="md:space-y-6 space-y-4 card-container w-full pt-0 pb-6 md:pt-6"
+                :class="{ 'pt-4' : !$page.props.user }"
                 style="max-width: 31rem;"
             >
                 <publish-button v-if="$page.props.user" />

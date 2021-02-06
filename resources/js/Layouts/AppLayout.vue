@@ -12,7 +12,7 @@
                             <div class="flex-shrink-0 flex items-center">
                                 <inertia-link :href="route('dashboard')" class="flex" preserve-scroll>
                                     <jet-application-mark class="block h-9 w-auto" />
-                                    <span class="font-bold text-2xl text-gray-900 ml-2">webdevstacks</span>
+                                    <span class="font-bold text-2xl text-gray-900 ml-2">seepc</span>
                                 </inertia-link>
                             </div>
 
@@ -30,10 +30,10 @@
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
+                        <div v-if="$page.props.user" class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
-                                <jet-dropdown v-if="$page.props.user" align="right" width="48">
+                                <jet-dropdown align="right" width="48">
                                     <template #trigger>
                                         <div class="flex">
                                             <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
@@ -73,6 +73,15 @@
                                     </template>
                                 </jet-dropdown>
                             </div>
+                        </div>
+
+                        <div v-else class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+                            <inertia-link :href="route('login')" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+                                Sign in
+                            </inertia-link>
+                            <inertia-link :href="route('register')" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                                Sign up
+                            </inertia-link>
                         </div>
 
                         <!-- Hamburger -->
@@ -123,6 +132,18 @@
                                 </jet-responsive-nav-link>
                             </form>
                         </div>
+                    </div>
+
+                    <div v-else class="p-4">
+                        <inertia-link :href="route('register')" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                            Sign up
+                        </inertia-link>
+                        <p class="mt-6 text-center text-base font-medium text-gray-500">
+                            Existing publisher?
+                            <inertia-link :href="route('login')" class="text-indigo-600 hover:text-indigo-500">
+                                Sign in
+                            </inertia-link>
+                        </p>
                     </div>
                 </div>
             </nav>

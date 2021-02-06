@@ -1,23 +1,45 @@
 <template>
     <div class="md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl">
-        <div class="flex flex-row px-4 py-3 items-center">
-            <div class="mr-2">
-                <img
-                    :src="getProfilePhoto()"
-                    alt="profile photo"
-                    class="w-10 h-10 rounded-full object-cover border border-gray-300"
-                >
-            </div>
-            <div>
-                <div
-                    class="font-bold text-gray-800"
-                >
-                    {{ publication.user.name }}
+        <div>
+            <div class="flex flex-row px-4 pt-3 items-center">
+                <div class="mr-2">
+                    <img
+                        :src="getProfilePhoto()"
+                        alt="profile photo"
+                        class="w-10 h-10 rounded-full object-cover border border-gray-300"
+                    >
                 </div>
-                <div
-                    class="text-sm font-semibold text-gray-500"
-                >
-                    {{ getDateTime(publication.created_at) }}
+                <div>
+                    <div
+                        class="font-bold text-gray-800"
+                    >
+                        {{ publication.user.name }}
+                    </div>
+                    <div
+                        class="text-sm font-semibold text-gray-500"
+                    >
+                        {{ getDateTime(publication.created_at) }}
+                    </div>
+                </div>
+            </div>
+            <div class="px-4 py-3 space-y-3">
+                <div class="md:text-base text-sm">
+                    <div v-for="description in descriptionArray" class="leading-tight">
+                        {{ description.length ? description : '&nbsp;' }}
+                    </div>
+                </div>
+
+                <div v-show="!isSpecsEmpty()" class="flex flex-col text-gray-800">
+                    <ul class="space-y-1 md:text-sm text-xs">
+                        <li v-for="specs in specsNames()" :class="{ hidden : publication.specifications[specs] === null }">
+                            <span class="font-bold uppercase mr-2">
+                                {{ specs }}:
+                            </span>
+                            <span>
+                                {{ publication.specifications[specs] }}
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -29,7 +51,7 @@
                 @click="visitPublication(publication.id)"
             >
         </div>
-        <div class="px-4 py-2 flex">
+        <div class="px-2 py-2 flex">
             <button
                 class="h-9 text-gray-500 rounded focus:outline-none flex-1 text-center hover:bg-gray-100 active:bg-gray-300"
             >
@@ -73,6 +95,10 @@
         computed: {
             ftpUrl () {
                 return this.$store.state.ftpUrl
+            },
+
+            descriptionArray () {
+                return this.publication.description.split('\n')
             }
         },
         data () {
@@ -95,7 +121,25 @@
 
             visitPublication (id) {
                 this.$inertia.get('publications/show/'+id)
-            }
+            },
+
+            specsNames () {
+                return Object.keys(this.publication.specifications)
+            },
+
+            isSpecsEmpty () {
+                let isEmpty = true
+                let specs
+
+                for (specs of this.specsNames()) {
+                    if (this.publication.specifications[specs] !== null) {
+                        isEmpty = false
+                        break
+                    }
+                }
+
+                return isEmpty
+            },
         }
     }
 </script>
