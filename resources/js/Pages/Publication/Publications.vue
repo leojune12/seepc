@@ -13,12 +13,15 @@
                     :publication="publication"
                     :key="publication.id"
                 />
+
+                <infinite-loading spinner="spiral"></infinite-loading>
             </div>
         </div>
     </app-layout>
 </template>
 
 <script>
+    import InfiniteLoading from 'vue-infinite-loading';
     import { mapActions } from 'vuex'
     import AppLayout from '@/Layouts/AppLayout'
     import PublicationCard from "@/Components/PublicationCard";
@@ -29,7 +32,8 @@
         components: {
             AppLayout,
             PublicationCard,
-            PublishButton
+            PublishButton,
+            InfiniteLoading
         },
         props: [
             'publicationsFromServer',
