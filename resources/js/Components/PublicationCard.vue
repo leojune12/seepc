@@ -1,7 +1,7 @@
 <template>
-    <div class="md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl">
+    <div class="md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl px-3 md:px-4">
         <div>
-            <div class="flex flex-row px-4 pt-3 items-center">
+            <div class="flex flex-row pt-3 items-center">
                 <div class="mr-2">
                     <img
                         :src="getProfilePhoto()"
@@ -22,15 +22,15 @@
                     </div>
                 </div>
             </div>
-            <div class="px-4 py-3 space-y-3">
+            <div class="py-3 space-y-3 text-gray-800">
                 <div class="md:text-base text-sm">
                     <div v-for="description in descriptionArray" class="leading-tight">
                         {{ description.length ? description : '&nbsp;' }}
                     </div>
                 </div>
 
-                <div v-show="!isSpecsEmpty()" class="flex flex-col text-gray-800">
-                    <ul class="space-y-1 md:text-sm text-xs">
+                <div v-show="!isSpecsEmpty()" class="flex flex-col">
+                    <ul class="space-y-1 md:text-base text-xs">
                         <li v-for="specs in specsNames()" :class="{ hidden : publication.specifications[specs] === null }">
                             <span class="font-bold uppercase mr-2">
                                 {{ specs }}:
@@ -43,16 +43,16 @@
                 </div>
             </div>
         </div>
-        <div class="bg-gray-700 border-t border-b">
+        <div>
             <img
                 :id="publication.id"
                 :src="ftpUrl+publication.photo_path"
                 alt="image"
-                class="w-full h-96 object-cover md:cursor-pointer"
+                class="w-full h-96 object-cover md:cursor-pointer rounded-xl border"
                 @click="visitPublication(publication.id)"
             >
         </div>
-        <div class="px-4">
+        <div>
             <publication-card-footer :publication="publication" />
         </div>
     </div>

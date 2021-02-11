@@ -12,9 +12,9 @@
             </span>
             <img :src="ftpUrl+publication.data.photo_path" alt="photo" class="w-full h-screen object-contain" @click="showDescription = !showDescription">
         </div>
-        <div :class="{ 'hidden md:block' : !showDescription }" class="w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white">
+        <div :class="{ 'hidden md:block' : !showDescription }" class="w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white px-3 md:px-4">
             <div class="">
-                <div class="flex flex-row px-4 py-3 items-center">
+                <div class="flex flex-row py-3 items-center">
                     <div class="mr-2">
                         <img
                             :src="getProfilePhoto()"
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="px-3 md:px-4 space-y-6 md:text-gray-800 text-gray-300 md:mb-0 mb-3 max-h-52 md:max-h-96 overflow-y-auto">
+                <div class="space-y-6 md:text-gray-800 text-gray-300 md:mb-0 mb-3 max-h-52 md:max-h-96 overflow-y-auto">
                     <div class="md:text-base text-sm">
                         <div v-for="description in descriptionArray" class="leading-tight">
                             {{ description.length ? description : '&nbsp;' }}
@@ -45,7 +45,7 @@
                     <div v-show="!isSpecsEmpty()" class="flex flex-col">
                         <ul class="space-y-1 md:text-sm text-xs">
                             <li v-for="specs in specsNames()" :class="{ hidden : publication.data.specifications[specs] === null }">
-                            <span class="font-bold uppercase mr-2">
+                            <span class="font-medium uppercase mr-2">
                                 {{ specs }}:
                             </span>
                                 <span>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div class="px-3 md:px-4 md:mt-6 mt-0">
+            <div class="md:mt-6 mt-0">
                 <div class="border-t md:border-gray-300 border-gray-100"></div>
                 <publication-card-footer :publication="publication.data" :in-show-component="true" />
                 <div class="border-t md:border-gray-300 border-gray-100"></div>

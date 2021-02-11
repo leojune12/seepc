@@ -9,7 +9,7 @@
                 <publish-button v-if="$page.props.user" />
 
                 <publication-card
-                    v-for="publication in publications"
+                    v-for="publication in publicationsFromStore"
                     :publication="publication"
                     :key="publication.id"
                 />
@@ -38,7 +38,7 @@
             this.storePublications()
         },
         computed: {
-            publications () {
+            publicationsFromStore () {
                 return this.$store.state.publications
             },
 
@@ -53,6 +53,11 @@
         mounted() {
             if (this.scrollPublications) {
                 this.scroll()
+            }
+        },
+        data () {
+            return {
+                publications: this.publicationsFromServer.data
             }
         },
         methods: {
@@ -71,7 +76,9 @@
                         this.setScrollPublications(false)
                     })
                     .then(() => {
-                        document.getElementById(this.lastShowedPublicationId).scrollIntoView({block: "center"})
+                        if (this.lastShowedPublicationId) {
+                            document.getElementById(this.lastShowedPublicationId).scrollIntoView({block: "center"})
+                        }
                     })
             },
 

@@ -5923,7 +5923,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.storePublications();
   },
   computed: {
-    publications: function publications() {
+    publicationsFromStore: function publicationsFromStore() {
       return this.$store.state.publications;
     },
     scrollPublications: function scrollPublications() {
@@ -5938,6 +5938,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.scroll();
     }
   },
+  data: function data() {
+    return {
+      publications: this.publicationsFromServer.data
+    };
+  },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)(['setPublications', 'setScrollPublications'])), {}, {
     scroll: function scroll() {
       var _this = this;
@@ -5948,9 +5953,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       promise.then(function () {
         _this.setScrollPublications(false);
       }).then(function () {
-        document.getElementById(_this.lastShowedPublicationId).scrollIntoView({
-          block: "center"
-        });
+        if (_this.lastShowedPublicationId) {
+          document.getElementById(_this.lastShowedPublicationId).scrollIntoView({
+            block: "center"
+          });
+        }
       });
     },
     storePublications: function storePublications() {
@@ -31504,11 +31511,11 @@ var render = function() {
     "div",
     {
       staticClass:
-        "md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl"
+        "md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl px-3 md:px-4"
     },
     [
       _c("div", [
-        _c("div", { staticClass: "flex flex-row px-4 pt-3 items-center" }, [
+        _c("div", { staticClass: "flex flex-row pt-3 items-center" }, [
           _c("div", { staticClass: "mr-2" }, [
             _c("img", {
               staticClass:
@@ -31536,7 +31543,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "px-4 py-3 space-y-3" }, [
+        _c("div", { staticClass: "py-3 space-y-3 text-gray-800" }, [
           _c(
             "div",
             { staticClass: "md:text-base text-sm" },
@@ -31563,12 +31570,12 @@ var render = function() {
                   expression: "!isSpecsEmpty()"
                 }
               ],
-              staticClass: "flex flex-col text-gray-800"
+              staticClass: "flex flex-col"
             },
             [
               _c(
                 "ul",
-                { staticClass: "space-y-1 md:text-sm text-xs" },
+                { staticClass: "space-y-1 md:text-base text-xs" },
                 _vm._l(_vm.specsNames(), function(specs) {
                   return _c(
                     "li",
@@ -31603,9 +31610,10 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "bg-gray-700 border-t border-b" }, [
+      _c("div", [
         _c("img", {
-          staticClass: "w-full h-96 object-cover md:cursor-pointer",
+          staticClass:
+            "w-full h-96 object-cover md:cursor-pointer rounded-xl border",
           attrs: {
             id: _vm.publication.id,
             src: _vm.ftpUrl + _vm.publication.photo_path,
@@ -31621,7 +31629,6 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "px-4" },
         [
           _c("publication-card-footer", {
             attrs: { publication: _vm.publication }
@@ -38173,7 +38180,7 @@ var render = function() {
         [
           _vm.$page.props.user ? _c("publish-button") : _vm._e(),
           _vm._v(" "),
-          _vm._l(_vm.publications, function(publication) {
+          _vm._l(_vm.publicationsFromStore, function(publication) {
             return _c("publication-card", {
               key: publication.id,
               attrs: { publication: publication }
@@ -38258,12 +38265,12 @@ var render = function() {
         "div",
         {
           staticClass:
-            "w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white",
+            "w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white px-3 md:px-4",
           class: { "hidden md:block": !_vm.showDescription }
         },
         [
           _c("div", {}, [
-            _c("div", { staticClass: "flex flex-row px-4 py-3 items-center" }, [
+            _c("div", { staticClass: "flex flex-row py-3 items-center" }, [
               _c("div", { staticClass: "mr-2" }, [
                 _c("img", {
                   staticClass:
@@ -38311,7 +38318,7 @@ var render = function() {
               "div",
               {
                 staticClass:
-                  "px-3 md:px-4 space-y-6 md:text-gray-800 text-gray-300 md:mb-0 mb-3 max-h-52 md:max-h-96 overflow-y-auto"
+                  "space-y-6 md:text-gray-800 text-gray-300 md:mb-0 mb-3 max-h-52 md:max-h-96 overflow-y-auto"
               },
               [
                 _c(
@@ -38359,7 +38366,7 @@ var render = function() {
                           [
                             _c(
                               "span",
-                              { staticClass: "font-bold uppercase mr-2" },
+                              { staticClass: "font-medium uppercase mr-2" },
                               [
                                 _vm._v(
                                   "\n                            " +
@@ -38391,7 +38398,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "px-3 md:px-4 md:mt-6 mt-0" },
+            { staticClass: "md:mt-6 mt-0" },
             [
               _c("div", {
                 staticClass: "border-t md:border-gray-300 border-gray-100"
