@@ -18,6 +18,8 @@ Route::get('/publications', [PublicationController::class, 'index'])->name('publ
 
 Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->name('publications.show');
 
+Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -27,7 +29,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::post('/publications/store', [PublicationController::class, 'store'])->name('publications.store');
 
-    Route::post('/publications/get-publication', [PublicationController::class, 'get_publication'])->name('publications.get-publication');
 
     Route::post('/publications/like', [PublicationController::class, 'like'])->name('publications.like');
 

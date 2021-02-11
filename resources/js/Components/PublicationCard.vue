@@ -45,7 +45,7 @@
         </div>
         <div>
             <img
-                :id="publication.id"
+                :id="'publication_'+publication.id"
                 :src="ftpUrl+publication.photo_path"
                 alt="image"
                 class="w-full h-96 object-cover md:cursor-pointer rounded-xl border"

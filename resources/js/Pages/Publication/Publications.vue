@@ -14,7 +14,13 @@
                     :key="publication.id"
                 />
 
-                <infinite-loading spinner="spiral"></infinite-loading>
+                <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+                    <div slot="no-more" class="text-gray-500 h-16 flex items-center justify-center">
+                        <span>
+                            No more publications
+                        </span>
+                    </div>
+                </infinite-loading>
             </div>
         </div>
     </app-layout>
@@ -36,14 +42,25 @@
             InfiniteLoading
         },
         props: [
-            'publicationsFromServer',
+            //'publicationsFromServer',
         ],
-        created() {
-            this.storePublications()
-        },
         computed: {
-            publicationsFromStore () {
-                return this.$store.state.publications
+            publicationsFromStore: {
+                get: function () {
+                    return this.$store.state.publications
+                },
+                set: function (value) {
+                    this.setPublications(value)
+                }
+            },
+
+            page: {
+                get: function () {
+                    return this.$store.state.publicationsPage
+                },
+                set: function (value) {
+                    this.setPublicationsPage(value)
+                }
             },
 
             scrollPublications () {
@@ -61,13 +78,13 @@
         },
         data () {
             return {
-                publications: this.publicationsFromServer.data
             }
         },
         methods: {
             ...mapActions([
                 'setPublications',
-                'setScrollPublications'
+                'setScrollPublications',
+                'setPublicationsPage',
             ]),
 
             scroll () {
@@ -81,14 +98,32 @@
                     })
                     .then(() => {
                         if (this.lastShowedPublicationId) {
-                            document.getElementById(this.lastShowedPublicationId).scrollIntoView({block: "center"})
+                            document.getElementById('publication_'+this.lastShowedPublicationId).scrollIntoView({block: "center"})
                         }
                     })
             },
 
-            storePublications () {
-                this.setPublications(this.publicationsFromServer.data)
-            }
+            storePublications (publications) {
+                this.setPublications(publications)
+            },
+
+            infiniteHandler($state) {
+                axios.post(this.route('publications.get-publications'), {
+                    page: this.page,
+                })
+                    .then(response => {
+                        if (response.data.publications.length) {
+                            this.page++
+                            this.publicationsFromStore.push(...response.data.publications)
+                            $state.loaded()
+                        } else {
+                            $state.complete()
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
         }
     }
 </script>

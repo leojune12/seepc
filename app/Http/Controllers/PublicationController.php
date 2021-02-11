@@ -22,9 +22,7 @@ class PublicationController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Publication/Publications', [
-            'publicationsFromServer' => PublicationResource::collection(Publication::with(['specification', 'user','likes'])->orderByDesc('created_at')->paginate()),
-        ]);
+        return Inertia::render('Publication/Publications');
     }
 
     /**
@@ -134,12 +132,10 @@ class PublicationController extends Controller
     /**
      *
      */
-    public function get_publication(Request $request)
+    public function get_publications()
     {
-        $publication = new PublicationResource(Publication::find($request->publication_id));
         return response()->json([
-            'liked' => LikeResource::collection($publication->likes)->contains('user_id', \auth()->id()),
-            'likes' => count(LikeResource::collection($publication->likes))
+            'publications' => PublicationResource::collection(Publication::with(['specification', 'user','likes'])->orderByDesc('created_at')->paginate(5)),
         ]);
     }
 

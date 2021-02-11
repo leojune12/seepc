@@ -5883,12 +5883,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
 /* harmony import */ var _Components_PublicationCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/PublicationCard */ "./resources/js/Components/PublicationCard.vue");
 /* harmony import */ var _Components_PublishButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/PublishButton */ "./resources/js/Components/PublishButton.vue");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5924,13 +5942,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     PublishButton: _Components_PublishButton__WEBPACK_IMPORTED_MODULE_3__.default,
     InfiniteLoading: (vue_infinite_loading__WEBPACK_IMPORTED_MODULE_0___default())
   },
-  props: ['publicationsFromServer'],
-  created: function created() {
-    this.storePublications();
-  },
+  props: [//'publicationsFromServer',
+  ],
   computed: {
-    publicationsFromStore: function publicationsFromStore() {
-      return this.$store.state.publications;
+    publicationsFromStore: {
+      get: function get() {
+        return this.$store.state.publications;
+      },
+      set: function set(value) {
+        this.setPublications(value);
+      }
+    },
+    page: {
+      get: function get() {
+        return this.$store.state.publicationsPage;
+      },
+      set: function set(value) {
+        this.setPublicationsPage(value);
+      }
     },
     scrollPublications: function scrollPublications() {
       return this.$store.state.scrollPublications;
@@ -5945,11 +5974,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   data: function data() {
-    return {
-      publications: this.publicationsFromServer.data
-    };
+    return {};
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage'])), {}, {
     scroll: function scroll() {
       var _this = this;
 
@@ -5960,14 +5987,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.setScrollPublications(false);
       }).then(function () {
         if (_this.lastShowedPublicationId) {
-          document.getElementById(_this.lastShowedPublicationId).scrollIntoView({
+          document.getElementById('publication_' + _this.lastShowedPublicationId).scrollIntoView({
             block: "center"
           });
         }
       });
     },
-    storePublications: function storePublications() {
-      this.setPublications(this.publicationsFromServer.data);
+    storePublications: function storePublications(publications) {
+      this.setPublications(publications);
+    },
+    infiniteHandler: function infiniteHandler($state) {
+      var _this2 = this;
+
+      axios.post(this.route('publications.get-publications'), {
+        page: this.page
+      }).then(function (response) {
+        if (response.data.publications.length) {
+          var _this2$publicationsFr;
+
+          _this2.page++;
+
+          (_this2$publicationsFr = _this2.publicationsFromStore).push.apply(_this2$publicationsFr, _toConsumableArray(response.data.publications));
+
+          $state.loaded();
+        } else {
+          $state.complete();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   })
 });
@@ -6491,6 +6539,10 @@ var actions = {
   setScrollPublications: function setScrollPublications(_ref3, payload) {
     var commit = _ref3.commit;
     commit('setScrollPublicationsMutation', payload);
+  },
+  setPublicationsPage: function setPublicationsPage(_ref4, payload) {
+    var commit = _ref4.commit;
+    commit('setpublicationsPageMutation', payload);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -6567,6 +6619,9 @@ var mutations = {
   },
   setScrollPublicationsMutation: function setScrollPublicationsMutation(state, payload) {
     state.scrollPublications = payload;
+  },
+  setpublicationsPageMutation: function setpublicationsPageMutation(state, payload) {
+    state.publicationsPage = payload;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -6587,8 +6642,9 @@ __webpack_require__.r(__webpack_exports__);
 var state = {
   ftpUrl: 'https://webdevstacks.000webhostapp.com/',
   lastShowedPublicationId: null,
-  publications: null,
-  scrollPublications: false
+  publications: [],
+  scrollPublications: false,
+  publicationsPage: 1
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
 
@@ -31636,7 +31692,7 @@ var render = function() {
           staticClass:
             "w-full h-96 object-cover md:cursor-pointer rounded-xl border",
           attrs: {
-            id: _vm.publication.id,
+            id: "publication_" + _vm.publication.id,
             src: _vm.ftpUrl + _vm.publication.photo_path,
             alt: "image"
           },
@@ -38208,7 +38264,31 @@ var render = function() {
             })
           }),
           _vm._v(" "),
-          _c("infinite-loading", { attrs: { spinner: "spiral" } })
+          _c(
+            "infinite-loading",
+            {
+              attrs: { spinner: "waveDots" },
+              on: { infinite: _vm.infiniteHandler }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "text-gray-500 h-16 flex items-center justify-center",
+                  attrs: { slot: "no-more" },
+                  slot: "no-more"
+                },
+                [
+                  _c("span", [
+                    _vm._v(
+                      "\n                        No more publications\n                    "
+                    )
+                  ])
+                ]
+              )
+            ]
+          )
         ],
         2
       )
