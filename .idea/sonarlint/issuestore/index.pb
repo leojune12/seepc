@@ -107,3 +107,15 @@ W
 'resources/js/Pages/Publication/Show.vue,7\b\7b766c2e62ae797d315717dff0cb796f1aa90a17
 M
 resources/views/app.blade.php,7\a\7a5a172478a3864465de17eec09536649e33d223
+l
+<database/migrations/2021_02_07_040111_create_likes_table.php,d\2\d2c9d88cfcb9f08428b469e1f7e2c23acaa30398
+C
+app/Models/Like.php,3\2\32c62c3b79e2711968fe5e27758b10b2cf1ae24f
+S
+#app/Http/Resources/LikeResource.php,7\8\78ae15415bc32287d66ad1e8624c420ffed81ee9
+Q
+!resources/js/Jetstream/Button.vue,6\1\612e6f81e1c3a4d68331505c63b379ae5964f212
+X
+(resources/js/Jetstream/SectionBorder.vue,1\b\1ba385c839698fb2e373ad83f5b3ee9913caafc7
+a
+1resources/js/Components/PublicationCardFooter.vue,e\d\ede56cce975bc6df1f52e8f7e7823a9f9b1ad544

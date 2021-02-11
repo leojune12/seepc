@@ -1,6 +1,14 @@
 let actions = {
-    setTestVariable ({commit}, payload) {
-        commit('setTestVariableMutation', payload)
+    setLastShowedPublicationId ({commit}, payload) {
+        commit('setLastShowedPublicationIdMutation', payload)
+    },
+
+    setPublications ({commit}, payload) {
+        commit('setPublicationsMutation', payload)
+    },
+
+    setScrollPublications ({commit}, payload) {
+        commit('setScrollPublicationsMutation', payload)
     },
 }
 

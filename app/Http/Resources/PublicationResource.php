@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Publication\Specification;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class PublicationResource extends JsonResource
 {
@@ -15,13 +16,14 @@ class PublicationResource extends JsonResource
      */
     public function toArray($request)
     {
-        //return parent::toArray($request);
         return [
             'id' => $this->id,
             'photo_path' => $this->photo_path,
             'description' => $this->description,
             'specifications' => new SpecificationResource($this->specification),
             'user' => new UserResource($this->user),
+            'likes' => count(LikeResource::collection($this->likes)),
+            'liked' => LikeResource::collection($this->likes)->contains('user_id', \auth()->id()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

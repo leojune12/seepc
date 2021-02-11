@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PublicationCollection;
+use App\Http\Resources\LikeResource;
 use App\Http\Resources\PublicationResource;
+use App\Models\Like;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -21,7 +23,7 @@ class PublicationController extends Controller
     public function index()
     {
         return Inertia::render('Publication/Publications', [
-            'publications' => PublicationResource::collection(Publication::with(['specification', 'user'])->orderByDesc('created_at')->paginate())
+            'publicationsFromServer' => PublicationResource::collection(Publication::with(['specification', 'user','likes'])->orderByDesc('created_at')->paginate()),
         ]);
     }
 
@@ -127,5 +129,54 @@ class PublicationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     *
+     */
+    public function get_publication(Request $request)
+    {
+        $publication = new PublicationResource(Publication::find($request->publication_id));
+        return response()->json([
+            'liked' => LikeResource::collection($publication->likes)->contains('user_id', \auth()->id()),
+            'likes' => count(LikeResource::collection($publication->likes))
+        ]);
+    }
+
+    /**
+     *
+     */
+    public function like(Request $request)
+    {
+        Validator::make($request->all(), [
+            'user_id' => ['required', 'integer'],
+            'publication_id' => ['required', 'integer'],
+        ])->validate();
+
+        Like::create([
+           'user_id' => $request->user_id,
+           'publication_id' => $request->publication_id
+        ]);
+
+        return response()->json([
+            'likes' => count(Publication::find($request->publication_id)->likes)
+        ]);
+    }
+
+    /**
+     *
+     */
+    public function unlike(Request $request)
+    {
+        Validator::make($request->all(), [
+            'user_id' => ['required', 'integer'],
+            'publication_id' => ['required', 'integer'],
+        ])->validate();
+
+        Like::where('user_id', $request->user_id)->where('publication_id', $request->publication_id)->delete();
+
+        return response()->json([
+            'likes' => count(Publication::find($request->publication_id)->likes)
+        ]);
     }
 }

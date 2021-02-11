@@ -9,7 +9,7 @@
                 <publish-button v-if="$page.props.user" />
 
                 <publication-card
-                    v-for="publication in publications.data"
+                    v-for="publication in publications"
                     :publication="publication"
                     :key="publication.id"
                 />
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
     import AppLayout from '@/Layouts/AppLayout'
     import PublicationCard from "@/Components/PublicationCard";
     import PublishButton from "@/Components/PublishButton";
@@ -31,8 +32,53 @@
             PublishButton
         },
         props: [
-            'publications'
+            'publicationsFromServer',
         ],
+        created() {
+            this.storePublications()
+        },
+        computed: {
+            publications () {
+                return this.$store.state.publications
+            },
+
+            scrollPublications () {
+                return this.$store.state.scrollPublications
+            },
+
+            lastShowedPublicationId () {
+                return this.$store.state.lastShowedPublicationId
+            }
+        },
+        mounted() {
+            if (this.scrollPublications) {
+                this.scroll()
+            }
+        },
+        methods: {
+            ...mapActions([
+                'setPublications',
+                'setScrollPublications'
+            ]),
+
+            scroll () {
+                let promise = new Promise(function(myResolve, myReject) {
+                    myResolve();
+                });
+
+                promise
+                    .then(() => {
+                        this.setScrollPublications(false)
+                    })
+                    .then(() => {
+                        document.getElementById(this.lastShowedPublicationId).scrollIntoView({block: "center"})
+                    })
+            },
+
+            storePublications () {
+                this.setPublications(this.publicationsFromServer.data)
+            }
+        }
     }
 </script>
 

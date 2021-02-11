@@ -26,4 +26,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 
     Route::post('/publications/store', [PublicationController::class, 'store'])->name('publications.store');
+
+    Route::post('/publications/get-publication', [PublicationController::class, 'get_publication'])->name('publications.get-publication');
+
+    Route::post('/publications/like', [PublicationController::class, 'like'])->name('publications.like');
+
+    Route::post('/publications/unlike', [PublicationController::class, 'unlike'])->name('publications.unlike');
 });
