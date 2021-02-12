@@ -1,48 +1,6 @@
 <template>
     <div class="md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl px-3 md:px-4">
-        <div>
-            <div class="flex flex-row pt-3 items-center">
-                <div class="mr-2">
-                    <img
-                        :src="getProfilePhoto()"
-                        alt="profile photo"
-                        class="w-10 h-10 rounded-full object-cover border border-gray-300"
-                    >
-                </div>
-                <div>
-                    <div
-                        class="font-bold text-gray-800"
-                    >
-                        {{ publication.user.name }}
-                    </div>
-                    <div
-                        class="text-sm font-semibold text-gray-500"
-                    >
-                        {{ getDateTime(publication.created_at) }}
-                    </div>
-                </div>
-            </div>
-            <div class="py-3 space-y-3 text-gray-800">
-                <div class="md:text-base text-sm">
-                    <div v-for="description in descriptionArray" class="leading-tight">
-                        {{ description.length ? description : '&nbsp;' }}
-                    </div>
-                </div>
-
-                <div v-show="!isSpecsEmpty()" class="flex flex-col">
-                    <ul class="space-y-1 md:text-base text-xs">
-                        <li v-for="specs in specsNames()" :class="{ hidden : publication.specifications[specs] === null }">
-                            <span class="font-bold uppercase mr-2">
-                                {{ specs }}:
-                            </span>
-                            <span>
-                                {{ publication.specifications[specs] }}
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <publication-descriptions :publication="publication" />
         <div>
             <img
                 :id="'publication_'+publication.id"
@@ -61,11 +19,13 @@
 <script>
     import { mapActions } from 'vuex'
     import PublicationCardFooter from "@/Components/PublicationCardFooter";
+    import PublicationDescriptions from "@/Components/PublicationDescriptions";
 
     export default {
         name: "PublicationCard",
         components: {
-            PublicationCardFooter
+            PublicationCardFooter,
+            PublicationDescriptions
         },
         props: [
             'publication'

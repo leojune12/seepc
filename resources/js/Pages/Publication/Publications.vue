@@ -41,9 +41,6 @@
             PublishButton,
             InfiniteLoading
         },
-        props: [
-            //'publicationsFromServer',
-        ],
         computed: {
             publicationsFromStore: {
                 get: function () {
@@ -71,14 +68,12 @@
                 return this.$store.state.lastShowedPublicationId
             }
         },
-        mounted() {
-            if (this.scrollPublications) {
-                this.scroll()
-            }
-        },
         data () {
             return {
             }
+        },
+        mounted () {
+            this.scroll()
         },
         methods: {
             ...mapActions([
@@ -94,22 +89,24 @@
 
                 promise
                     .then(() => {
-                        this.setScrollPublications(false)
-                    })
-                    .then(() => {
                         if (this.lastShowedPublicationId) {
                             document.getElementById('publication_'+this.lastShowedPublicationId).scrollIntoView({block: "center"})
                         }
                     })
             },
 
-            storePublications (publications) {
-                this.setPublications(publications)
-            },
-
             infiniteHandler($state) {
+                let firstItem = {
+                    created_at: null
+                }
+
+                if (this.publicationsFromStore.length) {
+                    firstItem = this.publicationsFromStore[0]
+                }
+
                 axios.post(this.route('publications.get-publications'), {
                     page: this.page,
+                    first_item_created_at: firstItem.created_at
                 })
                     .then(response => {
                         if (response.data.publications.length) {

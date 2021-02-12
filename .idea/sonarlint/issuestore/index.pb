@@ -119,3 +119,13 @@ X
 (resources/js/Jetstream/SectionBorder.vue,1\b\1ba385c839698fb2e373ad83f5b3ee9913caafc7
 a
 1resources/js/Components/PublicationCardFooter.vue,e\d\ede56cce975bc6df1f52e8f7e7823a9f9b1ad544
+A
+webpack.config.js,d\5\d5595158cc48f9bf3e51b06f6e6805a8fd2d6262
+>
+webpack.mix.js,7\3\73a5f9e927f70e0292701d67f61dbff4fb17febc
+<
+package.json,7\0\7030d0b2f71b999ff89a343de08c414af32fc93a
+m
+=resources/js/Pages/Profile/LogoutOtherBrowserSessionsForm.vue,1\5\15314ab36c62169f985c954a7a78615dedf69994
+c
+3resources/js/Components/PublicationDescriptions.vue,f\0\f09c71428ce9de629c2f92c6a4236507271957be

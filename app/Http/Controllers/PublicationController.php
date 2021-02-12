@@ -132,10 +132,16 @@ class PublicationController extends Controller
     /**
      *
      */
-    public function get_publications()
+    public function get_publications(Request $request)
     {
+        $first_item_created_at = $request->first_item_created_at;
+
+        if ($first_item_created_at == null) {
+            $first_item_created_at = now();
+        }
+
         return response()->json([
-            'publications' => PublicationResource::collection(Publication::with(['specification', 'user','likes'])->orderByDesc('created_at')->paginate(5)),
+            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes'])->orderByDesc('created_at')->simplePaginate(5)),
         ]);
     }
 
