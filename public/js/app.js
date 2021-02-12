@@ -31661,7 +31661,7 @@ var render = function() {
       _c("div", [
         _c("img", {
           staticClass:
-            "w-full h-96 object-cover md:cursor-pointer rounded-xl border",
+            "w-full h-80 object-cover md:cursor-pointer rounded-xl border",
           attrs: {
             id: "publication_" + _vm.publication.id,
             src: _vm.ftpUrl + _vm.publication.photo_path,

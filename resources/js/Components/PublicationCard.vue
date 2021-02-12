@@ -6,7 +6,7 @@
                 :id="'publication_'+publication.id"
                 :src="ftpUrl+publication.photo_path"
                 alt="image"
-                class="w-full h-96 object-cover md:cursor-pointer rounded-xl border"
+                class="w-full h-80 object-cover md:cursor-pointer rounded-xl border"
                 @click="visitPublication(publication.id)"
             >
         </div>
