@@ -58,10 +58,6 @@
                 }
             },
 
-            getDateTime (dateTime) {
-                return moment(dateTime).fromNow();
-            },
-
             visitPublication (id) {
                 let promise = new Promise(function(myResolve, myReject) {
                     myResolve();

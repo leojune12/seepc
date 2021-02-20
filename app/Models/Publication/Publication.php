@@ -2,7 +2,8 @@
 
 namespace App\Models\Publication;
 
-use App\Models\Like;
+use App\Models\Publication\Comment;
+use App\Models\Publication\Like;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,10 @@ class Publication extends Model
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
 }

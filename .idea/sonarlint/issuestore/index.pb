@@ -109,8 +109,6 @@ M
 resources/views/app.blade.php,7\a\7a5a172478a3864465de17eec09536649e33d223
 l
 <database/migrations/2021_02_07_040111_create_likes_table.php,d\2\d2c9d88cfcb9f08428b469e1f7e2c23acaa30398
-C
-app/Models/Like.php,3\2\32c62c3b79e2711968fe5e27758b10b2cf1ae24f
 S
 #app/Http/Resources/LikeResource.php,7\8\78ae15415bc32287d66ad1e8624c420ffed81ee9
 Q
@@ -129,3 +127,23 @@ m
 =resources/js/Pages/Profile/LogoutOtherBrowserSessionsForm.vue,1\5\15314ab36c62169f985c954a7a78615dedf69994
 c
 3resources/js/Components/PublicationDescriptions.vue,f\0\f09c71428ce9de629c2f92c6a4236507271957be
+G
+config/broadcasting.php,b\a\bac236f5cc1ad8412b3ade7938cd9a596cb29b3c
+O
+app/Models/Publication/Like.php,5\a\5a8230f0815bbea75c497c559400be3d8534f68c
+R
+"app/Models/Publication/Comment.php,2\d\2da51235238f722644b969186f9d8afa19497213
+o
+?database/migrations/2021_02_15_160255_create_comments_table.php,8\9\89e488611100e71a0932fa5e01d1df798deadcd9
+V
+&app/Http/Resources/CommentResource.php,a\6\a647af8f79dd6e54dcc4527bd5b4aaac4aa1b9a3
+I
+resources/js/bootstrap.js,2\a\2a602b14e912f494b7df1e17ce8d98958460f936
+_
+/resources/js/Components/PublicationComments.vue,5\d\5dc181abd27f1b3122916727ae20edd7e2edf960
+Z
+*app/Http/Controllers/CommentController.php,b\8\b87288f26705bc97e73a5cc3d07228aa06e4d059
+Z
+*resources/js/Components/CommentReplies.vue,c\e\ce16765249f7ec18a683130d217fc17961e3d95a
+X
+(resources/js/Components/CommentsList.vue,2\b\2bcbcb481f06c86e053333fccc9b327348097552

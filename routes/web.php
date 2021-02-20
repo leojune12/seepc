@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PublicationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->n
 
 Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
 
+Route::post('/publications/comment/show', [CommentController::class, 'show'])->name('publications.comment.show');
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -33,4 +36,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/publications/like', [PublicationController::class, 'like'])->name('publications.like');
 
     Route::post('/publications/unlike', [PublicationController::class, 'unlike'])->name('publications.unlike');
+
+    Route::post('/publications/comment/store', [CommentController::class, 'store'])->name('publications.comment.store');
 });

@@ -1,11 +1,21 @@
 <template>
     <div>
-        <div v-if="likes">
-            <div
-                class="py-2 md:text-normal text-sm"
-                :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
-            >
-                {{ likes + ' ' + likesString }}
+        <div v-if="likes || comment_count">
+            <div class="py-2 md:text-normal text-sm flex justify-between">
+                <div
+                    :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
+                >
+                    <span v-if="likes">
+                        {{ likes + ' ' + likesString }}
+                    </span>
+                </div>
+                <div
+                    :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
+                >
+                    <span v-if="comment_count">
+                        {{ comment_count + ' ' + commentsString }}
+                    </span>
+                </div>
             </div>
             <div>
                 <div class="border-t border-gray-300"></div>
@@ -50,7 +60,10 @@
                     </div>
                 </div>
             </button>
-            <button class="h-9 rounded md:hover:bg-gray-100 focus:outline-none flex-1 text-center">
+            <button
+                class="h-9 rounded md:hover:bg-gray-100 focus:outline-none flex-1 text-center"
+                @click="showCommentInput = true"
+            >
                 <div class="flex justify-center">
                     <div
                         class="flex"
@@ -66,14 +79,19 @@
                 </div>
             </button>
         </div>
+        <publication-comments v-if="showCommentInput" :publication="publication" v-on:update-comment-count="comment_count = $event" />
     </div>
 </template>
 
 <script>
     import { mapActions } from 'vuex'
+    import PublicationComments from "@/Components/PublicationComments";
 
     export default {
         name: "PublicationCardFooter",
+        components: {
+            PublicationComments
+        },
         props: {
             publication: Object,
             inShowComponent: {
@@ -85,13 +103,19 @@
             return {
                 liked: this.publication.liked,
                 likes: this.publication.likes,
+                comment_count: this.publication.comment_count,
                 disabled: false,
-                currentPublication: null
+                currentPublication: null,
+                showCommentInput: false
             }
         },
         computed: {
             likesString () {
                 return this.likes > 1 ? 'Likes' : 'Like'
+            },
+
+            commentsString () {
+                return this.comment_count > 1 ? 'Comments' : 'Comment'
             },
 
             publications () {

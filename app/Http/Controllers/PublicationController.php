@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LikeResource;
 use App\Http\Resources\PublicationResource;
-use App\Models\Like;
+use App\Models\Publication\Like;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -141,7 +139,7 @@ class PublicationController extends Controller
         }
 
         return response()->json([
-            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes'])->orderByDesc('created_at')->simplePaginate(5)),
+            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes', 'comments'])->orderByDesc('created_at')->simplePaginate(5)),
         ]);
     }
 
