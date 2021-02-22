@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PublicationLiked;
 use App\Http\Resources\PublicationResource;
 use App\Models\Publication\Like;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -153,13 +155,26 @@ class PublicationController extends Controller
             'publication_id' => ['required', 'integer'],
         ])->validate();
 
-        Like::create([
-           'user_id' => $request->user_id,
-           'publication_id' => $request->publication_id
-        ]);
+        Like::firstOrCreate(
+            [
+                'user_id' => $request->user_id,
+                'publication_id' => $request->publication_id
+            ]
+        );
+
+        $publication = Publication::find($request->publication_id);
+
+        $likes = count($publication->likes);
+
+        $data = [
+            'publication' => $publication,
+            'likes' => $likes
+        ];
+
+        broadcast(new PublicationLiked($data))->toOthers();
 
         return response()->json([
-            'likes' => count(Publication::find($request->publication_id)->likes)
+            'likes' => $likes
         ]);
     }
 
@@ -173,10 +188,18 @@ class PublicationController extends Controller
             'publication_id' => ['required', 'integer'],
         ])->validate();
 
-        Like::where('user_id', $request->user_id)->where('publication_id', $request->publication_id)->delete();
+        $like = Like::where('user_id', $request->user_id)->where('publication_id', $request->publication_id);
+
+        if (isset($like)) {
+            $like->delete();
+        }
+
+        $publication = Publication::find($request->publication_id);
+
+        $likes = count($publication->likes);
 
         return response()->json([
-            'likes' => count(Publication::find($request->publication_id)->likes)
+            'likes' => $likes
         ]);
     }
 }
