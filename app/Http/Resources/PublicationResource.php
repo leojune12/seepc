@@ -25,9 +25,8 @@ class PublicationResource extends JsonResource
             'user' => new UserResource($this->user),
             'likes' => count(LikeResource::collection($this->likes)),
             'liked' => LikeResource::collection($this->likes)->contains('user_id', \auth()->id()),
-            'comment_count' => count(CommentResource::collection($this->comments)),
+            'comment_count' => $this->comments_count,
             'comment_page' => 1,
-            'comments' => [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

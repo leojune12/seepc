@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Publication\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CommentResource extends JsonResource
@@ -19,8 +20,7 @@ class CommentResource extends JsonResource
             'user_id' => $this->user_id,
             'user' => $this->user,
             'comment' => $this->comment,
-            'commentable_id' => $this->commentable_id,
-            'commentable_type' => $this->commentable_type,
+            'replies_count' => count($this->replies),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

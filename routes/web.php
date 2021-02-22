@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Resources\CommentResource;
+use App\Models\Publication\Comment;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,7 +24,9 @@ Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->n
 
 Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
 
-Route::post('/publications/comment/show', [CommentController::class, 'show'])->name('publications.comment.show');
+Route::post('/publications/comment/show', [CommentController::class, 'show_comments'])->name('publications.comment.show');
+
+Route::post('/publications/comment/reply/show', [CommentController::class, 'show_replies'])->name('publications.comment.reply.show');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
@@ -38,4 +43,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/publications/unlike', [PublicationController::class, 'unlike'])->name('publications.unlike');
 
     Route::post('/publications/comment/store', [CommentController::class, 'store'])->name('publications.comment.store');
+
+    Route::post('/publications/comment/reply/store', [CommentController::class, 'store_reply'])->name('publications.comment.reply.store');
 });

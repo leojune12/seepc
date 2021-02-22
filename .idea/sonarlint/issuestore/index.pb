@@ -147,3 +147,9 @@ Z
 *resources/js/Components/CommentReplies.vue,c\e\ce16765249f7ec18a683130d217fc17961e3d95a
 X
 (resources/js/Components/CommentsList.vue,2\b\2bcbcb481f06c86e053333fccc9b327348097552
+P
+ resources/js/Pages/Dashboard.vue,f\d\fd8c286ff0cfa06868131932c2d2468eb8c242de
+S
+#app/Http/Resources/UserResource.php,f\6\f6770a192e2fd7fec6853c6fc802aae1effa0302
+W
+'resources/js/Components/RepliesList.vue,4\0\40e7305c02013f984407c253ce070463fbabc353

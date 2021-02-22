@@ -12,7 +12,11 @@
                 <div
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
                 >
-                    <span v-if="comment_count">
+                    <span
+                        v-if="comment_count"
+                        class="hover:underline"
+                        @click="showCommentInput = true"
+                    >
                         {{ comment_count + ' ' + commentsString }}
                     </span>
                 </div>

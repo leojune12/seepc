@@ -25,22 +25,40 @@
                     </div>
                 </div>
             </div>
-            <div class="px-3 items-center flex">
-                <span class="md:text-sm text-xs">
-                    {{ getDateTime(comment.created_at) }}
-                </span>
-                <span class="text-xs">&nbsp;&bullet;&nbsp;</span>
-                <span class="md:text-sm text-xs font-semibold">
-                    <span
-                        class="hover:underline cursor-pointer"
-                        @click="showReplyInput = true"
-                    >
-                        Reply
+            <div class="flex">
+                <div class="px-3 items-center flex">
+                    <span class="md:text-sm text-xs">
+                        {{ getDateTime(comment.created_at) }}
                     </span>
-                </span>
+                    <span class="text-xs">&nbsp;&bullet;&nbsp;</span>
+                    <span class="md:text-sm text-xs font-semibold">
+                        <span
+                            class="hover:underline cursor-pointer"
+                            @click="showReplies = true"
+                        >
+                            Reply
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div
+                v-if="comment.replies_count && !showReplies"
+                class="font-semibold text-gray-600 text-sm flex py-1 px-3"
+                @click="showReplies = true"
+            >
+                <div class="flex items-center cursor-pointer">
+                    <div>
+                        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,15L13,21L11.58,19.58L15.17,16H4V4H6V14H15.17L11.58,10.42L13,9L19,15Z" />
+                        </svg>
+                    </div>
+                    <div class="hover:underline">
+                        Show {{ comment.replies_count }} {{ comment.replies_count > 1 ? 'replies' : 'reply' }}
+                    </div>
+                </div>
             </div>
             <comment-replies
-                v-if="showReplyInput"
+                v-if="showReplies"
                 :comment="comment"
             />
         </div>
@@ -65,7 +83,8 @@
         },
         data () {
             return {
-                showReplyInput: false,
+                showReplies: false,
+                showReplyLoader: false,
             }
         },
         methods: {
@@ -79,23 +98,6 @@
                 } else {
                     return user.profile_photo_url
                 }
-            },
-
-            saveComment () {
-                axios.post(this.route('publications.comment.store'), {
-                    user_id: this.$page.props.user.id,
-                    comment: this.comment,
-                    publication_id: this.publication.id,
-                    currentPublication: null,
-                })
-                    .then(response => {
-                        this.comment = ''
-                        this.$emit('update-comment-count', response.data.comment_count)
-                        console.log(response)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             },
         }
     }

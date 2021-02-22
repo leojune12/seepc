@@ -19,7 +19,6 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'user_id' => ['required', 'integer'],
             'comment' => ['required', 'string', 'max:255'],
             'publication_id' => ['required', 'integer'],
         ])->validate();
@@ -34,15 +33,36 @@ class CommentController extends Controller
 
         $publication->comments()->save($comment);
 
-        /*$publication->comments()->create([
-            'user_id' => $request->user_id,
-            'comment' => $request->comment,
-            'commentable_id' => $request->publication_id,
-            'commentable_type' => 'App\Models\Publication\Publication',
-        ]);*/
-
         return response()->json([
             'comment_count' => count($publication->comments),
+            'comment' => $comment
+        ]);
+    }
+
+    /**
+     *Store new comment
+     *
+     * @param Request $request
+     */
+    public function store_reply(Request $request)
+    {
+        Validator::make($request->all(), [
+            'reply' => ['required', 'string', 'max:255'],
+            'comment_id' => ['required', 'integer'],
+        ])->validate();
+
+        $comment = Comment::find($request->comment_id);
+
+        $reply = new Comment;
+
+        $reply->user()->associate(Auth::user());
+
+        $reply->comment = $request->reply;
+
+        $comment->replies()->save($reply);
+
+        return response()->json([
+            'reply' => $reply
         ]);
     }
 
@@ -51,10 +71,27 @@ class CommentController extends Controller
      *
      * @param Request $request
      */
-    public function show(Request $request)
+    public function show_comments(Request $request)
     {
+        $comments = CommentResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->with(['user', 'replies'])->orderByDesc('created_at')->get());
+
         return response()->json([
-            'comments' => CommentResource::collection(Comment::orderByDesc('created_at')->simplePaginate(10))
+            //'comments' => CommentResource::collection($publication->comments->sortByDesc('created_at'))
+            'comments' => $comments
+        ]);
+    }
+
+    /**
+     * Fetch replies
+     *
+     * @param Request $request
+     */
+    public function show_replies(Request $request)
+    {
+        $replies = CommentResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Comment')->where('commentable_id', $request->comment_id)->with(['user', 'replies'])->get());
+
+        return response()->json([
+            'replies' => $replies
         ]);
     }
 }

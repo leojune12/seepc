@@ -43,7 +43,7 @@
             </div>
             <div class="mt-2">
                 <comments-list
-                    v-for="comment in publication.comments"
+                    v-for="comment in comments"
                     :key="comment.id"
                     :comment="comment"
                 />
@@ -122,6 +122,7 @@
                 comment: '',
                 showCommentLoader: false,
                 showCommentInput: false,
+                comments: [],
             }
         },
         mounted () {
@@ -141,11 +142,11 @@
                     user_id: this.$page.props.user.id,
                     comment: this.comment,
                     publication_id: this.publication.id,
-                    currentPublication: null,
                 })
                     .then(response => {
                         this.comment = ''
                         this.$emit('update-comment-count', response.data.comment_count)
+                        this.comments.unshift(response.data.comment)
                         console.log(response)
                     })
                     .catch(function (error) {
@@ -156,15 +157,16 @@
             fetchComments() {
                 this.showCommentLoader = true
                 axios.post(this.route('publications.comment.show'), {
-                    page: this.publication.comment_page,
+                    //page: this.publication.comment_page,
                     publication_id: this.publication.id
                 })
                     .then(response => {
                         this.showCommentLoader = false
                         this.showCommentInput = true
+                        console.log(response)
                         if (response.data.comments) {
                             this.publication.comment_page++
-                            this.publication.comments.push(...response.data.comments)
+                            this.comments.push(...response.data.comments)
                         }
                     })
                     .catch(function (error) {
