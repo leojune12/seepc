@@ -14,6 +14,14 @@ let actions = {
     setPublicationsPage ({commit}, payload) {
         commit('setpublicationsPageMutation', payload)
     },
+
+    setPublicationLikes ({commit}, payload) {
+        commit('setPublicationLikesMutation', payload)
+    },
+
+    setPublicationShow ({commit}, payload) {
+        commit('setPublicationShowMutation', payload)
+    }
 }
 
 export default actions

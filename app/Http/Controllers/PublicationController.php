@@ -130,7 +130,7 @@ class PublicationController extends Controller
     }
 
     /**
-     *
+     * Get Publications
      */
     public function get_publications(Request $request)
     {
@@ -141,7 +141,7 @@ class PublicationController extends Controller
         }
 
         return response()->json([
-            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5)),
+            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes', 'comments'])->orderByDesc('created_at')->simplePaginate(5)),
         ]);
     }
 
@@ -164,17 +164,12 @@ class PublicationController extends Controller
 
         $publication = Publication::find($request->publication_id);
 
-        $likes = count($publication->likes);
+        broadcast(new PublicationLiked($publication))->toOthers();
 
-        $data = [
-            'publication' => $publication,
-            'likes' => $likes
-        ];
-
-        broadcast(new PublicationLiked($data))->toOthers();
+        $likes_count = count($publication->likes);
 
         return response()->json([
-            'likes' => $likes
+            'likes_count' => $likes_count
         ]);
     }
 
@@ -196,10 +191,12 @@ class PublicationController extends Controller
 
         $publication = Publication::find($request->publication_id);
 
-        $likes = count($publication->likes);
+        broadcast(new PublicationLiked($publication))->toOthers();
+
+        $likes_count = count($publication->likes);
 
         return response()->json([
-            'likes' => $likes
+            'likes_count' => $likes_count
         ]);
     }
 }

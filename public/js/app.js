@@ -2416,20 +2416,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      liked: this.publication.liked,
-      likes: this.publication.likes,
-      comment_count: this.publication.comment_count,
       disabled: false,
-      currentPublication: null,
       showCommentInput: false
     };
   },
   computed: {
     likesString: function likesString() {
-      return this.likes > 1 ? 'Likes' : 'Like';
+      return this.publication.likes_count > 1 ? 'Likes' : 'Like';
     },
     commentsString: function commentsString() {
-      return this.comment_count > 1 ? 'Comments' : 'Comment';
+      return this.publication.comment_count > 1 ? 'Comments' : 'Comment';
     },
     publications: function publications() {
       return this.$store.state.publications;
@@ -2442,45 +2438,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.disabled = true;
 
-      if (this.liked) {
+      if (this.publication.liked) {
+        // like publication
+        this.publication.liked = false;
         axios.post(this.route('publications.unlike'), {
           user_id: this.$page.props.user.id,
           publication_id: this.publication.id
         }).then(function (response) {
-          _this.liked = false;
-          _this.likes = response.data.likes;
-
-          if (_this.publications !== null) {
-            _this.getCurrentPublicationFromStore();
-
-            _this.currentPublication.liked = false;
-            _this.currentPublication.likes = response.data.likes;
-          }
-
+          _this.publication.likes_count = response.data.likes_count;
           _this.disabled = false;
         })["catch"](function (error) {
           console.log(error);
-          this.disabled = false;
+          _this.disabled = false;
+          _this.publication.liked = true;
         });
       } else {
+        // unlike publication
+        this.publication.liked = true;
         axios.post(this.route('publications.like'), {
           user_id: this.$page.props.user.id,
           publication_id: this.publication.id
         }).then(function (response) {
-          _this.liked = true;
-          _this.likes = response.data.likes;
-
-          if (_this.publications !== null) {
-            _this.getCurrentPublicationFromStore();
-
-            _this.currentPublication.liked = true;
-            _this.currentPublication.likes = response.data.likes;
-          }
-
+          _this.publication.likes_count = response.data.likes_count;
           _this.disabled = false;
         })["catch"](function (error) {
           console.log(error);
           this.disabled = false;
+          this.publication.liked = true;
         });
       }
 
@@ -6666,13 +6650,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.$store.state.lastShowedPublicationId;
     }
   },
-  data: function data() {
-    return {};
-  },
   mounted: function mounted() {
     this.scroll();
+    this.listenForUpdates();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes'])), {}, {
     scroll: function scroll() {
       var _this = this;
 
@@ -6716,6 +6698,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    listenForUpdates: function listenForUpdates() {
+      this.listenForLikes();
+    },
+    listenForLikes: function listenForLikes() {
+      var _this3 = this;
+
+      Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
+        var data = {
+          currentUserId: _this3.$page.props.user.id,
+          data: incomingData
+        };
+
+        _this3.setPublicationLikes(data);
+      });
     }
   })
 });
@@ -6736,6 +6733,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_PublicationCardFooter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/PublicationCardFooter */ "./resources/js/Components/PublicationCardFooter.vue");
 /* harmony import */ var _Components_PublicationCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/PublicationCard */ "./resources/js/Components/PublicationCard.vue");
 /* harmony import */ var _Components_PublicationDescriptions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/PublicationDescriptions */ "./resources/js/Components/PublicationDescriptions.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -6763,11 +6767,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "ShowPhoto",
   components: {
     PublicationCard: _Components_PublicationCard__WEBPACK_IMPORTED_MODULE_1__.default,
     PublicationCardFooter: _Components_PublicationCardFooter__WEBPACK_IMPORTED_MODULE_0__.default,
@@ -6777,6 +6781,27 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     ftpUrl: function ftpUrl() {
       return this.$store.state.ftpUrl;
+    },
+    publicationsFromStore: {
+      get: function get() {
+        return this.$store.state.publications;
+      },
+      set: function set(value) {
+        this.setPublications(value);
+      }
+    },
+    currentPublication: function currentPublication() {
+      var _this = this;
+
+      if (this.publicationsFromStore.length) {
+        var index = this.publicationsFromStore.findIndex(function (pub) {
+          return pub.id === _this.publication.data.id;
+        });
+        return this.publicationsFromStore[index];
+      } else {
+        this.setPublicationShow(this.publication.data);
+        return this.publication.data;
+      }
     }
   },
   data: function data() {
@@ -6784,18 +6809,36 @@ __webpack_require__.r(__webpack_exports__);
       showDescription: true
     };
   },
-  methods: {
+  mounted: function mounted() {
+    this.listenForUpdates();
+  },
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)(['setPublications', 'setPublicationLikes', 'setPublicationShow'])), {}, {
     goBack: function goBack() {
       this.$inertia.get(this.route('publications'));
     },
     toggleShowDescription: function toggleShowDescription() {
-      var _this = this;
+      var _this2 = this;
 
       setTimeout(function () {
-        _this.showDescription = !_this.showDescription;
+        _this2.showDescription = !_this2.showDescription;
       }, 200);
+    },
+    listenForUpdates: function listenForUpdates() {
+      this.listenForLikes();
+    },
+    listenForLikes: function listenForLikes() {
+      var _this3 = this;
+
+      Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
+        var data = {
+          currentUserId: _this3.$page.props.user.id,
+          data: incomingData
+        };
+
+        _this3.setPublicationLikes(data);
+      });
     }
-  }
+  })
 });
 
 /***/ }),
@@ -7146,6 +7189,14 @@ var actions = {
   setPublicationsPage: function setPublicationsPage(_ref4, payload) {
     var commit = _ref4.commit;
     commit('setpublicationsPageMutation', payload);
+  },
+  setPublicationLikes: function setPublicationLikes(_ref5, payload) {
+    var commit = _ref5.commit;
+    commit('setPublicationLikesMutation', payload);
+  },
+  setPublicationShow: function setPublicationShow(_ref6, payload) {
+    var commit = _ref6.commit;
+    commit('setPublicationShowMutation', payload);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -7225,6 +7276,30 @@ var mutations = {
   },
   setpublicationsPageMutation: function setpublicationsPageMutation(state, payload) {
     state.publicationsPage = payload;
+  },
+  setPublicationLikesMutation: function setPublicationLikesMutation(state, payload) {
+    var currentPublication = null;
+
+    if (state.publications.length) {
+      var index = state.publications.findIndex(function (publication) {
+        return publication.id === payload.data.publication_id;
+      });
+      currentPublication = state.publications[index];
+    } else {
+      currentPublication = state.publicationShow;
+    } // check if publication is already loaded
+
+
+    if (currentPublication !== undefined) {
+      currentPublication.likes_count = payload.data.likes_count;
+
+      if (payload.data.current_user_id === payload.currentUserId) {
+        currentPublication.liked = payload.data.liked;
+      }
+    }
+  },
+  setPublicationShowMutation: function setPublicationShowMutation(state, payload) {
+    state.publicationShow = payload;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -7246,6 +7321,7 @@ var state = {
   ftpUrl: 'https://webdevstacks.000webhostapp.com/',
   lastShowedPublicationId: null,
   publications: [],
+  publicationShow: null,
   scrollPublications: false,
   publicationsPage: 1
 };
@@ -39135,7 +39211,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.likes || _vm.comment_count
+      _vm.publication.likes_count || _vm.publication.comment_count
         ? _c("div", [
             _c(
               "div",
@@ -39153,11 +39229,15 @@ var render = function() {
                     ]
                   },
                   [
-                    _vm.likes
+                    _vm.publication.likes_count
                       ? _c("span", [
                           _vm._v(
                             "\n                    " +
-                              _vm._s(_vm.likes + " " + _vm.likesString) +
+                              _vm._s(
+                                _vm.publication.likes_count +
+                                  " " +
+                                  _vm.likesString
+                              ) +
                               "\n                "
                           )
                         ])
@@ -39175,11 +39255,11 @@ var render = function() {
                     ]
                   },
                   [
-                    _vm.comment_count
+                    _vm.publication.comment_count
                       ? _c(
                           "span",
                           {
-                            staticClass: "hover:underline",
+                            staticClass: "hover:underline cursor-pointer",
                             on: {
                               click: function($event) {
                                 _vm.showCommentInput = true
@@ -39190,7 +39270,9 @@ var render = function() {
                             _vm._v(
                               "\n                    " +
                                 _vm._s(
-                                  _vm.comment_count + " " + _vm.commentsString
+                                  _vm.publication.comment_count +
+                                    " " +
+                                    _vm.commentsString
                                 ) +
                                 "\n                "
                             )
@@ -39223,14 +39305,14 @@ var render = function() {
                     {
                       staticClass: "flex",
                       class: [
-                        _vm.liked
+                        _vm.publication.liked
                           ? "text-blue-500"
                           : "text-gray-300 md:text-gray-500"
                       ]
                     },
                     [
                       _c("div", { staticClass: "mr-2" }, [
-                        _vm.liked
+                        _vm.publication.liked
                           ? _c(
                               "svg",
                               {
@@ -39279,11 +39361,15 @@ var render = function() {
                     "div",
                     {
                       staticClass: "flex",
-                      class: [_vm.liked ? "text-blue-500" : "text-gray-500"]
+                      class: [
+                        _vm.publication.liked
+                          ? "text-blue-500"
+                          : "text-gray-500"
+                      ]
                     },
                     [
                       _c("div", { staticClass: "mr-2" }, [
-                        _vm.liked
+                        _vm.publication.liked
                           ? _c(
                               "svg",
                               {
@@ -39395,7 +39481,7 @@ var render = function() {
             attrs: { publication: _vm.publication },
             on: {
               "update-comment-count": function($event) {
-                _vm.comment_count = $event
+                _vm.publication.comment_count = $event
               }
             }
           })
@@ -46288,7 +46374,7 @@ var render = function() {
         _c("img", {
           staticClass: "w-full h-screen object-contain",
           attrs: {
-            src: _vm.ftpUrl + _vm.publication.data.photo_path,
+            src: _vm.ftpUrl + _vm.currentPublication.photo_path,
             alt: "photo"
           },
           on: { click: _vm.toggleShowDescription }
@@ -46305,7 +46391,7 @@ var render = function() {
         [
           _c("publication-descriptions", {
             attrs: {
-              publication: _vm.publication.data,
+              publication: _vm.currentPublication,
               "in-show-component": true
             }
           }),
@@ -46320,7 +46406,7 @@ var render = function() {
               _vm._v(" "),
               _c("publication-card-footer", {
                 attrs: {
-                  publication: _vm.publication.data,
+                  publication: _vm.currentPublication,
                   "in-show-component": true
                 }
               }),

@@ -1,23 +1,23 @@
 <template>
     <div>
-        <div v-if="likes || comment_count">
+        <div v-if="publication.likes_count || publication.comment_count">
             <div class="py-2 md:text-normal text-sm flex justify-between">
                 <div
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
                 >
-                    <span v-if="likes">
-                        {{ likes + ' ' + likesString }}
+                    <span v-if="publication.likes_count">
+                        {{ publication.likes_count + ' ' + likesString }}
                     </span>
                 </div>
                 <div
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
                 >
                     <span
-                        v-if="comment_count"
-                        class="hover:underline"
+                        v-if="publication.comment_count"
+                        class="hover:underline cursor-pointer"
                         @click="showCommentInput = true"
                     >
-                        {{ comment_count + ' ' + commentsString }}
+                        {{ publication.comment_count + ' ' + commentsString }}
                     </span>
                 </div>
             </div>
@@ -35,10 +35,10 @@
                     <div
                         v-if="inShowComponent"
                         class="flex"
-                        :class="[ liked ? 'text-blue-500' : 'text-gray-300 md:text-gray-500' ]"
+                        :class="[ publication.liked ? 'text-blue-500' : 'text-gray-300 md:text-gray-500' ]"
                     >
                         <div class="mr-2">
-                            <svg v-if="liked" style="width:20px;height:20px" viewBox="0 0 24 24">
+                            <svg v-if="publication.liked" style="width:20px;height:20px" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,3.43C15.66,3.33 15.67,3.22 15.67,3.11C15.67,2.7 15.5,2.32 15.23,2.05L14.17,1L7.59,7.58C7.22,7.95 7,8.45 7,9V19A2,2 0 0,0 9,21H18C18.83,21 19.54,20.5 19.84,19.78L22.86,12.73C22.95,12.5 23,12.26 23,12V10M1,21H5V9H1V21Z" />
                             </svg>
                             <svg v-else style="width:20px;height:20px" viewBox="0 0 24 24">
@@ -50,10 +50,10 @@
                     <div
                         v-else
                         class="flex"
-                        :class="[ liked ? 'text-blue-500' : 'text-gray-500' ]"
+                        :class="[ publication.liked ? 'text-blue-500' : 'text-gray-500' ]"
                     >
                         <div class="mr-2">
-                            <svg v-if="liked" style="width:20px;height:20px" viewBox="0 0 24 24">
+                            <svg v-if="publication.liked" style="width:20px;height:20px" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,3.43C15.66,3.33 15.67,3.22 15.67,3.11C15.67,2.7 15.5,2.32 15.23,2.05L14.17,1L7.59,7.58C7.22,7.95 7,8.45 7,9V19A2,2 0 0,0 9,21H18C18.83,21 19.54,20.5 19.84,19.78L22.86,12.73C22.95,12.5 23,12.26 23,12V10M1,21H5V9H1V21Z" />
                             </svg>
                             <svg v-else style="width:20px;height:20px" viewBox="0 0 24 24">
@@ -83,7 +83,7 @@
                 </div>
             </button>
         </div>
-        <publication-comments v-if="showCommentInput" :publication="publication" v-on:update-comment-count="comment_count = $event" />
+        <publication-comments v-if="showCommentInput" :publication="publication" v-on:update-comment-count="publication.comment_count = $event" />
     </div>
 </template>
 
@@ -105,21 +105,17 @@
         },
         data () {
             return {
-                liked: this.publication.liked,
-                likes: this.publication.likes,
-                comment_count: this.publication.comment_count,
                 disabled: false,
-                currentPublication: null,
                 showCommentInput: false
             }
         },
         computed: {
             likesString () {
-                return this.likes > 1 ? 'Likes' : 'Like'
+                return this.publication.likes_count > 1 ? 'Likes' : 'Like'
             },
 
             commentsString () {
-                return this.comment_count > 1 ? 'Comments' : 'Comment'
+                return this.publication.comment_count > 1 ? 'Comments' : 'Comment'
             },
 
             publications () {
@@ -134,43 +130,37 @@
             ]),
             like() {
                 this.disabled = true
-                if (this.liked) {
+                if (this.publication.liked) {
+                    // like publication
+                    this.publication.liked = false
                     axios.post(this.route('publications.unlike'), {
                         user_id: this.$page.props.user.id,
                         publication_id: this.publication.id
                     })
                         .then(response => {
-                            this.liked = false
-                            this.likes = response.data.likes
-                            if (this.publications !== null) {
-                                this.getCurrentPublicationFromStore()
-                                this.currentPublication.liked = false
-                                this.currentPublication.likes = response.data.likes
-                            }
+                            this.publication.likes_count = response.data.likes_count
                             this.disabled = false
                         })
-                        .catch(function (error) {
+                        .catch(error => {
                             console.log(error);
                             this.disabled = false
+                            this.publication.liked = true
                         });
                 } else {
+                    // unlike publication
+                    this.publication.liked = true
                     axios.post(this.route('publications.like'), {
                         user_id: this.$page.props.user.id,
                         publication_id: this.publication.id
                     })
                         .then(response => {
-                            this.liked = true
-                            this.likes = response.data.likes
-                            if (this.publications !== null) {
-                                this.getCurrentPublicationFromStore()
-                                this.currentPublication.liked = true
-                                this.currentPublication.likes = response.data.likes
-                            }
+                            this.publication.likes_count = response.data.likes_count
                             this.disabled = false
                         })
                         .catch(function (error) {
                             console.log(error);
                             this.disabled = false
+                            this.publication.liked = true
                         });
                 }
                 this.setScrollPublications(true)

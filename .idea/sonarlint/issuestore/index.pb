@@ -153,3 +153,9 @@ S
 #app/Http/Resources/UserResource.php,f\6\f6770a192e2fd7fec6853c6fc802aae1effa0302
 W
 'resources/js/Components/RepliesList.vue,4\0\40e7305c02013f984407c253ce070463fbabc353
+Z
+*app/Providers/BroadcastServiceProvider.php,4\8\487aabf55f4492fef38a2c2590a539cbea0535ca
+C
+routes/channels.php,0\b\0bfb6f21972af3f30f6c08e68c4d218c7fa15613
+O
+app/Events/PublicationLiked.php,0\e\0e9cc3ef7d4776db700d024f61e101abaae67e82

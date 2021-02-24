@@ -68,18 +68,16 @@
                 return this.$store.state.lastShowedPublicationId
             }
         },
-        data () {
-            return {
-            }
-        },
         mounted () {
             this.scroll()
+            this.listenForUpdates()
         },
         methods: {
             ...mapActions([
                 'setPublications',
                 'setScrollPublications',
                 'setPublicationsPage',
+                'setPublicationLikes'
             ]),
 
             scroll () {
@@ -119,6 +117,21 @@
                     })
                     .catch(function (error) {
                         console.log(error);
+                    });
+            },
+
+            listenForUpdates () {
+                this.listenForLikes()
+            },
+
+            listenForLikes () {
+                Echo.channel('publications')
+                    .listen('PublicationLiked', (incomingData) => {
+                        let data = {
+                            currentUserId: this.$page.props.user.id,
+                            data: incomingData
+                        }
+                        this.setPublicationLikes(data)
                     });
             },
         }
