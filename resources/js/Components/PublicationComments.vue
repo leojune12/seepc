@@ -143,18 +143,24 @@
                 }
             },
 
+            isNullOrWhiteSpace (str) {
+                return (!str || str.length === 0 || /^\s*$/.test(str))
+            },
+
             saveComment () {
-                axios.post(this.route('publications.comment.store'), {
-                    comment: this.comment,
-                    publication_id: this.publication.id,
-                })
-                    .then(response => {
-                        this.comment = ''
-                        this.addPublicationComment(response)
+                if (!this.isNullOrWhiteSpace(this.comment)) {
+                    axios.post(this.route('publications.comment.store'), {
+                        comment: this.comment,
+                        publication_id: this.publication.id,
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(response => {
+                            this.comment = ''
+                            this.addPublicationComment(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
             },
 
             fetchComments() {

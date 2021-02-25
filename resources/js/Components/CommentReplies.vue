@@ -47,11 +47,12 @@
             v-else
         >
             <replies-list
-                v-for="reply in replies"
+                v-for="reply in comment.replies"
                 :key="reply.id"
                 :reply="reply"
             />
             <div
+                v-if="$page.props.user"
                 class="flex h-9 mt-1"
             >
                 <div class="flex-none mr-2 flex items-center">
@@ -95,6 +96,8 @@
 
 <script>
     import RepliesList from "@/Components/RepliesList";
+    import {mapActions} from 'vuex'
+
     export default {
         name: "CommentReplies",
         components: {
@@ -119,6 +122,11 @@
             this.fetchReplies()
         },
         methods: {
+            ...mapActions([
+                'setPublicationCommentReplies',
+                'addPublicationCommentReply'
+            ]),
+
             getProfilePhoto () {
                 if (this.$page.props.user.profile_photo_path) {
                     return this.ftpUrl + this.$page.props.user.profile_photo_path
@@ -127,19 +135,26 @@
                 }
             },
 
+            isNullOrWhiteSpace (str) {
+                return (!str || str.length === 0 || /^\s*$/.test(str))
+            },
+
             saveReply () {
-                axios.post(this.route('publications.comment.reply.store'), {
-                    reply: this.reply,
-                    comment_id: this.comment.id,
-                })
-                    .then(response => {
-                        this.reply = ''
-                        this.replies.push(response.data.reply)
-                        console.log(response)
+                if (!this.isNullOrWhiteSpace(this.reply)) {
+                    axios.post(this.route('publications.comment.reply.store'), {
+                        reply: this.reply,
+                        comment_id: this.comment.id,
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(response => {
+                            this.reply = ''
+                            //this.replies.push(response.data.reply)
+                            //console.log(response)
+                            this.addPublicationCommentReply(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
             },
 
             fetchReplies() {
@@ -149,8 +164,11 @@
                     })
                         .then(response => {
                             this.showReplyLoader = false
-                            this.replies.push(...response.data.replies)
-                            console.log(response.data.replies)
+                            this.setPublicationCommentReplies({
+                                publication_id: this.comment.publication_id,
+                                comment_id: this.comment.id,
+                                replies: response.data.replies
+                            })
                         })
                         .catch(function (error) {
                             console.log(error);

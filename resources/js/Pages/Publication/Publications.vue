@@ -80,8 +80,8 @@
                 'setScrollPublications',
                 'setPublicationsPage',
                 'setPublicationLikes',
-                'setPublicationComments',
-                'addPublicationComment'
+                'addPublicationComment',
+                'addPublicationCommentReply'
             ]),
 
             scroll () {
@@ -135,6 +135,10 @@
                     })
                     .listen('PublicationCommentAdded', (incomingData) => {
                         this.addPublicationComment(incomingData)
+                    })
+                    .listen('PublicationCommentReplyAdded', (incomingData) => {
+                        console.log(incomingData)
+                        this.addPublicationCommentReply(incomingData)
                     })
             },
         },

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\PublicationCommentAdded;
+use App\Events\PublicationCommentReplyAdded;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\ReplyResource;
 use App\Models\Publication\Comment;
 use App\Models\Publication\Publication;
 use Illuminate\Http\Request;
@@ -35,21 +37,15 @@ class CommentController extends Controller
 
         $publication->comments()->save($comment);
 
-        //Log::debug($comment);
-
         $data = [
             'publication_id' => $publication->id,
-            'comment' => $comment,
+            'comment' => new CommentResource($comment),
             'comments_count' => count($publication->comments)
         ];
 
         broadcast(new PublicationCommentAdded($data))->toOthers();
 
-        return response()->json([
-            'publication_id' => $publication->id,
-            'comment' => $comment,
-            'comments_count' => count($publication->comments)
-        ]);
+        return response()->json($data);
     }
 
     /**
@@ -74,9 +70,16 @@ class CommentController extends Controller
 
         $comment->replies()->save($reply);
 
-        return response()->json([
-            'reply' => $reply
-        ]);
+        $data = [
+            'publication_id' => $comment->commentable_id,
+            'comment_id' => $comment->id,
+            'reply' => new ReplyResource($reply),
+            'replies_count' => count($comment->replies)
+        ];
+
+        broadcast(new PublicationCommentReplyAdded($data))->toOthers();
+
+        return response()->json($data);
     }
 
     /**
@@ -100,7 +103,7 @@ class CommentController extends Controller
      */
     public function show_replies(Request $request)
     {
-        $replies = CommentResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Comment')->where('commentable_id', $request->comment_id)->with(['user', 'replies'])->get());
+        $replies = ReplyResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Comment')->where('commentable_id', $request->comment_id)->with(['user'])->get());
 
         return response()->json([
             'replies' => $replies

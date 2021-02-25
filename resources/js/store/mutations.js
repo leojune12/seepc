@@ -15,6 +15,14 @@ let mutations = {
         state.publicationsPage = payload
     },
 
+    setPublicationShowMutation (state, payload) {
+        state.publicationShow = payload
+    },
+
+    setLoginMessageMutation (state, payload) {
+        state.loginMessage = payload
+    },
+
     setPublicationLikesMutation (state, payload) {
         let currentPublication = null
 
@@ -71,13 +79,61 @@ let mutations = {
         }
     },
 
-    setPublicationShowMutation (state, payload) {
-        state.publicationShow = payload
+    setPublicationCommentRepliesMutation (state, payload) {
+
+        let currentPublication = null
+        let currentComment = null
+
+        if (state.publications.length) {
+            const index = state.publications.findIndex(publication => publication.id === payload.publication_id)
+
+            currentPublication = state.publications[index]
+        } else {
+            currentPublication = state.publicationShow
+        }
+
+        // check if publication is already loaded
+        if (currentPublication !== undefined) {
+
+            const index = currentPublication.comments.findIndex(comment =>comment.id === payload.comment_id)
+
+            currentComment = currentPublication.comments[index]
+
+            if (currentComment !== undefined) {
+                currentComment.replies = payload.replies
+            }
+        }
     },
 
-    setLoginMessageMutation (state, payload) {
-        state.loginMessage = payload
-    }
+    addPublicationCommentReplyMutation (state, payload) {
+
+        console.log(payload)
+
+        let currentPublication = null
+        let currentComment = null
+
+        if (state.publications.length) {
+            const index = state.publications.findIndex(publication => publication.id === payload.data.publication_id)
+
+            currentPublication = state.publications[index]
+        } else {
+            currentPublication = state.publicationShow
+        }
+
+        // check if publication is already loaded
+        if (currentPublication !== undefined) {
+
+            const index = currentPublication.comments.findIndex(comment =>comment.id === payload.data.comment_id)
+
+            currentComment = currentPublication.comments[index]
+
+            if (currentComment !== undefined) {
+                currentComment.replies.push(payload.data.reply)
+                currentComment.replies_count = payload.data.replies_count
+            }
+        }
+    },
+
 }
 
 export default mutations

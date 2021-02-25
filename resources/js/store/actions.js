@@ -33,6 +33,14 @@ let actions = {
 
     setLoginMessage ({commit}, payload) {
         commit('setLoginMessageMutation', payload)
+    },
+
+    setPublicationCommentReplies ({commit}, payload) {
+        commit('setPublicationCommentRepliesMutation', payload)
+    },
+
+    addPublicationCommentReply ({commit}, payload) {
+        commit('addPublicationCommentReplyMutation', payload)
     }
 }
 

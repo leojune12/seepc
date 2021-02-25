@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Publication\Comment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommentResource extends JsonResource
+class ReplyResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +16,9 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
             'user' => $this->user,
-            'comment' => $this->comment,
-            'replies' => [],
-            'replies_count' => count($this->replies),
-            'publication_id' => $this->commentable_id,
-            'created_at' => $this->created_at,
+            'reply' => $this->comment,
+            'created_at' => $this->created_at
         ];
     }
 }

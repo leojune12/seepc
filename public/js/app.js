@@ -1882,17 +1882,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_RepliesList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/RepliesList */ "./resources/js/Components/RepliesList.vue");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
 //
@@ -1989,6 +1984,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CommentReplies",
@@ -2011,7 +2008,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   mounted: function mounted() {
     this.fetchReplies();
   },
-  methods: {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['setPublicationCommentReplies', 'addPublicationCommentReply'])), {}, {
     getProfilePhoto: function getProfilePhoto() {
       if (this.$page.props.user.profile_photo_path) {
         return this.ftpUrl + this.$page.props.user.profile_photo_path;
@@ -2019,21 +2016,25 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         return this.$page.props.user.profile_photo_url;
       }
     },
+    isNullOrWhiteSpace: function isNullOrWhiteSpace(str) {
+      return !str || str.length === 0 || /^\s*$/.test(str);
+    },
     saveReply: function saveReply() {
       var _this = this;
 
-      axios.post(this.route('publications.comment.reply.store'), {
-        reply: this.reply,
-        comment_id: this.comment.id
-      }).then(function (response) {
-        _this.reply = '';
+      if (!this.isNullOrWhiteSpace(this.reply)) {
+        axios.post(this.route('publications.comment.reply.store'), {
+          reply: this.reply,
+          comment_id: this.comment.id
+        }).then(function (response) {
+          _this.reply = ''; //this.replies.push(response.data.reply)
+          //console.log(response)
 
-        _this.replies.push(response.data.reply);
-
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+          _this.addPublicationCommentReply(response);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     },
     fetchReplies: function fetchReplies() {
       var _this2 = this;
@@ -2042,13 +2043,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         axios.post(this.route('publications.comment.reply.show'), {
           comment_id: this.comment.id
         }).then(function (response) {
-          var _this2$replies;
-
           _this2.showReplyLoader = false;
 
-          (_this2$replies = _this2.replies).push.apply(_this2$replies, _toConsumableArray(response.data.replies));
-
-          console.log(response.data.replies);
+          _this2.setPublicationCommentReplies({
+            publication_id: _this2.comment.publication_id,
+            comment_id: _this2.comment.id,
+            replies: response.data.replies
+          });
         })["catch"](function (error) {
           console.log(error);
         });
@@ -2056,7 +2057,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         this.showReplyLoader = false;
       }
     }
-  }
+  })
 });
 
 /***/ }),
@@ -2666,19 +2667,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return this.$page.props.user.profile_photo_url;
       }
     },
+    isNullOrWhiteSpace: function isNullOrWhiteSpace(str) {
+      return !str || str.length === 0 || /^\s*$/.test(str);
+    },
     saveComment: function saveComment() {
       var _this = this;
 
-      axios.post(this.route('publications.comment.store'), {
-        comment: this.comment,
-        publication_id: this.publication.id
-      }).then(function (response) {
-        _this.comment = '';
+      if (!this.isNullOrWhiteSpace(this.comment)) {
+        axios.post(this.route('publications.comment.store'), {
+          comment: this.comment,
+          publication_id: this.publication.id
+        }).then(function (response) {
+          _this.comment = '';
 
-        _this.addPublicationComment(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+          _this.addPublicationComment(response);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
     },
     fetchComments: function fetchComments() {
       var _this2 = this;
@@ -6695,7 +6701,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.scroll();
     this.listenForUpdates();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes', 'setPublicationComments', 'addPublicationComment'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply'])), {}, {
     scroll: function scroll() {
       var _this = this;
 
@@ -6752,6 +6758,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this3.setPublicationLikes(data);
       }).listen('PublicationCommentAdded', function (incomingData) {
         _this3.addPublicationComment(incomingData);
+      }).listen('PublicationCommentReplyAdded', function (incomingData) {
+        console.log(incomingData);
+
+        _this3.addPublicationCommentReply(incomingData);
       });
     }
   }),
@@ -7255,6 +7265,14 @@ var actions = {
   setLoginMessage: function setLoginMessage(_ref9, payload) {
     var commit = _ref9.commit;
     commit('setLoginMessageMutation', payload);
+  },
+  setPublicationCommentReplies: function setPublicationCommentReplies(_ref10, payload) {
+    var commit = _ref10.commit;
+    commit('setPublicationCommentRepliesMutation', payload);
+  },
+  addPublicationCommentReply: function addPublicationCommentReply(_ref11, payload) {
+    var commit = _ref11.commit;
+    commit('addPublicationCommentReplyMutation', payload);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -7335,6 +7353,12 @@ var mutations = {
   setPublicationsPageMutation: function setPublicationsPageMutation(state, payload) {
     state.publicationsPage = payload;
   },
+  setPublicationShowMutation: function setPublicationShowMutation(state, payload) {
+    state.publicationShow = payload;
+  },
+  setLoginMessageMutation: function setLoginMessageMutation(state, payload) {
+    state.loginMessage = payload;
+  },
   setPublicationLikesMutation: function setPublicationLikesMutation(state, payload) {
     var currentPublication = null;
 
@@ -7391,11 +7415,59 @@ var mutations = {
       currentPublication.comments_count = payload.data.comments_count;
     }
   },
-  setPublicationShowMutation: function setPublicationShowMutation(state, payload) {
-    state.publicationShow = payload;
+  setPublicationCommentRepliesMutation: function setPublicationCommentRepliesMutation(state, payload) {
+    var currentPublication = null;
+    var currentComment = null;
+
+    if (state.publications.length) {
+      var index = state.publications.findIndex(function (publication) {
+        return publication.id === payload.publication_id;
+      });
+      currentPublication = state.publications[index];
+    } else {
+      currentPublication = state.publicationShow;
+    } // check if publication is already loaded
+
+
+    if (currentPublication !== undefined) {
+      var _index = currentPublication.comments.findIndex(function (comment) {
+        return comment.id === payload.comment_id;
+      });
+
+      currentComment = currentPublication.comments[_index];
+
+      if (currentComment !== undefined) {
+        currentComment.replies = payload.replies;
+      }
+    }
   },
-  setLoginMessageMutation: function setLoginMessageMutation(state, payload) {
-    state.loginMessage = payload;
+  addPublicationCommentReplyMutation: function addPublicationCommentReplyMutation(state, payload) {
+    console.log(payload);
+    var currentPublication = null;
+    var currentComment = null;
+
+    if (state.publications.length) {
+      var index = state.publications.findIndex(function (publication) {
+        return publication.id === payload.data.publication_id;
+      });
+      currentPublication = state.publications[index];
+    } else {
+      currentPublication = state.publicationShow;
+    } // check if publication is already loaded
+
+
+    if (currentPublication !== undefined) {
+      var _index2 = currentPublication.comments.findIndex(function (comment) {
+        return comment.id === payload.data.comment_id;
+      });
+
+      currentComment = currentPublication.comments[_index2];
+
+      if (currentComment !== undefined) {
+        currentComment.replies.push(payload.data.reply);
+        currentComment.replies_count = payload.data.replies_count;
+      }
+    }
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -39020,103 +39092,115 @@ var render = function() {
       : _c(
           "div",
           [
-            _vm._l(_vm.replies, function(reply) {
+            _vm._l(_vm.comment.replies, function(reply) {
               return _c("replies-list", {
                 key: reply.id,
                 attrs: { reply: reply }
               })
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "flex h-9 mt-1" }, [
-              _c("div", { staticClass: "flex-none mr-2 flex items-center" }, [
-                _c("img", {
-                  staticClass:
-                    "w-7 h-7 rounded-full object-cover border border-gray-300",
-                  attrs: { src: _vm.getProfilePhoto(), alt: "profile photo" }
-                })
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "flex-1 bg-gray-100 rounded-2xl flex items-center"
-                },
-                [
-                  _c("div", { staticClass: "flex-1" }, [
-                    _c(
-                      "form",
-                      {
-                        on: {
-                          submit: function($event) {
-                            $event.preventDefault()
-                            return _vm.saveReply($event)
-                          }
+            _vm.$page.props.user
+              ? _c("div", { staticClass: "flex h-9 mt-1" }, [
+                  _c(
+                    "div",
+                    { staticClass: "flex-none mr-2 flex items-center" },
+                    [
+                      _c("img", {
+                        staticClass:
+                          "w-7 h-7 rounded-full object-cover border border-gray-300",
+                        attrs: {
+                          src: _vm.getProfilePhoto(),
+                          alt: "profile photo"
                         }
-                      },
-                      [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.reply,
-                              expression: "reply"
-                            }
-                          ],
-                          staticClass:
-                            "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
-                          attrs: { type: "text", placeholder: "Reply..." },
-                          domProps: { value: _vm.reply },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.reply = $event.target.value
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]),
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
                   _c(
                     "div",
                     {
                       staticClass:
-                        "flex-none text-blue-500 pr-3 md:hidden block"
+                        "flex-1 bg-gray-100 rounded-2xl flex items-center"
                     },
                     [
+                      _c("div", { staticClass: "flex-1" }, [
+                        _c(
+                          "form",
+                          {
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.saveReply($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.reply,
+                                  expression: "reply"
+                                }
+                              ],
+                              staticClass:
+                                "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
+                              attrs: { type: "text", placeholder: "Reply..." },
+                              domProps: { value: _vm.reply },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.reply = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
                       _c(
-                        "span",
+                        "div",
                         {
-                          staticClass: "cursor-pointer",
-                          on: { click: _vm.saveReply }
+                          staticClass:
+                            "flex-none text-blue-500 pr-3 md:hidden block"
                         },
                         [
                           _c(
-                            "svg",
+                            "span",
                             {
-                              staticStyle: { width: "24px", height: "24px" },
-                              attrs: { viewBox: "0 0 24 24" }
+                              staticClass: "cursor-pointer",
+                              on: { click: _vm.saveReply }
                             },
                             [
-                              _c("path", {
-                                attrs: {
-                                  fill: "currentColor",
-                                  d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
-                                }
-                              })
+                              _c(
+                                "svg",
+                                {
+                                  staticStyle: {
+                                    width: "24px",
+                                    height: "24px"
+                                  },
+                                  attrs: { viewBox: "0 0 24 24" }
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      fill: "currentColor",
+                                      d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                                    }
+                                  })
+                                ]
+                              )
                             ]
                           )
                         ]
                       )
                     ]
                   )
-                ]
-              )
-            ])
+                ])
+              : _vm._e()
           ],
           2
         )
@@ -40234,7 +40318,7 @@ var render = function() {
             _c("div", { staticClass: "text-sm" }, [
               _vm._v(
                 "\n                    " +
-                  _vm._s(_vm.reply.comment) +
+                  _vm._s(_vm.reply.reply) +
                   "\n                "
               )
             ])

@@ -21,7 +21,7 @@
                         {{ reply.user.name }}
                     </div>
                     <div class="text-sm">
-                        {{ reply.comment }}
+                        {{ reply.reply }}
                     </div>
                 </div>
             </div>
