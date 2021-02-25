@@ -30,7 +30,7 @@ let mutations = {
         if (currentPublication !== undefined) {
             currentPublication.likes_count = payload.data.likes_count
 
-            if (payload.data.current_user_id === payload.currentUserId) {
+            if (payload.data.currentUserId && payload.data.current_user_id === payload.currentUserId) {
                 currentPublication.liked = payload.data.liked
             }
         }
@@ -73,6 +73,10 @@ let mutations = {
 
     setPublicationShowMutation (state, payload) {
         state.publicationShow = payload
+    },
+
+    setLoginMessageMutation (state, payload) {
+        state.loginMessage = payload
     }
 }
 

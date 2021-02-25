@@ -29,6 +29,10 @@ let actions = {
 
     setPublicationShow ({commit}, payload) {
         commit('setPublicationShowMutation', payload)
+    },
+
+    setLoginMessage ({commit}, payload) {
+        commit('setLoginMessageMutation', payload)
     }
 }
 

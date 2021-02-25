@@ -52,6 +52,11 @@
 
             <jet-validation-errors class="mb-4" />
 
+            <info-message
+                v-if="loginMessage"
+                :message="loginMessage"
+            />
+
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                 {{ status }}
             </div>
@@ -150,6 +155,8 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import { mapActions } from 'vuex'
+    import InfoMessage from "@/Components/InfoMessage"
 
     export default {
         components: {
@@ -159,12 +166,19 @@
             JetInput,
             JetCheckbox,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            InfoMessage
         },
 
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: String,
+        },
+
+        computed: {
+            loginMessage () {
+                return this.$store.state.loginMessage
+            }
         },
 
         data() {
@@ -178,6 +192,10 @@
         },
 
         methods: {
+            ...mapActions([
+                'setLoginMessage'
+            ]),
+
             submit() {
                 this.form
                     .transform(data => ({
@@ -187,6 +205,12 @@
                     .post(this.route('login'), {
                         onFinish: () => this.form.reset('password'),
                     })
+            }
+        },
+
+        beforeDestroy() {
+            if (this.loginMessage) {
+                this.setLoginMessage(null)
             }
         }
     }

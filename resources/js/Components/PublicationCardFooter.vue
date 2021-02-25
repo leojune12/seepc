@@ -129,44 +129,50 @@
         },
         methods: {
             ...mapActions([
-                'setScrollPublications'
+                'setScrollPublications',
+                'setLoginMessage'
             ]),
             like() {
                 this.disabled = true
-                if (this.publication.liked) {
-                    // like publication
-                    this.publication.liked = false
-                    axios.post(this.route('publications.unlike'), {
-                        user_id: this.$page.props.user.id,
-                        publication_id: this.publication.id
-                    })
-                        .then(response => {
-                            this.publication.likes_count = response.data.likes_count
-                            this.disabled = false
-                        })
-                        .catch(error => {
-                            console.log(error);
-                            this.disabled = false
-                            this.publication.liked = true
-                        });
+                if (!this.$page.props.user) {
+                    this.setLoginMessage('You must sign in to perform this action.')
+                    this.$inertia.get(route('login'))
                 } else {
-                    // unlike publication
-                    this.publication.liked = true
-                    axios.post(this.route('publications.like'), {
-                        user_id: this.$page.props.user.id,
-                        publication_id: this.publication.id
-                    })
-                        .then(response => {
-                            this.publication.likes_count = response.data.likes_count
-                            this.disabled = false
+                    if (this.publication.liked) {
+                        // like publication
+                        this.publication.liked = false
+                        axios.post(this.route('publications.unlike'), {
+                            user_id: this.$page.props.user.id,
+                            publication_id: this.publication.id
                         })
-                        .catch(function (error) {
-                            console.log(error);
-                            this.disabled = false
-                            this.publication.liked = true
-                        });
+                            .then(response => {
+                                this.publication.likes_count = response.data.likes_count
+                                this.disabled = false
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                this.disabled = false
+                                this.publication.liked = true
+                            });
+                    } else {
+                        // unlike publication
+                        this.publication.liked = true
+                        axios.post(this.route('publications.like'), {
+                            user_id: this.$page.props.user.id,
+                            publication_id: this.publication.id
+                        })
+                            .then(response => {
+                                this.publication.likes_count = response.data.likes_count
+                                this.disabled = false
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                                this.disabled = false
+                                this.publication.liked = true
+                            });
+                    }
+                    this.setScrollPublications(true)
                 }
-                this.setScrollPublications(true)
             },
         },
     }
