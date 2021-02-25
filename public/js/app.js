@@ -2400,6 +2400,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2425,7 +2428,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.publication.likes_count > 1 ? 'Likes' : 'Like';
     },
     commentsString: function commentsString() {
-      return this.publication.comment_count > 1 ? 'Comments' : 'Comment';
+      return this.publication.comments_count > 1 ? 'Comments' : 'Comment';
     },
     publications: function publications() {
       return this.$store.state.publications;
@@ -2469,12 +2472,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.setScrollPublications(true);
-    },
-    getCurrentPublicationFromStore: function getCurrentPublicationFromStore() {
-      var vm = this;
-      this.currentPublication = this.publications.filter(function (publication) {
-        return publication.id === vm.publication.id;
-      })[0];
     }
   })
 });
@@ -2493,17 +2490,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_CommentsList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/CommentsList */ "./resources/js/Components/CommentsList.vue");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
 //
@@ -2602,6 +2594,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PublicationComments",
@@ -2632,7 +2625,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   mounted: function mounted() {
     this.fetchComments();
   },
-  methods: {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['setPublicationComments', 'addPublicationComment'])), {}, {
     getProfilePhoto: function getProfilePhoto() {
       if (this.$page.props.user.profile_photo_path) {
         return this.ftpUrl + this.$page.props.user.profile_photo_path;
@@ -2644,17 +2637,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var _this = this;
 
       axios.post(this.route('publications.comment.store'), {
-        user_id: this.$page.props.user.id,
         comment: this.comment,
         publication_id: this.publication.id
       }).then(function (response) {
         _this.comment = '';
 
-        _this.$emit('update-comment-count', response.data.comment_count);
-
-        _this.comments.unshift(response.data.comment);
-
-        console.log(response);
+        _this.addPublicationComment(response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2662,27 +2650,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     fetchComments: function fetchComments() {
       var _this2 = this;
 
-      this.showCommentLoader = true;
-      axios.post(this.route('publications.comment.show'), {
-        //page: this.publication.comment_page,
-        publication_id: this.publication.id
-      }).then(function (response) {
-        _this2.showCommentLoader = false;
-        _this2.showCommentInput = true;
-        console.log(response);
+      if (this.publication.comments_count) {
+        this.showCommentLoader = true;
+        axios.post(this.route('publications.comment.show'), {
+          publication_id: this.publication.id
+        }).then(function (response) {
+          _this2.showCommentLoader = false;
+          _this2.showCommentInput = true;
+          var data = {
+            publication_id: _this2.publication.id,
+            comments: response.data.comments
+          };
 
-        if (response.data.comments) {
-          var _this2$comments;
-
-          _this2.publication.comment_page++;
-
-          (_this2$comments = _this2.comments).push.apply(_this2$comments, _toConsumableArray(response.data.comments));
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
+          _this2.setPublicationComments(data);
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } else {
+        this.showCommentInput = true;
+      }
     }
-  }
+  })
 });
 
 /***/ }),
@@ -6654,7 +6642,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.scroll();
     this.listenForUpdates();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes', 'setPublicationComments', 'addPublicationComment'])), {}, {
     scroll: function scroll() {
       var _this = this;
 
@@ -6700,21 +6688,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     listenForUpdates: function listenForUpdates() {
-      this.listenForLikes();
-    },
-    listenForLikes: function listenForLikes() {
       var _this3 = this;
 
       Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
+        console.log(incomingData);
         var data = {
           currentUserId: _this3.$page.props.user.id,
           data: incomingData
         };
 
         _this3.setPublicationLikes(data);
+      }).listen('PublicationCommentAdded', function (incomingData) {
+        _this3.addPublicationComment(incomingData);
       });
     }
-  })
+  }),
+  beforeDestroy: function beforeDestroy() {
+    Echo.leaveChannel('publications');
+  }
 });
 
 /***/ }),
@@ -6838,7 +6829,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this3.setPublicationLikes(data);
       });
     }
-  })
+  }),
+  beforeDestroy: function beforeDestroy() {
+    Echo.leaveChannel('publications');
+  }
 });
 
 /***/ }),
@@ -7188,14 +7182,22 @@ var actions = {
   },
   setPublicationsPage: function setPublicationsPage(_ref4, payload) {
     var commit = _ref4.commit;
-    commit('setpublicationsPageMutation', payload);
+    commit('setPublicationsPageMutation', payload);
   },
   setPublicationLikes: function setPublicationLikes(_ref5, payload) {
     var commit = _ref5.commit;
     commit('setPublicationLikesMutation', payload);
   },
-  setPublicationShow: function setPublicationShow(_ref6, payload) {
+  setPublicationComments: function setPublicationComments(_ref6, payload) {
     var commit = _ref6.commit;
+    commit('setPublicationCommentsMutation', payload);
+  },
+  addPublicationComment: function addPublicationComment(_ref7, payload) {
+    var commit = _ref7.commit;
+    commit('addPublicationCommentMutation', payload);
+  },
+  setPublicationShow: function setPublicationShow(_ref8, payload) {
+    var commit = _ref8.commit;
     commit('setPublicationShowMutation', payload);
   }
 };
@@ -7274,7 +7276,7 @@ var mutations = {
   setScrollPublicationsMutation: function setScrollPublicationsMutation(state, payload) {
     state.scrollPublications = payload;
   },
-  setpublicationsPageMutation: function setpublicationsPageMutation(state, payload) {
+  setPublicationsPageMutation: function setPublicationsPageMutation(state, payload) {
     state.publicationsPage = payload;
   },
   setPublicationLikesMutation: function setPublicationLikesMutation(state, payload) {
@@ -7296,6 +7298,41 @@ var mutations = {
       if (payload.data.current_user_id === payload.currentUserId) {
         currentPublication.liked = payload.data.liked;
       }
+    }
+  },
+  setPublicationCommentsMutation: function setPublicationCommentsMutation(state, payload) {
+    var currentPublication = null;
+
+    if (state.publications.length) {
+      var index = state.publications.findIndex(function (publication) {
+        return publication.id === payload.publication_id;
+      });
+      currentPublication = state.publications[index];
+    } else {
+      currentPublication = state.publicationShow;
+    } // check if publication is already loaded
+
+
+    if (currentPublication !== undefined) {
+      currentPublication.comments = payload.comments;
+    }
+  },
+  addPublicationCommentMutation: function addPublicationCommentMutation(state, payload) {
+    var currentPublication = null;
+
+    if (state.publications.length) {
+      var index = state.publications.findIndex(function (publication) {
+        return publication.id === payload.data.publication_id;
+      });
+      currentPublication = state.publications[index];
+    } else {
+      currentPublication = state.publicationShow;
+    } // check if publication is already loaded
+
+
+    if (currentPublication !== undefined) {
+      currentPublication.comments.unshift(payload.data.comment);
+      currentPublication.comments_count = payload.data.comments_count;
     }
   },
   setPublicationShowMutation: function setPublicationShowMutation(state, payload) {
@@ -39211,7 +39248,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.publication.likes_count || _vm.publication.comment_count
+      _vm.publication.likes_count || _vm.publication.comments_count
         ? _c("div", [
             _c(
               "div",
@@ -39255,7 +39292,7 @@ var render = function() {
                     ]
                   },
                   [
-                    _vm.publication.comment_count
+                    _vm.publication.comments_count
                       ? _c(
                           "span",
                           {
@@ -39270,7 +39307,7 @@ var render = function() {
                             _vm._v(
                               "\n                    " +
                                 _vm._s(
-                                  _vm.publication.comment_count +
+                                  _vm.publication.comments_count +
                                     " " +
                                     _vm.commentsString
                                 ) +
@@ -39478,12 +39515,7 @@ var render = function() {
       _vm._v(" "),
       _vm.showCommentInput
         ? _c("publication-comments", {
-            attrs: { publication: _vm.publication },
-            on: {
-              "update-comment-count": function($event) {
-                _vm.publication.comment_count = $event
-              }
-            }
+            attrs: { publication: _vm.publication }
           })
         : _vm._e()
     ],
@@ -39524,7 +39556,7 @@ var render = function() {
     _c("div", { staticClass: "border-t border-gray-300" }),
     _vm._v(" "),
     _c("div", { staticClass: "py-3" }, [
-      _vm.showCommentInput
+      _vm.showCommentInput && _vm.$page.props.user
         ? _c("div", { staticClass: "flex h-9" }, [
             _c("div", { staticClass: "flex-none mr-2" }, [
               _c("img", {
@@ -39619,7 +39651,7 @@ var render = function() {
         "div",
         { staticClass: "mt-2" },
         [
-          _vm._l(_vm.comments, function(comment) {
+          _vm._l(_vm.publication.comments, function(comment) {
             return _c("comments-list", {
               key: comment.id,
               attrs: { comment: comment }

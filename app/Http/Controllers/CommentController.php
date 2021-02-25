@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PublicationCommentAdded;
 use App\Http\Resources\CommentResource;
 use App\Models\Publication\Comment;
 use App\Models\Publication\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
@@ -33,9 +35,20 @@ class CommentController extends Controller
 
         $publication->comments()->save($comment);
 
+        //Log::debug($comment);
+
+        $data = [
+            'publication_id' => $publication->id,
+            'comment' => $comment,
+            'comments_count' => count($publication->comments)
+        ];
+
+        broadcast(new PublicationCommentAdded($data))->toOthers();
+
         return response()->json([
-            'comment_count' => count($publication->comments),
-            'comment' => $comment
+            'publication_id' => $publication->id,
+            'comment' => $comment,
+            'comments_count' => count($publication->comments)
         ]);
     }
 
@@ -76,7 +89,6 @@ class CommentController extends Controller
         $comments = CommentResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->with(['user', 'replies'])->orderByDesc('created_at')->get());
 
         return response()->json([
-            //'comments' => CommentResource::collection($publication->comments->sortByDesc('created_at'))
             'comments' => $comments
         ]);
     }

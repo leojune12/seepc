@@ -104,6 +104,9 @@
                     });
             },
         },
+        beforeDestroy() {
+            Echo.leaveChannel('publications')
+        }
     }
 </script>
 

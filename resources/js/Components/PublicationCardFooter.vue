@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="publication.likes_count || publication.comment_count">
+        <div v-if="publication.likes_count || publication.comments_count">
             <div class="py-2 md:text-normal text-sm flex justify-between">
                 <div
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
@@ -13,11 +13,11 @@
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
                 >
                     <span
-                        v-if="publication.comment_count"
+                        v-if="publication.comments_count"
                         class="hover:underline cursor-pointer"
                         @click="showCommentInput = true"
                     >
-                        {{ publication.comment_count + ' ' + commentsString }}
+                        {{ publication.comments_count + ' ' + commentsString }}
                     </span>
                 </div>
             </div>
@@ -83,7 +83,10 @@
                 </div>
             </button>
         </div>
-        <publication-comments v-if="showCommentInput" :publication="publication" v-on:update-comment-count="publication.comment_count = $event" />
+        <publication-comments
+            v-if="showCommentInput"
+            :publication="publication"
+        />
     </div>
 </template>
 
@@ -115,7 +118,7 @@
             },
 
             commentsString () {
-                return this.publication.comment_count > 1 ? 'Comments' : 'Comment'
+                return this.publication.comments_count > 1 ? 'Comments' : 'Comment'
             },
 
             publications () {
@@ -165,14 +168,6 @@
                 }
                 this.setScrollPublications(true)
             },
-
-            getCurrentPublicationFromStore () {
-                let vm = this
-                this.currentPublication = this.publications.filter(function(publication)
-                {
-                    return publication.id === vm.publication.id
-                })[0]
-            }
         },
     }
 </script>

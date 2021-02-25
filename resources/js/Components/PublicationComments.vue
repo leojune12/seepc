@@ -3,7 +3,7 @@
         <div class="border-t border-gray-300"></div>
         <div class="py-3">
             <div
-                v-if="showCommentInput"
+                v-if="showCommentInput && $page.props.user"
                 class="flex h-9"
             >
                 <div class="flex-none mr-2">
@@ -43,7 +43,7 @@
             </div>
             <div class="mt-2">
                 <comments-list
-                    v-for="comment in comments"
+                    v-for="comment in publication.comments"
                     :key="comment.id"
                     :comment="comment"
                 />
@@ -97,6 +97,7 @@
 
 <script>
     import CommentsList from "@/Components/CommentsList";
+    import {mapActions} from 'vuex'
 
     export default {
         name: "PublicationComments",
@@ -129,6 +130,11 @@
             this.fetchComments()
         },
         methods: {
+            ...mapActions([
+                'setPublicationComments',
+                'addPublicationComment'
+            ]),
+
             getProfilePhoto () {
                 if (this.$page.props.user.profile_photo_path) {
                     return this.ftpUrl + this.$page.props.user.profile_photo_path
@@ -139,15 +145,12 @@
 
             saveComment () {
                 axios.post(this.route('publications.comment.store'), {
-                    user_id: this.$page.props.user.id,
                     comment: this.comment,
                     publication_id: this.publication.id,
                 })
                     .then(response => {
                         this.comment = ''
-                        this.$emit('update-comment-count', response.data.comment_count)
-                        this.comments.unshift(response.data.comment)
-                        console.log(response)
+                        this.addPublicationComment(response)
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -155,23 +158,30 @@
             },
 
             fetchComments() {
-                this.showCommentLoader = true
-                axios.post(this.route('publications.comment.show'), {
-                    //page: this.publication.comment_page,
-                    publication_id: this.publication.id
-                })
-                    .then(response => {
-                        this.showCommentLoader = false
-                        this.showCommentInput = true
-                        console.log(response)
-                        if (response.data.comments) {
-                            this.publication.comment_page++
-                            this.comments.push(...response.data.comments)
-                        }
+                if (this.publication.comments_count) {
+
+                    this.showCommentLoader = true
+
+                    axios.post(this.route('publications.comment.show'), {
+                        publication_id: this.publication.id
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(response => {
+                            this.showCommentLoader = false
+                            this.showCommentInput = true
+
+                            let data = {
+                                publication_id: this.publication.id,
+                                comments: response.data.comments
+                            }
+                            this.setPublicationComments(data)
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                } else {
+                    this.showCommentInput = true
+                }
             },
         }
     }

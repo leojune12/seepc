@@ -11,7 +11,7 @@ let mutations = {
         state.scrollPublications = payload
     },
 
-    setpublicationsPageMutation (state, payload) {
+    setPublicationsPageMutation (state, payload) {
         state.publicationsPage = payload
     },
 
@@ -33,6 +33,41 @@ let mutations = {
             if (payload.data.current_user_id === payload.currentUserId) {
                 currentPublication.liked = payload.data.liked
             }
+        }
+    },
+
+    setPublicationCommentsMutation (state, payload) {
+        let currentPublication = null
+
+        if (state.publications.length) {
+            const index = state.publications.findIndex(publication => publication.id === payload.publication_id)
+
+            currentPublication = state.publications[index]
+        } else {
+            currentPublication = state.publicationShow
+        }
+
+        // check if publication is already loaded
+        if (currentPublication !== undefined) {
+            currentPublication.comments = payload.comments
+        }
+    },
+
+    addPublicationCommentMutation (state, payload) {
+        let currentPublication = null
+
+        if (state.publications.length) {
+            const index = state.publications.findIndex(publication => publication.id === payload.data.publication_id)
+
+            currentPublication = state.publications[index]
+        } else {
+            currentPublication = state.publicationShow
+        }
+
+        // check if publication is already loaded
+        if (currentPublication !== undefined) {
+            currentPublication.comments.unshift(payload.data.comment)
+            currentPublication.comments_count = payload.data.comments_count
         }
     },
 

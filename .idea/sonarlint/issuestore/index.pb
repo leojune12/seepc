@@ -159,3 +159,7 @@ C
 routes/channels.php,0\b\0bfb6f21972af3f30f6c08e68c4d218c7fa15613
 O
 app/Events/PublicationLiked.php,0\e\0e9cc3ef7d4776db700d024f61e101abaae67e82
+>
+routes/api.php,b\3\b337d07ab0e7d54bf5547a0321a43ecafbd73ec1
+V
+&app/Events/PublicationCommentAdded.php,9\b\9b562745f94b0317845be1e1b2721cd62f8cb3d0

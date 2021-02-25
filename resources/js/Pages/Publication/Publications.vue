@@ -68,16 +68,20 @@
                 return this.$store.state.lastShowedPublicationId
             }
         },
+
         mounted () {
             this.scroll()
             this.listenForUpdates()
         },
+
         methods: {
             ...mapActions([
                 'setPublications',
                 'setScrollPublications',
                 'setPublicationsPage',
-                'setPublicationLikes'
+                'setPublicationLikes',
+                'setPublicationComments',
+                'addPublicationComment'
             ]),
 
             scroll () {
@@ -121,19 +125,23 @@
             },
 
             listenForUpdates () {
-                this.listenForLikes()
-            },
-
-            listenForLikes () {
                 Echo.channel('publications')
                     .listen('PublicationLiked', (incomingData) => {
+                        console.log(incomingData)
                         let data = {
                             currentUserId: this.$page.props.user.id,
                             data: incomingData
                         }
                         this.setPublicationLikes(data)
-                    });
+                    })
+                    .listen('PublicationCommentAdded', (incomingData) => {
+                        this.addPublicationComment(incomingData)
+                    })
             },
+        },
+
+        beforeDestroy() {
+            Echo.leaveChannel('publications')
         }
     }
 </script>

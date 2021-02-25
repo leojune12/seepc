@@ -141,12 +141,12 @@ class PublicationController extends Controller
         }
 
         return response()->json([
-            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes', 'comments'])->orderByDesc('created_at')->simplePaginate(5)),
+            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5)),
         ]);
     }
 
     /**
-     *
+     *Like publication
      */
     public function like(Request $request)
     {
@@ -174,7 +174,7 @@ class PublicationController extends Controller
     }
 
     /**
-     *
+     *Unlike publication
      */
     public function unlike(Request $request)
     {

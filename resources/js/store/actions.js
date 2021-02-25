@@ -12,11 +12,19 @@ let actions = {
     },
 
     setPublicationsPage ({commit}, payload) {
-        commit('setpublicationsPageMutation', payload)
+        commit('setPublicationsPageMutation', payload)
     },
 
     setPublicationLikes ({commit}, payload) {
         commit('setPublicationLikesMutation', payload)
+    },
+
+    setPublicationComments ({commit}, payload) {
+        commit('setPublicationCommentsMutation', payload)
+    },
+
+    addPublicationComment ({commit}, payload) {
+        commit('addPublicationCommentMutation', payload)
     },
 
     setPublicationShow ({commit}, payload) {
