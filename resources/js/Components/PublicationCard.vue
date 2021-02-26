@@ -1,14 +1,19 @@
 <template>
     <div class="md:border-l md:border-r border-t border-b bg-white shadow rounded-none md:rounded-xl px-3 md:px-4">
         <publication-descriptions :publication="publication" />
-        <div>
-            <img
-                :id="'publication_'+publication.id"
-                :src="ftpUrl+publication.photo_path"
-                alt="image"
-                class="w-full h-80 object-cover md:cursor-pointer rounded-xl border"
-                @click="visitPublication(publication.id)"
-            >
+        <div class="relative">
+            <div class="w-full h-80 animate-pulse">
+                <div class="w-full h-80 bg-gray-300 rounded-xl"></div>
+            </div>
+            <div class="w-full h-80 absolute top-0 left-0 rounded-xl">
+                <img
+                    :id="'publication_'+publication.id"
+                    :src="ftpUrl+publication.photo_path"
+                    alt=""
+                    class="w-full h-80 object-cover md:cursor-pointer rounded-xl border"
+                    @click="visitPublication(publication.id)"
+                >
+            </div>
         </div>
         <div>
             <publication-card-footer :publication="publication" />

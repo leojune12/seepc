@@ -2247,6 +2247,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -39587,21 +39592,29 @@ var render = function() {
         attrs: { publication: _vm.publication }
       }),
       _vm._v(" "),
-      _c("div", [
-        _c("img", {
-          staticClass:
-            "w-full h-80 object-cover md:cursor-pointer rounded-xl border",
-          attrs: {
-            id: "publication_" + _vm.publication.id,
-            src: _vm.ftpUrl + _vm.publication.photo_path,
-            alt: "image"
-          },
-          on: {
-            click: function($event) {
-              return _vm.visitPublication(_vm.publication.id)
-            }
-          }
-        })
+      _c("div", { staticClass: "relative" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "w-full h-80 absolute top-0 left-0 rounded-xl" },
+          [
+            _c("img", {
+              staticClass:
+                "w-full h-80 object-cover md:cursor-pointer rounded-xl border",
+              attrs: {
+                id: "publication_" + _vm.publication.id,
+                src: _vm.ftpUrl + _vm.publication.photo_path,
+                alt: ""
+              },
+              on: {
+                click: function($event) {
+                  return _vm.visitPublication(_vm.publication.id)
+                }
+              }
+            })
+          ]
+        )
       ]),
       _vm._v(" "),
       _c(
@@ -39617,7 +39630,16 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-full h-80 animate-pulse" }, [
+      _c("div", { staticClass: "w-full h-80 bg-gray-300 rounded-xl" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -42562,7 +42584,9 @@ var render = function() {
         [
           _c(
             "nav",
-            { staticClass: "bg-white border-b border-gray-200 sticky top-0" },
+            {
+              staticClass: "bg-white border-b border-gray-200 sticky top-0 z-50"
+            },
             [
               _c(
                 "div",
@@ -43089,7 +43113,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("main", [_vm._t("default")], 2),
+          _c("main", { staticClass: "z-40" }, [_vm._t("default")], 2),
           _vm._v(" "),
           _c("portal-target", { attrs: { name: "modal", multiple: "" } })
         ],
