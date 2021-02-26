@@ -1,6 +1,8 @@
 <template>
     <app-layout>
-        <div class="flex justify-center tracking-tight">
+        <div
+            class="flex justify-center tracking-tight"
+        >
             <div
                 class="md:space-y-6 space-y-4 card-container w-full pt-0 pb-6 md:pt-6"
                 :class="{ 'pt-4' : !$page.props.user }"
@@ -9,13 +11,17 @@
                 <publish-button v-if="$page.props.user" />
 
                 <publication-card
+                    v-if="publicationsFromStore.length"
                     v-for="publication in publicationsFromStore"
                     :publication="publication"
                     :key="publication.id"
                 />
 
                 <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
-                    <div slot="no-more" class="text-gray-500 h-16 flex items-center justify-center">
+                    <div slot="spinner">
+                        <publication-skeleton-card />
+                    </div>
+                    <div slot="no-more" class="text-gray-500 flex items-center justify-center">
                         <span>
                             No more publications
                         </span>
@@ -32,6 +38,7 @@
     import AppLayout from '@/Layouts/AppLayout'
     import PublicationCard from "@/Components/PublicationCard";
     import PublishButton from "@/Components/PublishButton";
+    import PublicationSkeletonCard from "@/Components/PublicationSkeletonCard";
 
     export default {
         name: "Publications",
@@ -39,7 +46,8 @@
             AppLayout,
             PublicationCard,
             PublishButton,
-            InfiniteLoading
+            InfiniteLoading,
+            PublicationSkeletonCard
         },
         computed: {
             publicationsFromStore: {
@@ -72,6 +80,10 @@
         mounted () {
             this.scroll()
             this.listenForUpdates()
+        },
+
+        created () {
+            this.scrollToTop()
         },
 
         methods: {
@@ -141,6 +153,11 @@
                         this.addPublicationCommentReply(incomingData)
                     })
             },
+
+            scrollToTop() {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
         },
 
         beforeDestroy() {
