@@ -10,7 +10,6 @@ use App\Models\Publication\Comment;
 use App\Models\Publication\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller

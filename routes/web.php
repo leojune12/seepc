@@ -2,10 +2,6 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PublicationController;
-use App\Http\Resources\CommentResource;
-use App\Models\Publication\Comment;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
