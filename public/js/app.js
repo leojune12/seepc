@@ -40382,31 +40382,31 @@ var staticRenderFns = [
           _c("div", { staticClass: "mr-2" }, [
             _c("div", {
               staticClass:
-                "w-10 h-10 rounded-full object-cover border border-gray-300 bg-gray-200"
+                "w-10 h-10 rounded-full object-cover border border-gray-300 bg-gray-300"
             })
           ]),
           _vm._v(" "),
           _c("div", [
-            _c("div", { staticClass: "h-4 bg-gray-200 w-60 mb-2" }),
+            _c("div", { staticClass: "h-4 bg-gray-300 w-60 mb-2" }),
             _vm._v(" "),
-            _c("div", { staticClass: "h-3 bg-gray-200 w-20" })
+            _c("div", { staticClass: "h-3 bg-gray-300 w-20" })
           ])
         ]),
         _vm._v(" "),
         _c("div", [
-          _c("div", { staticClass: "w-72 h-4 bg-gray-200 mb-3" }),
+          _c("div", { staticClass: "w-72 h-4 bg-gray-300 mb-3" }),
           _vm._v(" "),
           _c("div", {
-            staticClass: "w-full h-64 rounded-xl border bg-gray-200"
+            staticClass: "w-full h-64 rounded-xl border bg-gray-300"
           })
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "flex py-2" }, [
-          _c("div", { staticClass: "h-9 rounded bg-gray-200 flex-1" }),
+          _c("div", { staticClass: "h-9 rounded bg-gray-300 flex-1" }),
           _vm._v(" "),
           _c("div", { staticClass: "w-2 flex-none" }),
           _vm._v(" "),
-          _c("div", { staticClass: "h-9 rounded bg-gray-200 flex-1" })
+          _c("div", { staticClass: "h-9 rounded bg-gray-300 flex-1" })
         ])
       ]
     )
