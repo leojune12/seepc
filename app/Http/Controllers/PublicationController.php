@@ -88,7 +88,7 @@ class PublicationController extends Controller
      */
     public function show($id)
     {
-        $publication = new PublicationResource(Publication::find($id));
+        $publication = new PublicationResource(Publication::where('id', $id)->withCount('comments')->first());
 
         return Inertia::render('Publication/Show', [
             'publication' => $publication
