@@ -1882,7 +1882,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_RepliesList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/RepliesList */ "./resources/js/Components/RepliesList.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _Components_CommentSkeleton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/CommentSkeleton */ "./resources/js/Components/CommentSkeleton.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -1950,47 +1951,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CommentReplies",
   components: {
-    RepliesList: _Components_RepliesList__WEBPACK_IMPORTED_MODULE_0__.default
+    RepliesList: _Components_RepliesList__WEBPACK_IMPORTED_MODULE_0__.default,
+    CommentSkeleton: _Components_CommentSkeleton__WEBPACK_IMPORTED_MODULE_1__.default
   },
   props: ['comment'],
   computed: {
@@ -2002,13 +1970,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       reply: '',
       showReplyLoader: true,
-      replies: []
+      replies: [],
+      replyPlaceholder: 'Reply...',
+      sending: false
     };
   },
   mounted: function mounted() {
     this.fetchReplies();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['setPublicationCommentReplies', 'addPublicationCommentReply'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapActions)(['setPublicationCommentReplies', 'addPublicationCommentReply'])), {}, {
     getProfilePhoto: function getProfilePhoto() {
       if (this.$page.props.user.profile_photo_path) {
         return this.ftpUrl + this.$page.props.user.profile_photo_path;
@@ -2022,17 +1992,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveReply: function saveReply() {
       var _this = this;
 
-      if (!this.isNullOrWhiteSpace(this.reply)) {
+      var currentReply = this.reply;
+
+      if (!this.isNullOrWhiteSpace(currentReply)) {
+        this.sending = true;
+        this.reply = '';
+        this.replyPlaceholder = 'Posting reply...';
         axios.post(this.route('publications.comment.reply.store'), {
-          reply: this.reply,
+          reply: currentReply,
           comment_id: this.comment.id
         }).then(function (response) {
-          _this.reply = ''; //this.replies.push(response.data.reply)
-          //console.log(response)
-
           _this.addPublicationCommentReply(response);
         })["catch"](function (error) {
           console.log(error);
+        })["finally"](function () {
+          _this.replyPlaceholder = 'Reply...';
+          _this.sending = false;
         });
       }
     },
@@ -2043,8 +2018,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         axios.post(this.route('publications.comment.reply.show'), {
           comment_id: this.comment.id
         }).then(function (response) {
-          _this2.showReplyLoader = false;
-
           _this2.setPublicationCommentReplies({
             publication_id: _this2.comment.publication_id,
             comment_id: _this2.comment.id,
@@ -2052,12 +2025,67 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         })["catch"](function (error) {
           console.log(error);
+        })["finally"](function () {
+          _this2.showReplyLoader = false;
         });
       } else {
         this.showReplyLoader = false;
       }
     }
   })
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "CommentSkeleton",
+  props: {
+    reply: {
+      type: Boolean,
+      "default": false
+    }
+  }
 });
 
 /***/ }),
@@ -2074,6 +2102,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_CommentReplies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/CommentReplies */ "./resources/js/Components/CommentReplies.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2437,6 +2471,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2454,7 +2493,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       disabled: false,
-      showCommentInput: false
+      showComments: false
     };
   },
   computed: {
@@ -2529,7 +2568,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_CommentsList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/CommentsList */ "./resources/js/Components/CommentsList.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _Components_CommentSkeleton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/CommentSkeleton */ "./resources/js/Components/CommentSkeleton.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2633,16 +2673,87 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PublicationComments",
   components: {
-    CommentsList: _Components_CommentsList__WEBPACK_IMPORTED_MODULE_0__.default
+    CommentsList: _Components_CommentsList__WEBPACK_IMPORTED_MODULE_0__.default,
+    CommentSkeleton: _Components_CommentSkeleton__WEBPACK_IMPORTED_MODULE_1__.default
   },
   props: {
     publication: {
       type: Object
+    },
+    inShowComponent: {
+      type: Boolean,
+      "default": false
     }
   },
   computed: {
@@ -2657,14 +2768,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       comment: '',
       showCommentLoader: false,
-      showCommentInput: false,
-      comments: []
+      comments: [],
+      window: {
+        width: 0,
+        height: 0
+      },
+      sending: false,
+      commentPlaceholder: 'Comment...'
     };
+  },
+  created: function created() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
   mounted: function mounted() {
     this.fetchComments();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['setPublicationComments', 'addPublicationComment'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapActions)(['setPublicationComments', 'addPublicationComment'])), {}, {
     getProfilePhoto: function getProfilePhoto() {
       if (this.$page.props.user.profile_photo_path) {
         return this.ftpUrl + this.$page.props.user.profile_photo_path;
@@ -2678,16 +2798,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveComment: function saveComment() {
       var _this = this;
 
-      if (!this.isNullOrWhiteSpace(this.comment)) {
+      var currentComment = this.comment;
+
+      if (!this.isNullOrWhiteSpace(currentComment)) {
+        this.sending = true;
+        this.comment = '';
+        this.commentPlaceholder = 'Posting comment...';
         axios.post(this.route('publications.comment.store'), {
-          comment: this.comment,
+          comment: currentComment,
           publication_id: this.publication.id
         }).then(function (response) {
-          _this.comment = '';
-
           _this.addPublicationComment(response);
         })["catch"](function (error) {
           console.log(error);
+        })["finally"](function () {
+          _this.commentPlaceholder = 'Comment...';
+          _this.sending = false;
         });
       }
     },
@@ -2699,8 +2825,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         axios.post(this.route('publications.comment.show'), {
           publication_id: this.publication.id
         }).then(function (response) {
-          _this2.showCommentLoader = false;
-          _this2.showCommentInput = true;
           var data = {
             publication_id: _this2.publication.id,
             comments: response.data.comments
@@ -2709,12 +2833,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this2.setPublicationComments(data);
         })["catch"](function (error) {
           console.log(error);
+        })["finally"](function () {
+          _this2.showCommentLoader = false;
         });
       } else {
-        this.showCommentInput = true;
+        this.showCommentLoader = false;
       }
+    },
+    handleResize: function handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
     }
-  })
+  }),
+  destroyed: function destroyed() {
+    window.removeEventListener('resize', this.handleResize);
+  }
 });
 
 /***/ }),
@@ -6834,8 +6967,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).listen('PublicationCommentAdded', function (incomingData) {
         _this3.addPublicationComment(incomingData);
       }).listen('PublicationCommentReplyAdded', function (incomingData) {
-        console.log(incomingData);
-
         _this3.addPublicationCommentReply(incomingData);
       });
     },
@@ -6873,6 +7004,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7522,7 +7664,6 @@ var mutations = {
     }
   },
   addPublicationCommentReplyMutation: function addPublicationCommentReplyMutation(state, payload) {
-    console.log(payload);
     var currentPublication = null;
     var currentComment = null;
 
@@ -34915,6 +35056,45 @@ component.options.__file = "resources/js/Components/CommentReplies.vue"
 
 /***/ }),
 
+/***/ "./resources/js/Components/CommentSkeleton.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/Components/CommentSkeleton.vue ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true& */ "./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true&");
+/* harmony import */ var _CommentSkeleton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommentSkeleton.vue?vue&type=script&lang=js& */ "./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
+  _CommentSkeleton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "94ff635e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/Components/CommentSkeleton.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/Components/CommentsList.vue":
 /*!**************************************************!*\
   !*** ./resources/js/Components/CommentsList.vue ***!
@@ -37224,6 +37404,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentSkeleton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CommentSkeleton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentSkeleton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+
+/***/ }),
+
 /***/ "./resources/js/Components/CommentsList.vue?vue&type=script&lang=js&":
 /*!***************************************************************************!*\
   !*** ./resources/js/Components/CommentsList.vue?vue&type=script&lang=js& ***!
@@ -38111,6 +38307,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentReplies_vue_vue_type_template_id_f40f7f98_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentReplies_vue_vue_type_template_id_f40f7f98_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CommentReplies.vue?vue&type=template&id=f40f7f98&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentReplies.vue?vue&type=template&id=f40f7f98&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true& ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CommentSkeleton_vue_vue_type_template_id_94ff635e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true&");
 
 
 /***/ }),
@@ -39136,229 +39349,162 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _vm.showReplyLoader
-      ? _c("div", { staticClass: "py-2 px-5" }, [
+      ? _c("div", [_c("comment-skeleton", { attrs: { reply: true } })], 1)
+      : _c(
+          "div",
+          _vm._l(_vm.comment.replies, function(reply) {
+            return _c("replies-list", {
+              key: reply.id,
+              attrs: { reply: reply }
+            })
+          }),
+          1
+        ),
+    _vm._v(" "),
+    _vm.$page.props.user
+      ? _c("div", { staticClass: "flex h-9 mt-1" }, [
+          _c("div", { staticClass: "flex-none mr-2 flex items-center" }, [
+            _c("img", {
+              staticClass:
+                "w-7 h-7 rounded-full object-cover border border-gray-300",
+              attrs: { src: _vm.getProfilePhoto(), alt: "profile photo" }
+            })
+          ]),
+          _vm._v(" "),
           _c(
-            "svg",
-            {
-              staticClass: "fill-current text-gray-500",
-              attrs: {
-                width: "50",
-                height: "12",
-                viewBox: "0 0 120 30",
-                xmlns: "http://www.w3.org/2000/svg"
-              }
-            },
+            "div",
+            { staticClass: "flex-1 bg-gray-100 rounded-2xl flex items-center" },
             [
-              _c("circle", { attrs: { cx: "15", cy: "15", r: "15" } }, [
-                _c("animate", {
-                  attrs: {
-                    attributeName: "r",
-                    from: "15",
-                    to: "15",
-                    begin: "0s",
-                    dur: "0.8s",
-                    values: "15;9;15",
-                    calcMode: "linear",
-                    repeatCount: "indefinite"
-                  }
-                }),
-                _vm._v(" "),
-                _c("animate", {
-                  attrs: {
-                    attributeName: "fill-opacity",
-                    from: "1",
-                    to: "1",
-                    begin: "0s",
-                    dur: "0.8s",
-                    values: "1;.5;1",
-                    calcMode: "linear",
-                    repeatCount: "indefinite"
-                  }
-                })
+              _c("div", { staticClass: "flex-1" }, [
+                _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.saveReply($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.reply,
+                          expression: "reply"
+                        }
+                      ],
+                      staticClass:
+                        "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
+                      attrs: {
+                        type: "text",
+                        placeholder: _vm.replyPlaceholder,
+                        disabled: _vm.sending
+                      },
+                      domProps: { value: _vm.reply },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.reply = $event.target.value
+                        }
+                      }
+                    })
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c(
-                "circle",
-                {
-                  attrs: { cx: "60", cy: "15", r: "9", "fill-opacity": "0.3" }
-                },
+                "div",
+                { staticClass: "flex-none text-blue-500 pr-3 md:hidden block" },
                 [
-                  _c("animate", {
-                    attrs: {
-                      attributeName: "r",
-                      from: "9",
-                      to: "9",
-                      begin: "0s",
-                      dur: "0.8s",
-                      values: "9;15;9",
-                      calcMode: "linear",
-                      repeatCount: "indefinite"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("animate", {
-                    attrs: {
-                      attributeName: "fill-opacity",
-                      from: "0.5",
-                      to: "0.5",
-                      begin: "0s",
-                      dur: "0.8s",
-                      values: ".5;1;.5",
-                      calcMode: "linear",
-                      repeatCount: "indefinite"
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c("circle", { attrs: { cx: "105", cy: "15", r: "15" } }, [
-                _c("animate", {
-                  attrs: {
-                    attributeName: "r",
-                    from: "15",
-                    to: "15",
-                    begin: "0s",
-                    dur: "0.8s",
-                    values: "15;9;15",
-                    calcMode: "linear",
-                    repeatCount: "indefinite"
-                  }
-                }),
-                _vm._v(" "),
-                _c("animate", {
-                  attrs: {
-                    attributeName: "fill-opacity",
-                    from: "1",
-                    to: "1",
-                    begin: "0s",
-                    dur: "0.8s",
-                    values: "1;.5;1",
-                    calcMode: "linear",
-                    repeatCount: "indefinite"
-                  }
-                })
-              ])
-            ]
-          )
-        ])
-      : _c(
-          "div",
-          [
-            _vm._l(_vm.comment.replies, function(reply) {
-              return _c("replies-list", {
-                key: reply.id,
-                attrs: { reply: reply }
-              })
-            }),
-            _vm._v(" "),
-            _vm.$page.props.user
-              ? _c("div", { staticClass: "flex h-9 mt-1" }, [
                   _c(
-                    "div",
-                    { staticClass: "flex-none mr-2 flex items-center" },
-                    [
-                      _c("img", {
-                        staticClass:
-                          "w-7 h-7 rounded-full object-cover border border-gray-300",
-                        attrs: {
-                          src: _vm.getProfilePhoto(),
-                          alt: "profile photo"
-                        }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
+                    "span",
                     {
-                      staticClass:
-                        "flex-1 bg-gray-100 rounded-2xl flex items-center"
+                      staticClass: "cursor-pointer",
+                      on: { click: _vm.saveReply }
                     },
                     [
-                      _c("div", { staticClass: "flex-1" }, [
-                        _c(
-                          "form",
-                          {
-                            on: {
-                              submit: function($event) {
-                                $event.preventDefault()
-                                return _vm.saveReply($event)
-                              }
-                            }
-                          },
-                          [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.reply,
-                                  expression: "reply"
-                                }
-                              ],
-                              staticClass:
-                                "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
-                              attrs: { type: "text", placeholder: "Reply..." },
-                              domProps: { value: _vm.reply },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.reply = $event.target.value
-                                }
-                              }
-                            })
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
                       _c(
-                        "div",
+                        "svg",
                         {
-                          staticClass:
-                            "flex-none text-blue-500 pr-3 md:hidden block"
+                          staticStyle: { width: "24px", height: "24px" },
+                          attrs: { viewBox: "0 0 24 24" }
                         },
                         [
-                          _c(
-                            "span",
-                            {
-                              staticClass: "cursor-pointer",
-                              on: { click: _vm.saveReply }
-                            },
-                            [
-                              _c(
-                                "svg",
-                                {
-                                  staticStyle: {
-                                    width: "24px",
-                                    height: "24px"
-                                  },
-                                  attrs: { viewBox: "0 0 24 24" }
-                                },
-                                [
-                                  _c("path", {
-                                    attrs: {
-                                      fill: "currentColor",
-                                      d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
-                                    }
-                                  })
-                                ]
-                              )
-                            ]
-                          )
+                          _c("path", {
+                            attrs: {
+                              fill: "currentColor",
+                              d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                            }
+                          })
                         ]
                       )
                     ]
                   )
-                ])
-              : _vm._e()
-          ],
-          2
-        )
+                ]
+              )
+            ]
+          )
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Components/CommentSkeleton.vue?vue&type=template&id=94ff635e&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex mt-1 animate-pulse" }, [
+    _c("div", { staticClass: "flex-none mr-2" }, [
+      _c("div", {
+        staticClass: "rounded-full border-gray-300 bg-gray-300",
+        class: [_vm.reply ? "w-7 h-7" : "w-9 h-9"]
+      })
+    ]),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "flex-1" }, [
+      _c("div", { staticClass: "flex items-center" }, [
+        _c("div", { staticClass: "bg-gray-100 rounded-2xl px-3 py-2 h-16" }, [
+          _c("div", { staticClass: "h-3 bg-gray-300 w-24 mb-2" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "h-3 bg-gray-300 w-40 mb-1" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "h-3 bg-gray-300 w-32" })
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -39439,26 +39585,34 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("span", { staticClass: "text-xs" }, [_vm._v(" • ")]),
+              _vm.$page.props.user
+                ? _c("span", { staticClass: "text-xs" }, [_vm._v(" • ")])
+                : _vm._e(),
               _vm._v(" "),
-              _c("span", { staticClass: "md:text-sm text-xs font-semibold" }, [
-                _c(
-                  "span",
-                  {
-                    staticClass: "hover:underline cursor-pointer",
-                    on: {
-                      click: function($event) {
-                        _vm.showReplies = true
-                      }
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n                        Reply\n                    "
-                    )
-                  ]
-                )
-              ])
+              _vm.$page.props.user
+                ? _c(
+                    "span",
+                    { staticClass: "md:text-sm text-xs font-semibold" },
+                    [
+                      _c(
+                        "span",
+                        {
+                          staticClass: "hover:underline cursor-pointer",
+                          on: {
+                            click: function($event) {
+                              _vm.showReplies = true
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Reply\n                    "
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -39670,7 +39824,8 @@ var render = function() {
             _c(
               "div",
               {
-                staticClass: "py-2 md:text-normal text-sm flex justify-between"
+                staticClass: "py-2 md:text-normal text-sm flex justify-between",
+                class: { "px-3 md:px-0": _vm.inShowComponent }
               },
               [
                 _c(
@@ -39716,7 +39871,7 @@ var render = function() {
                             staticClass: "hover:underline cursor-pointer",
                             on: {
                               click: function($event) {
-                                _vm.showCommentInput = true
+                                _vm.showComments = true
                               }
                             }
                           },
@@ -39879,7 +40034,7 @@ var render = function() {
               "h-9 rounded md:hover:bg-gray-100 focus:outline-none flex-1 text-center",
             on: {
               click: function($event) {
-                _vm.showCommentInput = true
+                _vm.showComments = true
               }
             }
           },
@@ -39930,9 +40085,17 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm.showCommentInput
+      _vm.showComments
         ? _c("publication-comments", {
-            attrs: { publication: _vm.publication }
+            attrs: {
+              publication: _vm.publication,
+              "in-show-component": _vm.inShowComponent
+            },
+            on: {
+              "hide-comments": function($event) {
+                _vm.showComments = false
+              }
+            }
           })
         : _vm._e()
     ],
@@ -39970,227 +40133,376 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "border-t border-gray-300" }),
-    _vm._v(" "),
-    _c("div", { staticClass: "py-3" }, [
-      _vm.showCommentInput && _vm.$page.props.user
-        ? _c("div", { staticClass: "flex h-9" }, [
-            _c("div", { staticClass: "flex-none mr-2" }, [
-              _c("img", {
-                staticClass:
-                  "w-9 h-9 rounded-full object-cover border border-gray-300",
-                attrs: { src: _vm.getProfilePhoto(), alt: "profile photo" }
-              })
-            ]),
-            _vm._v(" "),
+    _vm.window.width < 768 && _vm.inShowComponent
+      ? _c(
+          "div",
+          [
             _c(
-              "div",
+              "transition",
               {
-                staticClass: "flex-1 bg-gray-100 rounded-2xl flex items-center"
+                attrs: {
+                  "enter-active-class":
+                    "transform transition ease-in duration-300",
+                  "enter-class": "translate-y-full",
+                  "enter-to-class": "translate-y-0",
+                  "leave-active-class":
+                    "transform transition ease-in duration-300",
+                  "leave-class": "translate-y-0",
+                  "leave-to-class": "translate-y-full"
+                }
               },
               [
-                _c("div", { staticClass: "flex-1" }, [
-                  _c(
-                    "form",
-                    {
-                      on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.saveComment($event)
-                        }
-                      }
-                    },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.comment,
-                            expression: "comment"
-                          }
-                        ],
-                        staticClass:
-                          "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
-                        attrs: { type: "text", placeholder: "Comment..." },
-                        domProps: { value: _vm.comment },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.comment = $event.target.value
-                          }
-                        }
-                      })
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
                 _c(
                   "div",
                   {
-                    staticClass: "flex-none text-blue-500 pr-3 md:hidden block"
+                    staticClass:
+                      "h-screen md:h-auto overflow-y-auto md:overflow-y-visible bg-white md:bg-transparent pt-14 md:pt-0"
                   },
                   [
-                    _c(
-                      "span",
-                      {
-                        staticClass: "cursor-pointer",
-                        on: { click: _vm.saveComment }
-                      },
-                      [
-                        _c(
-                          "svg",
-                          {
-                            staticStyle: { width: "24px", height: "24px" },
-                            attrs: { viewBox: "0 0 24 24" }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                fill: "currentColor",
-                                d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
-                              }
-                            })
-                          ]
-                        )
-                      ]
-                    )
+                    _c("div", {
+                      staticClass: "border-t border-gray-300 hidden md:block"
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "md:py-3" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex justify-between items-center block md:hidden\n            pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800 px-3"
+                        },
+                        [
+                          _c("div", { staticClass: "flex items-center" }, [
+                            _c(
+                              "span",
+                              {
+                                staticClass:
+                                  "rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.$emit("hide-comments")
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "svg",
+                                  {
+                                    staticStyle: {
+                                      width: "24px",
+                                      height: "24px"
+                                    },
+                                    attrs: { viewBox: "0 0 24 24" }
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        fill: "currentColor",
+                                        d:
+                                          "M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Comments")])
+                          ]),
+                          _vm._v(" "),
+                          _vm.publication.comments_count
+                            ? _c("div", { staticClass: "flex items-center" }, [
+                                _c(
+                                  "span",
+                                  { staticClass: "text-gray-500 mr-1" },
+                                  [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticStyle: {
+                                          width: "20px",
+                                          height: "20px"
+                                        },
+                                        attrs: { viewBox: "0 0 24 24" }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            fill: "currentColor",
+                                            d:
+                                              "M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M5,5V7H19V5H5M5,9V11H13V9H5M5,13V15H15V13H5Z"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.publication.comments_count))
+                                ])
+                              ])
+                            : _vm._e()
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.$page.props.user
+                        ? _c(
+                            "div",
+                            {
+                              staticClass:
+                                "flex items-center h-9 md:relative fixed bottom-0 left-0 bg-white md:bg-transparent h-14 w-full px-3 md:px-0 border-t md:border-t-0"
+                            },
+                            [
+                              _c("div", { staticClass: "flex-none mr-2" }, [
+                                _c("img", {
+                                  staticClass:
+                                    "w-9 h-9 rounded-full object-cover border border-gray-300",
+                                  attrs: {
+                                    src: _vm.getProfilePhoto(),
+                                    alt: "profile photo"
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "flex-1 h-9 bg-gray-100 rounded-full flex items-center"
+                                },
+                                [
+                                  _c("div", { staticClass: "flex-1" }, [
+                                    _c(
+                                      "form",
+                                      {
+                                        on: {
+                                          submit: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.saveComment($event)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.comment,
+                                              expression: "comment"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: _vm.commentPlaceholder,
+                                            disabled: _vm.sending
+                                          },
+                                          domProps: { value: _vm.comment },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.comment = $event.target.value
+                                            }
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "flex-none text-blue-500 pr-3 md:hidden block"
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        {
+                                          staticClass: "cursor-pointer",
+                                          on: { click: _vm.saveComment }
+                                        },
+                                        [
+                                          _c(
+                                            "svg",
+                                            {
+                                              staticStyle: {
+                                                width: "24px",
+                                                height: "24px"
+                                              },
+                                              attrs: { viewBox: "0 0 24 24" }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  fill: "currentColor",
+                                                  d:
+                                                    "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.showCommentLoader
+                        ? _c(
+                            "div",
+                            { staticClass: "px-3" },
+                            [_c("comment-skeleton")],
+                            1
+                          )
+                        : _c(
+                            "div",
+                            { staticClass: "px-3" },
+                            _vm._l(_vm.publication.comments, function(comment) {
+                              return _c("comments-list", {
+                                key: comment.id,
+                                attrs: { comment: comment }
+                              })
+                            }),
+                            1
+                          )
+                    ])
                   ]
                 )
               ]
             )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "mt-2" },
-        [
-          _vm._l(_vm.publication.comments, function(comment) {
-            return _c("comments-list", {
-              key: comment.id,
-              attrs: { comment: comment }
-            })
-          }),
+          ],
+          1
+        )
+      : _c("div", [
+          _c("div", { staticClass: "border-t border-gray-300" }),
           _vm._v(" "),
-          _vm.showCommentLoader
-            ? _c("div", { staticClass: "flex justify-center py-2" }, [
-                _c(
-                  "svg",
-                  {
-                    staticClass: "fill-current text-gray-500",
-                    attrs: {
-                      width: "50",
-                      height: "12",
-                      viewBox: "0 0 120 30",
-                      xmlns: "http://www.w3.org/2000/svg"
-                    }
-                  },
-                  [
-                    _c("circle", { attrs: { cx: "15", cy: "15", r: "15" } }, [
-                      _c("animate", {
-                        attrs: {
-                          attributeName: "r",
-                          from: "15",
-                          to: "15",
-                          begin: "0s",
-                          dur: "0.8s",
-                          values: "15;9;15",
-                          calcMode: "linear",
-                          repeatCount: "indefinite"
-                        }
-                      }),
+          _c("div", { staticClass: "py-3" }, [
+            _vm.$page.props.user
+              ? _c("div", { staticClass: "flex h-9" }, [
+                  _c("div", { staticClass: "flex-none mr-2" }, [
+                    _c("img", {
+                      staticClass:
+                        "w-9 h-9 rounded-full object-cover border border-gray-300",
+                      attrs: {
+                        src: _vm.getProfilePhoto(),
+                        alt: "profile photo"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "flex-1 bg-gray-100 rounded-2xl flex items-center"
+                    },
+                    [
+                      _c("div", { staticClass: "flex-1" }, [
+                        _c(
+                          "form",
+                          {
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.saveComment($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.comment,
+                                  expression: "comment"
+                                }
+                              ],
+                              staticClass:
+                                "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.commentPlaceholder,
+                                disabled: _vm.sending
+                              },
+                              domProps: { value: _vm.comment },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.comment = $event.target.value
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
                       _vm._v(" "),
-                      _c("animate", {
-                        attrs: {
-                          attributeName: "fill-opacity",
-                          from: "1",
-                          to: "1",
-                          begin: "0s",
-                          dur: "0.8s",
-                          values: "1;.5;1",
-                          calcMode: "linear",
-                          repeatCount: "indefinite"
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "circle",
-                      {
-                        attrs: {
-                          cx: "60",
-                          cy: "15",
-                          r: "9",
-                          "fill-opacity": "0.3"
-                        }
-                      },
-                      [
-                        _c("animate", {
-                          attrs: {
-                            attributeName: "r",
-                            from: "9",
-                            to: "9",
-                            begin: "0s",
-                            dur: "0.8s",
-                            values: "9;15;9",
-                            calcMode: "linear",
-                            repeatCount: "indefinite"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("animate", {
-                          attrs: {
-                            attributeName: "fill-opacity",
-                            from: "0.5",
-                            to: "0.5",
-                            begin: "0s",
-                            dur: "0.8s",
-                            values: ".5;1;.5",
-                            calcMode: "linear",
-                            repeatCount: "indefinite"
-                          }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("circle", { attrs: { cx: "105", cy: "15", r: "15" } }, [
-                      _c("animate", {
-                        attrs: {
-                          attributeName: "r",
-                          from: "15",
-                          to: "15",
-                          begin: "0s",
-                          dur: "0.8s",
-                          values: "15;9;15",
-                          calcMode: "linear",
-                          repeatCount: "indefinite"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("animate", {
-                        attrs: {
-                          attributeName: "fill-opacity",
-                          from: "1",
-                          to: "1",
-                          begin: "0s",
-                          dur: "0.8s",
-                          values: "1;.5;1",
-                          calcMode: "linear",
-                          repeatCount: "indefinite"
-                        }
-                      })
-                    ])
-                  ]
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "flex-none text-blue-500 pr-3 md:hidden block"
+                        },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "cursor-pointer",
+                              on: { click: _vm.saveComment }
+                            },
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticStyle: {
+                                    width: "24px",
+                                    height: "24px"
+                                  },
+                                  attrs: { viewBox: "0 0 24 24" }
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      fill: "currentColor",
+                                      d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.showCommentLoader
+              ? _c("div", [_c("comment-skeleton")], 1)
+              : _c(
+                  "div",
+                  _vm._l(_vm.publication.comments, function(comment) {
+                    return _c("comments-list", {
+                      key: comment.id,
+                      attrs: { comment: comment }
+                    })
+                  }),
+                  1
                 )
-              ])
-            : _vm._e()
-        ],
-        2
-      )
-    ])
+          ])
+        ])
   ])
 }
 var staticRenderFns = []
@@ -40394,7 +40706,7 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("div", [
-          _c("div", { staticClass: "w-72 h-4 bg-gray-300 mb-3" }),
+          _c("div", { staticClass: "w-60 h-4 bg-gray-300 mb-3" }),
           _vm._v(" "),
           _c("div", {
             staticClass: "w-full h-64 rounded-xl border bg-gray-300"
@@ -42585,7 +42897,7 @@ var render = function() {
           _c(
             "nav",
             {
-              staticClass: "bg-white border-b border-gray-200 sticky top-0 z-50"
+              staticClass: "bg-white border-b border-gray-200 sticky top-0 z-20"
             },
             [
               _c(
@@ -43113,7 +43425,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("main", { staticClass: "z-40" }, [_vm._t("default")], 2),
+          _c("main", { staticClass: "z-10" }, [_vm._t("default")], 2),
           _vm._v(" "),
           _c("portal-target", { attrs: { name: "modal", multiple: "" } })
         ],
@@ -46874,7 +47186,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "flex flex-col md:flex-row min-h-screen tracking-tight" },
+    { staticClass: "flex flex-col md:flex-row h-screen tracking-tight" },
     [
       _c("div", { staticClass: "md:flex-grow bg-black" }, [
         _c(
@@ -46918,11 +47230,12 @@ var render = function() {
         "div",
         {
           staticClass:
-            "w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white px-3 md:px-4",
+            "w-full md:w-96 md:flex-none md:relative absolute bottom-0 bg-opacity-50 md:bg-opacity-100 bg-black md:bg-white md:overflow-y-auto",
           class: { "hidden md:block": !_vm.showDescription }
         },
         [
           _c("publication-descriptions", {
+            staticClass: "px-3 md:px-4",
             attrs: {
               publication: _vm.currentPublication,
               "in-show-component": true
@@ -46934,10 +47247,12 @@ var render = function() {
             { staticClass: "md:mt-3 mt-0" },
             [
               _c("div", {
-                staticClass: "border-t md:border-gray-300 border-gray-100"
+                staticClass:
+                  "border-t md:border-gray-300 border-gray-100 md:mx-4"
               }),
               _vm._v(" "),
               _c("publication-card-footer", {
+                staticClass: "md:mx-4",
                 attrs: {
                   publication: _vm.currentPublication,
                   "in-show-component": true
@@ -46945,7 +47260,8 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("div", {
-                staticClass: "border-t md:border-gray-300 border-gray-100"
+                staticClass:
+                  "border-t md:border-gray-300 border-gray-100 md:mx-4"
               })
             ],
             1

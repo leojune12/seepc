@@ -1,7 +1,10 @@
 <template>
     <div>
         <div v-if="publication.likes_count || publication.comments_count">
-            <div class="py-2 md:text-normal text-sm flex justify-between">
+            <div
+                class="py-2 md:text-normal text-sm flex justify-between"
+                :class="{ 'px-3 md:px-0' : inShowComponent }"
+            >
                 <div
                     :class="[ inShowComponent ? 'text-gray-200 md:text-gray-800' : 'text-gray-800' ]"
                 >
@@ -15,7 +18,7 @@
                     <span
                         v-if="publication.comments_count"
                         class="hover:underline cursor-pointer"
-                        @click="showCommentInput = true"
+                        @click="showComments = true"
                     >
                         {{ publication.comments_count + ' ' + commentsString }}
                     </span>
@@ -66,7 +69,7 @@
             </button>
             <button
                 class="h-9 rounded md:hover:bg-gray-100 focus:outline-none flex-1 text-center"
-                @click="showCommentInput = true"
+                @click="showComments = true"
             >
                 <div class="flex justify-center">
                     <div
@@ -84,8 +87,10 @@
             </button>
         </div>
         <publication-comments
-            v-if="showCommentInput"
+            v-if="showComments"
             :publication="publication"
+            :in-show-component="inShowComponent"
+            v-on:hide-comments="showComments = false"
         />
     </div>
 </template>
@@ -109,7 +114,7 @@
         data () {
             return {
                 disabled: false,
-                showCommentInput: false
+                showComments: false
             }
         },
         computed: {

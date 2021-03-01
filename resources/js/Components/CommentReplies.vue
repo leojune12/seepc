@@ -2,46 +2,10 @@
     <div>
         <div
             v-if="showReplyLoader"
-            class="py-2 px-5"
         >
-            <svg
-                width="50"
-                height="12"
-                viewBox="0 0 120 30"
-                xmlns="http://www.w3.org/2000/svg"
-                class="fill-current text-gray-500"
-            >
-                <circle cx="15" cy="15" r="15">
-                    <animate attributeName="r" from="15" to="15"
-                             begin="0s" dur="0.8s"
-                             values="15;9;15" calcMode="linear"
-                             repeatCount="indefinite" />
-                    <animate attributeName="fill-opacity" from="1" to="1"
-                             begin="0s" dur="0.8s"
-                             values="1;.5;1" calcMode="linear"
-                             repeatCount="indefinite" />
-                </circle>
-                <circle cx="60" cy="15" r="9" fill-opacity="0.3">
-                    <animate attributeName="r" from="9" to="9"
-                             begin="0s" dur="0.8s"
-                             values="9;15;9" calcMode="linear"
-                             repeatCount="indefinite" />
-                    <animate attributeName="fill-opacity" from="0.5" to="0.5"
-                             begin="0s" dur="0.8s"
-                             values=".5;1;.5" calcMode="linear"
-                             repeatCount="indefinite" />
-                </circle>
-                <circle cx="105" cy="15" r="15">
-                    <animate attributeName="r" from="15" to="15"
-                             begin="0s" dur="0.8s"
-                             values="15;9;15" calcMode="linear"
-                             repeatCount="indefinite" />
-                    <animate attributeName="fill-opacity" from="1" to="1"
-                             begin="0s" dur="0.8s"
-                             values="1;.5;1" calcMode="linear"
-                             repeatCount="indefinite" />
-                </circle>
-            </svg>
+            <comment-skeleton
+                :reply="true"
+            />
         </div>
         <div
             v-else
@@ -51,31 +15,33 @@
                 :key="reply.id"
                 :reply="reply"
             />
-            <div
-                v-if="$page.props.user"
-                class="flex h-9 mt-1"
-            >
-                <div class="flex-none mr-2 flex items-center">
-                    <img
-                        :src="getProfilePhoto()"
-                        alt="profile photo"
-                        class="w-7 h-7 rounded-full object-cover border border-gray-300"
-                    >
+        </div>
+        <div
+            v-if="$page.props.user"
+            class="flex h-9 mt-1"
+        >
+            <div class="flex-none mr-2 flex items-center">
+                <img
+                    :src="getProfilePhoto()"
+                    alt="profile photo"
+                    class="w-7 h-7 rounded-full object-cover border border-gray-300"
+                >
+            </div>
+            <div class="flex-1 bg-gray-100 rounded-2xl flex items-center">
+                <div class="flex-1">
+                    <form @submit.prevent="saveReply">
+                        <input
+                            type="text"
+                            class="w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm"
+                            :placeholder="replyPlaceholder"
+                            v-model="reply"
+                            :disabled="sending"
+                        >
+                    </form>
                 </div>
-                <div class="flex-1 bg-gray-100 rounded-2xl flex items-center">
-                    <div class="flex-1">
-                        <form @submit.prevent="saveReply">
-                            <input
-                                type="text"
-                                class="w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm"
-                                placeholder="Reply..."
-                                v-model="reply"
-                            >
-                        </form>
-                    </div>
-                    <div
-                        class="flex-none text-blue-500 pr-3 md:hidden block"
-                    >
+                <div
+                    class="flex-none text-blue-500 pr-3 md:hidden block"
+                >
                     <span
                         class="cursor-pointer"
                         @click="saveReply"
@@ -87,7 +53,6 @@
                             <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
                         </svg>
                     </span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -97,11 +62,13 @@
 <script>
     import RepliesList from "@/Components/RepliesList";
     import {mapActions} from 'vuex'
+    import CommentSkeleton from "@/Components/CommentSkeleton";
 
     export default {
         name: "CommentReplies",
         components: {
-            RepliesList
+            RepliesList,
+            CommentSkeleton
         },
         props: [
             'comment'
@@ -115,7 +82,9 @@
             return {
                 reply: '',
                 showReplyLoader: true,
-                replies: []
+                replies: [],
+                replyPlaceholder: 'Reply...',
+                sending: false
             }
         },
         mounted() {
@@ -140,20 +109,27 @@
             },
 
             saveReply () {
-                if (!this.isNullOrWhiteSpace(this.reply)) {
+                let currentReply = this.reply
+
+                if (!this.isNullOrWhiteSpace(currentReply)) {
+                    this.sending = true
+                    this.reply = ''
+                    this.replyPlaceholder = 'Posting reply...'
+
                     axios.post(this.route('publications.comment.reply.store'), {
-                        reply: this.reply,
+                        reply: currentReply,
                         comment_id: this.comment.id,
                     })
                         .then(response => {
-                            this.reply = ''
-                            //this.replies.push(response.data.reply)
-                            //console.log(response)
                             this.addPublicationCommentReply(response)
                         })
-                        .catch(function (error) {
+                        .catch(error => {
                             console.log(error);
-                        });
+                        })
+                        .finally(() => {
+                            this.replyPlaceholder = 'Reply...'
+                            this.sending = false
+                        })
                 }
             },
 
@@ -163,7 +139,6 @@
                         comment_id: this.comment.id
                     })
                         .then(response => {
-                            this.showReplyLoader = false
                             this.setPublicationCommentReplies({
                                 publication_id: this.comment.publication_id,
                                 comment_id: this.comment.id,
@@ -172,7 +147,10 @@
                         })
                         .catch(function (error) {
                             console.log(error);
-                        });
+                        })
+                        .finally(() => {
+                            this.showReplyLoader = false
+                        })
                 } else {
                     this.showReplyLoader = false
                 }

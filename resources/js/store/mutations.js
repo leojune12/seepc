@@ -107,8 +107,6 @@ let mutations = {
 
     addPublicationCommentReplyMutation (state, payload) {
 
-        console.log(payload)
-
         let currentPublication = null
         let currentComment = null
 

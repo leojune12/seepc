@@ -19,7 +19,7 @@
             </div>
         </div>
         <div>
-            <div class="w-72 h-4 bg-gray-300 mb-3"></div>
+            <div class="w-60 h-4 bg-gray-300 mb-3"></div>
             <div
                 class="w-full h-64 rounded-xl border bg-gray-300"
             >

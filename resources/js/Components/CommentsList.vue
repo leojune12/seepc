@@ -30,8 +30,14 @@
                     <span class="md:text-sm text-xs">
                         {{ getDateTime(comment.created_at) }}
                     </span>
-                    <span class="text-xs">&nbsp;&bullet;&nbsp;</span>
-                    <span class="md:text-sm text-xs font-semibold">
+                    <span
+                        v-if="$page.props.user"
+                        class="text-xs"
+                    >&nbsp;&bullet;&nbsp;</span>
+                    <span
+                        v-if="$page.props.user"
+                        class="md:text-sm text-xs font-semibold"
+                    >
                         <span
                             class="hover:underline cursor-pointer"
                             @click="showReplies = true"

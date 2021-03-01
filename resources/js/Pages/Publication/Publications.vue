@@ -149,7 +149,6 @@
                         this.addPublicationComment(incomingData)
                     })
                     .listen('PublicationCommentReplyAdded', (incomingData) => {
-                        console.log(incomingData)
                         this.addPublicationCommentReply(incomingData)
                     })
             },
