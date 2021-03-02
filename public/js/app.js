@@ -40211,8 +40211,8 @@ var render = function() {
                   "enter-to-class": "translate-y-0",
                   "leave-active-class":
                     "transform transition ease-in duration-300",
-                  "leave-class": "-translate-y-0",
-                  "leave-to-class": "-translate-y-full"
+                  "leave-class": "translate-y-0",
+                  "leave-to-class": "translate-y-full"
                 }
               },
               [

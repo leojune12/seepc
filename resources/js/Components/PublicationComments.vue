@@ -11,12 +11,11 @@
                 leave-to-class="translate-y-full"
             >
                 <div
-                    class="h-screen overflow-y-auto bg-white md:bg-transparent pt-14"
+                    class="h-screen overflow-y-auto bg-white pt-14"
                     v-show="animate"
                 >
-                    <div class="border-t border-gray-300 hidden md:block"></div>
-                    <div class="px-3">
-                        <div class="flex justify-between items-center pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800">
+                    <div>
+                        <div class="flex justify-between items-center pt-4 pb-3 border-b sticky top-0 left-0 px-3 border-t border-b border-gray-300 bg-white w-full text-gray-800">
                             <div class="flex items-center">
                                 <span
                                     class="rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2"
@@ -65,7 +64,7 @@
                                     </form>
                                 </div>
                                 <div
-                                    class="flex-none text-blue-500 pr-3 md:hidden block"
+                                    class="flex-none text-blue-500 pr-3"
                                 >
                             <span
                                 class="cursor-pointer"
@@ -81,7 +80,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="px-3">
                             <comments-list
                                 v-for="comment in publication.comments"
                                 :key="comment.id"
@@ -90,12 +89,13 @@
                         </div>
                         <div
                             v-if="fetching"
+                            class="px-3"
                         >
                             <comment-skeleton />
                         </div>
                         <div
-                            v-if="commentsNextPageLink"
-                            class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-3"
+                            v-if="commentsNextPageLink && !fetching"
+                            class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline p-3"
                             @click="fetchComments"
                         >
                             Show more comments
@@ -158,7 +158,7 @@
                         <comment-skeleton />
                     </div>
                     <div
-                        v-if="commentsNextPageLink"
+                        v-if="commentsNextPageLink && !fetching"
                         class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline"
                         @click="fetchComments"
                     >
@@ -283,11 +283,12 @@
                     this.fetching = true
 
                     axios.post(this.route('publications.comment.show'), {
-                        current_comments_ids: this.getIds,
+                        comments_ids: this.getIds,
                         publication_id: this.publication.id,
                     })
                         .then(response => {
                             this.commentsNextPageLink = response.data.comments.links.next
+
                             let data = {
                                 publication_id: this.publication.id,
                                 comments: response.data.comments.data,
