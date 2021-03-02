@@ -11,39 +11,39 @@
                 leave-to-class="translate-y-full"
             >
                 <div
-                    class="h-screen md:h-auto overflow-y-auto md:overflow-y-visible bg-white md:bg-transparent pt-14 md:pt-0"
+                    class="h-screen overflow-y-auto bg-white md:bg-transparent pt-14"
+                    v-show="animate"
                 >
                     <div class="border-t border-gray-300 hidden md:block"></div>
-                    <div class="md:py-3">
-                        <div class="flex justify-between items-center block md:hidden
-                pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800 px-3">
+                    <div class="px-3">
+                        <div class="flex justify-between items-center pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800">
                             <div class="flex items-center">
-                        <span
-                            class="rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2"
-                            v-on:click="$emit('hide-comments')"
-                        >
-                            <!-- left arrow -->
-                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
-                            </svg>
-                        </span>
+                                <span
+                                    class="rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2"
+                                    v-on:click="$emit('hide-comments')"
+                                >
+                                    <!-- left arrow -->
+                                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+                                    </svg>
+                                </span>
                                 <span>Comments</span>
                             </div>
                             <div
                                 v-if="publication.comments_count"
                                 class="flex items-center"
                             >
-                        <span class="text-gray-500 mr-1">
-                            <svg style="width:20px;height:20px" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M5,5V7H19V5H5M5,9V11H13V9H5M5,13V15H15V13H5Z" />
-                            </svg>
-                        </span>
+                                <span class="text-gray-500 mr-1">
+                                    <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M5,5V7H19V5H5M5,9V11H13V9H5M5,13V15H15V13H5Z" />
+                                    </svg>
+                                </span>
                                 <span>{{ publication.comments_count }}</span>
                             </div>
                         </div>
                         <div
                             v-if="$page.props.user"
-                            class="flex items-center h-9 md:relative fixed bottom-0 left-0 bg-white md:bg-transparent h-14 w-full px-3 md:px-0 border-t md:border-t-0"
+                            class="flex items-center h-9 fixed bottom-0 left-0 bg-white h-14 w-full border-t px-3"
                         >
                             <div class="flex-none mr-2">
                                 <img
@@ -81,21 +81,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div
-                            v-if="showCommentLoader"
-                            class="px-3"
-                        >
-                            <comment-skeleton />
-                        </div>
-                        <div
-                            v-else
-                            class="px-3"
-                        >
+                        <div>
                             <comments-list
                                 v-for="comment in publication.comments"
                                 :key="comment.id"
                                 :comment="comment"
                             />
+                        </div>
+                        <div
+                            v-if="fetching"
+                        >
+                            <comment-skeleton />
+                        </div>
+                        <div
+                            v-if="commentsNextPageLink"
+                            class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-3"
+                            @click="fetchComments"
+                        >
+                            Show more comments
                         </div>
                     </div>
                 </div>
@@ -145,15 +148,22 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="showCommentLoader">
-                    <comment-skeleton />
-                </div>
-                <div v-else>
+                <div>
                     <comments-list
                         v-for="comment in publication.comments"
                         :key="comment.id"
                         :comment="comment"
                     />
+                    <div v-if="fetching">
+                        <comment-skeleton />
+                    </div>
+                    <div
+                        v-if="commentsNextPageLink"
+                        class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline"
+                        @click="fetchComments"
+                    >
+                        Show more comments
+                    </div>
                 </div>
             </div>
         </div>
@@ -187,19 +197,28 @@
 
             publications () {
                 return this.$store.state.publications
+            },
+
+            getIds () {
+                let ids = []
+                this.publication.comments.forEach((item, index) => {
+                    ids.push(item.id)
+                })
+                return ids
             }
         },
         data () {
             return {
+                animate: false,
                 comment: '',
-                showCommentLoader: false,
-                comments: [],
+                fetching: false,
+                sending: false,
+                commentPlaceholder: 'Comment...',
                 window: {
                     width: 0,
                     height: 0
                 },
-                sending: false,
-                commentPlaceholder: 'Comment...'
+                commentsNextPageLink: null,
             }
         },
         created() {
@@ -207,7 +226,8 @@
             this.handleResize();
         },
         mounted () {
-            this.fetchComments()
+            this.fetchComments(this.initialCommentsLink)
+            this.animate = true
         },
         methods: {
             ...mapActions([
@@ -221,6 +241,11 @@
                 } else {
                     return this.$page.props.user.profile_photo_url
                 }
+            },
+
+            handleResize() {
+                this.window.width = window.innerWidth;
+                this.window.height = window.innerHeight;
             },
 
             isNullOrWhiteSpace (str) {
@@ -252,18 +277,20 @@
                 }
             },
 
-            fetchComments() {
+            fetchComments () {
                 if (this.publication.comments_count) {
 
-                    this.showCommentLoader = true
+                    this.fetching = true
 
                     axios.post(this.route('publications.comment.show'), {
-                        publication_id: this.publication.id
+                        current_comments_ids: this.getIds,
+                        publication_id: this.publication.id,
                     })
                         .then(response => {
+                            this.commentsNextPageLink = response.data.comments.links.next
                             let data = {
                                 publication_id: this.publication.id,
-                                comments: response.data.comments
+                                comments: response.data.comments.data,
                             }
                             this.setPublicationComments(data)
                         })
@@ -271,18 +298,13 @@
                             console.log(error);
                         })
                         .finally(() => {
-                            this.showCommentLoader = false
+                            this.fetching = false
                         })
 
                 } else {
-                    this.showCommentLoader = false
+                    this.fetching = false
                 }
             },
-
-            handleResize() {
-                this.window.width = window.innerWidth;
-                this.window.height = window.innerHeight;
-            }
         },
         destroyed() {
             window.removeEventListener('resize', this.handleResize);

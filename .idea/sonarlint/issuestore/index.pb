@@ -179,9 +179,13 @@ T
 $app/Http/Resources/ReplyResource.php,7\9\79b8845d6845dffe36f417c7aecfbd769fcb250f
 [
 +app/Events/PublicationCommentReplyAdded.php,5\5\5511639a78897413a2f5de5c3e6150889f416656
-f
-6resources/js/Components/PublicationsCommentsMobile.vue,e\f\efbfe0389f7d6137f15ce945d5fa42b652dba2dc
 P
  resources/js/Jetstream/Modal.vue,c\f\cf04eb14828be88a9e7b8e45ef59505f8de97be1
 @
 config/queue.php,e\b\eb49dc3fa7268b6ade2466fb9f9bc11bb4d71410
+[
++resources/js/Components/CommentSkeleton.vue,7\c\7c5897cf957cf3c00fbb11a46ac140608c9fa7ff
+c
+3resources/js/Components/PublicationSkeletonCard.vue,c\9\c99880b1c79ab39cabc8f1b1d97bbe26c312177e
+X
+(app/Http/Resources/CommentCollection.php,5\a\5a65b182941163ba9733ee7efc783de212569ce0

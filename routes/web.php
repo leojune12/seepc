@@ -23,7 +23,7 @@ Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->n
 
 Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
 
-Route::post('/publications/comment/show', [CommentController::class, 'show_comments'])->name('publications.comment.show');
+Route::post('/publications/comment/show}', [CommentController::class, 'show_comments'])->name('publications.comment.show');
 
 Route::post('/publications/comment/reply/show', [CommentController::class, 'show_replies'])->name('publications.comment.reply.show');
 

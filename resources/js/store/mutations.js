@@ -57,7 +57,7 @@ let mutations = {
 
         // check if publication is already loaded
         if (currentPublication !== undefined) {
-            currentPublication.comments = payload.comments
+            currentPublication.comments.push(...payload.comments)
         }
     },
 

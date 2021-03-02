@@ -2738,6 +2738,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2762,19 +2772,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     publications: function publications() {
       return this.$store.state.publications;
+    },
+    getIds: function getIds() {
+      var ids = [];
+      this.publication.comments.forEach(function (item, index) {
+        ids.push(item.id);
+      });
+      return ids;
     }
   },
   data: function data() {
     return {
+      animate: false,
       comment: '',
-      showCommentLoader: false,
-      comments: [],
+      fetching: false,
+      sending: false,
+      commentPlaceholder: 'Comment...',
       window: {
         width: 0,
         height: 0
       },
-      sending: false,
-      commentPlaceholder: 'Comment...'
+      commentsNextPageLink: null
     };
   },
   created: function created() {
@@ -2782,7 +2800,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.handleResize();
   },
   mounted: function mounted() {
-    this.fetchComments();
+    this.fetchComments(this.initialCommentsLink);
+    this.animate = true;
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapActions)(['setPublicationComments', 'addPublicationComment'])), {}, {
     getProfilePhoto: function getProfilePhoto() {
@@ -2791,6 +2810,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {
         return this.$page.props.user.profile_photo_url;
       }
+    },
+    handleResize: function handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
     },
     isNullOrWhiteSpace: function isNullOrWhiteSpace(str) {
       return !str || str.length === 0 || /^\s*$/.test(str);
@@ -2821,28 +2844,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       if (this.publication.comments_count) {
-        this.showCommentLoader = true;
+        this.fetching = true;
         axios.post(this.route('publications.comment.show'), {
+          current_comments_ids: this.getIds,
           publication_id: this.publication.id
         }).then(function (response) {
+          _this2.commentsNextPageLink = response.data.comments.links.next;
           var data = {
             publication_id: _this2.publication.id,
-            comments: response.data.comments
+            comments: response.data.comments.data
           };
 
           _this2.setPublicationComments(data);
         })["catch"](function (error) {
           console.log(error);
         })["finally"](function () {
-          _this2.showCommentLoader = false;
+          _this2.fetching = false;
         });
       } else {
-        this.showCommentLoader = false;
+        this.fetching = false;
       }
-    },
-    handleResize: function handleResize() {
-      this.window.width = window.innerWidth;
-      this.window.height = window.innerHeight;
     }
   }),
   destroyed: function destroyed() {
@@ -7562,6 +7583,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var mutations = {
   setLastShowedPublicationIdMutation: function setLastShowedPublicationIdMutation(state, payload) {
     state.lastShowedPublicationId = payload;
@@ -7616,7 +7649,9 @@ var mutations = {
 
 
     if (currentPublication !== undefined) {
-      currentPublication.comments = payload.comments;
+      var _currentPublication$c;
+
+      (_currentPublication$c = currentPublication.comments).push.apply(_currentPublication$c, _toConsumableArray(payload.comments));
     }
   },
   addPublicationCommentMutation: function addPublicationCommentMutation(state, payload) {
@@ -40155,20 +40190,28 @@ var render = function() {
                 _c(
                   "div",
                   {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.animate,
+                        expression: "animate"
+                      }
+                    ],
                     staticClass:
-                      "h-screen md:h-auto overflow-y-auto md:overflow-y-visible bg-white md:bg-transparent pt-14 md:pt-0"
+                      "h-screen overflow-y-auto bg-white md:bg-transparent pt-14"
                   },
                   [
                     _c("div", {
                       staticClass: "border-t border-gray-300 hidden md:block"
                     }),
                     _vm._v(" "),
-                    _c("div", { staticClass: "md:py-3" }, [
+                    _c("div", { staticClass: "px-3" }, [
                       _c(
                         "div",
                         {
                           staticClass:
-                            "flex justify-between items-center block md:hidden\n            pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800 px-3"
+                            "flex justify-between items-center pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800"
                         },
                         [
                           _c("div", { staticClass: "flex items-center" }, [
@@ -40250,7 +40293,7 @@ var render = function() {
                             "div",
                             {
                               staticClass:
-                                "flex items-center h-9 md:relative fixed bottom-0 left-0 bg-white md:bg-transparent h-14 w-full px-3 md:px-0 border-t md:border-t-0"
+                                "flex items-center h-9 fixed bottom-0 left-0 bg-white h-14 w-full border-t px-3"
                             },
                             [
                               _c("div", { staticClass: "flex-none mr-2" }, [
@@ -40356,24 +40399,36 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.showCommentLoader
+                      _c(
+                        "div",
+                        _vm._l(_vm.publication.comments, function(comment) {
+                          return _c("comments-list", {
+                            key: comment.id,
+                            attrs: { comment: comment }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.fetching
+                        ? _c("div", [_c("comment-skeleton")], 1)
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.commentsNextPageLink
                         ? _c(
                             "div",
-                            { staticClass: "px-3" },
-                            [_c("comment-skeleton")],
-                            1
+                            {
+                              staticClass:
+                                "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-3",
+                              on: { click: _vm.fetchComments }
+                            },
+                            [
+                              _vm._v(
+                                "\n                        Show more comments\n                    "
+                              )
+                            ]
                           )
-                        : _c(
-                            "div",
-                            { staticClass: "px-3" },
-                            _vm._l(_vm.publication.comments, function(comment) {
-                              return _c("comments-list", {
-                                key: comment.id,
-                                attrs: { comment: comment }
-                              })
-                            }),
-                            1
-                          )
+                        : _vm._e()
                     ])
                   ]
                 )
@@ -40489,18 +40544,38 @@ var render = function() {
                 ])
               : _vm._e(),
             _vm._v(" "),
-            _vm.showCommentLoader
-              ? _c("div", [_c("comment-skeleton")], 1)
-              : _c(
-                  "div",
-                  _vm._l(_vm.publication.comments, function(comment) {
-                    return _c("comments-list", {
-                      key: comment.id,
-                      attrs: { comment: comment }
-                    })
-                  }),
-                  1
-                )
+            _c(
+              "div",
+              [
+                _vm._l(_vm.publication.comments, function(comment) {
+                  return _c("comments-list", {
+                    key: comment.id,
+                    attrs: { comment: comment }
+                  })
+                }),
+                _vm._v(" "),
+                _vm.fetching
+                  ? _c("div", [_c("comment-skeleton")], 1)
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.commentsNextPageLink
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline",
+                        on: { click: _vm.fetchComments }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    Show more comments\n                "
+                        )
+                      ]
+                    )
+                  : _vm._e()
+              ],
+              2
+            )
           ])
         ])
   ])

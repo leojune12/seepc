@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\PublicationCommentAdded;
 use App\Events\PublicationCommentReplyAdded;
+use App\Http\Resources\CommentCollection;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReplyResource;
 use App\Models\Publication\Comment;
@@ -88,10 +89,12 @@ class CommentController extends Controller
      */
     public function show_comments(Request $request)
     {
-        $comments = CommentResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->with(['user', 'replies'])->orderByDesc('created_at')->get());
+        $comments = Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->whereNotIn('id', $request->current_comments_ids)->with(['user'])->withCount('replies')->orderByDesc('created_at')->simplePaginate(10);
+
+        $comments_with_links = CommentResource::collection($comments)->response()->getData(true);
 
         return response()->json([
-            'comments' => $comments
+            'comments' => $comments_with_links,
         ]);
     }
 

@@ -20,7 +20,7 @@ class CommentResource extends JsonResource
             'user' => new UserResource($this->user),
             'comment' => $this->comment,
             'replies' => [],
-            'replies_count' => count($this->replies),
+            'replies_count' => $this->replies_count,
             'publication_id' => $this->commentable_id,
             'created_at' => $this->created_at,
         ];
