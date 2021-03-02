@@ -100,7 +100,7 @@ let mutations = {
             currentComment = currentPublication.comments[index]
 
             if (currentComment !== undefined) {
-                currentComment.replies = payload.replies
+                currentComment.replies.push(...payload.replies)
             }
         }
     },
@@ -126,7 +126,7 @@ let mutations = {
             currentComment = currentPublication.comments[index]
 
             if (currentComment !== undefined) {
-                currentComment.replies.push(payload.data.reply)
+                currentComment.replies.unshift(payload.data.reply)
                 currentComment.replies_count = payload.data.replies_count
             }
         }

@@ -1964,15 +1964,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: {
     ftpUrl: function ftpUrl() {
       return this.$store.state.ftpUrl;
+    },
+    getIds: function getIds() {
+      var ids = [];
+      this.comment.replies.forEach(function (item, index) {
+        ids.push(item.id);
+      });
+      return ids;
     }
   },
   data: function data() {
     return {
       reply: '',
-      showReplyLoader: true,
+      fetching: false,
       replies: [],
       replyPlaceholder: 'Reply...',
-      sending: false
+      sending: false,
+      repliesNextPageLink: null
     };
   },
   mounted: function mounted() {
@@ -2015,21 +2023,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       if (this.comment.replies_count) {
+        this.fetching = true;
         axios.post(this.route('publications.comment.reply.show'), {
+          replies_ids: this.getIds,
           comment_id: this.comment.id
         }).then(function (response) {
+          _this2.repliesNextPageLink = response.data.replies.links.next;
+
           _this2.setPublicationCommentReplies({
             publication_id: _this2.comment.publication_id,
             comment_id: _this2.comment.id,
-            replies: response.data.replies
+            replies: response.data.replies.data
           });
         })["catch"](function (error) {
           console.log(error);
         })["finally"](function () {
-          _this2.showReplyLoader = false;
+          _this2.fetching = false;
         });
       } else {
-        this.showReplyLoader = false;
+        this.fetching = false;
       }
     }
   })
@@ -2846,7 +2858,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.publication.comments_count) {
         this.fetching = true;
         axios.post(this.route('publications.comment.show'), {
-          current_comments_ids: this.getIds,
+          comments_ids: this.getIds,
           publication_id: this.publication.id
         }).then(function (response) {
           _this2.commentsNextPageLink = response.data.comments.links.next;
@@ -7694,7 +7706,9 @@ var mutations = {
       currentComment = currentPublication.comments[_index];
 
       if (currentComment !== undefined) {
-        currentComment.replies = payload.replies;
+        var _currentComment$repli;
+
+        (_currentComment$repli = currentComment.replies).push.apply(_currentComment$repli, _toConsumableArray(payload.replies));
       }
     }
   },
@@ -7720,7 +7734,7 @@ var mutations = {
       currentComment = currentPublication.comments[_index2];
 
       if (currentComment !== undefined) {
-        currentComment.replies.push(payload.data.reply);
+        currentComment.replies.unshift(payload.data.reply);
         currentComment.replies_count = payload.data.replies_count;
       }
     }
@@ -39382,111 +39396,126 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm.showReplyLoader
-      ? _c("div", [_c("comment-skeleton", { attrs: { reply: true } })], 1)
-      : _c(
-          "div",
-          _vm._l(_vm.comment.replies, function(reply) {
-            return _c("replies-list", {
-              key: reply.id,
-              attrs: { reply: reply }
-            })
-          }),
-          1
-        ),
-    _vm._v(" "),
-    _vm.$page.props.user
-      ? _c("div", { staticClass: "flex h-9 mt-1" }, [
-          _c("div", { staticClass: "flex-none mr-2 flex items-center" }, [
-            _c("img", {
-              staticClass:
-                "w-7 h-7 rounded-full object-cover border border-gray-300",
-              attrs: { src: _vm.getProfilePhoto(), alt: "profile photo" }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex-1 bg-gray-100 rounded-2xl flex items-center" },
-            [
-              _c("div", { staticClass: "flex-1" }, [
-                _c(
-                  "form",
-                  {
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.saveReply($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.reply,
-                          expression: "reply"
-                        }
-                      ],
-                      staticClass:
-                        "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
-                      attrs: {
-                        type: "text",
-                        placeholder: _vm.replyPlaceholder,
-                        disabled: _vm.sending
-                      },
-                      domProps: { value: _vm.reply },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.reply = $event.target.value
-                        }
-                      }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "flex-none text-blue-500 pr-3 md:hidden block" },
-                [
+  return _c(
+    "div",
+    [
+      _vm.$page.props.user
+        ? _c("div", { staticClass: "flex h-9 mt-1" }, [
+            _c("div", { staticClass: "flex-none mr-2 flex items-center" }, [
+              _c("img", {
+                staticClass:
+                  "w-7 h-7 rounded-full object-cover border border-gray-300",
+                attrs: { src: _vm.getProfilePhoto(), alt: "profile photo" }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "flex-1 bg-gray-100 rounded-2xl flex items-center"
+              },
+              [
+                _c("div", { staticClass: "flex-1" }, [
                   _c(
-                    "span",
+                    "form",
                     {
-                      staticClass: "cursor-pointer",
-                      on: { click: _vm.saveReply }
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.saveReply($event)
+                        }
+                      }
                     },
                     [
-                      _c(
-                        "svg",
-                        {
-                          staticStyle: { width: "24px", height: "24px" },
-                          attrs: { viewBox: "0 0 24 24" }
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.reply,
+                            expression: "reply"
+                          }
+                        ],
+                        staticClass:
+                          "w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm",
+                        attrs: {
+                          type: "text",
+                          placeholder: _vm.replyPlaceholder,
+                          disabled: _vm.sending
                         },
-                        [
-                          _c("path", {
-                            attrs: {
-                              fill: "currentColor",
-                              d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                        domProps: { value: _vm.reply },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
                             }
-                          })
-                        ]
-                      )
+                            _vm.reply = $event.target.value
+                          }
+                        }
+                      })
                     ]
                   )
-                ]
-              )
-            ]
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "flex-none text-blue-500 pr-3 md:hidden block"
+                  },
+                  [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "cursor-pointer",
+                        on: { click: _vm.saveReply }
+                      },
+                      [
+                        _c(
+                          "svg",
+                          {
+                            staticStyle: { width: "24px", height: "24px" },
+                            attrs: { viewBox: "0 0 24 24" }
+                          },
+                          [
+                            _c("path", {
+                              attrs: {
+                                fill: "currentColor",
+                                d: "M2,21L23,12L2,3V10L17,12L2,14V21Z"
+                              }
+                            })
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                )
+              ]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.comment.replies, function(reply) {
+        return _c("replies-list", { key: reply.id, attrs: { reply: reply } })
+      }),
+      _vm._v(" "),
+      _vm.fetching
+        ? _c("comment-skeleton", { attrs: { reply: true } })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.repliesNextPageLink && !_vm.fetching
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-2",
+              on: { click: _vm.fetchReplies }
+            },
+            [_vm._v("\n        Show more replies\n    ")]
           )
-        ])
-      : _vm._e()
-  ])
+        : _vm._e()
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40182,8 +40211,8 @@ var render = function() {
                   "enter-to-class": "translate-y-0",
                   "leave-active-class":
                     "transform transition ease-in duration-300",
-                  "leave-class": "translate-y-0",
-                  "leave-to-class": "translate-y-full"
+                  "leave-class": "-translate-y-0",
+                  "leave-to-class": "-translate-y-full"
                 }
               },
               [
@@ -40198,20 +40227,15 @@ var render = function() {
                         expression: "animate"
                       }
                     ],
-                    staticClass:
-                      "h-screen overflow-y-auto bg-white md:bg-transparent pt-14"
+                    staticClass: "h-screen overflow-y-auto bg-white pt-14"
                   },
                   [
-                    _c("div", {
-                      staticClass: "border-t border-gray-300 hidden md:block"
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "px-3" }, [
+                    _c("div", [
                       _c(
                         "div",
                         {
                           staticClass:
-                            "flex justify-between items-center pt-4 pb-3 border-b sticky top-0 bg-white w-full text-gray-800"
+                            "flex justify-between items-center pt-4 pb-3 border-b sticky top-0 left-0 px-3 border-t border-b border-gray-300 bg-white w-full text-gray-800"
                         },
                         [
                           _c("div", { staticClass: "flex items-center" }, [
@@ -40360,7 +40384,7 @@ var render = function() {
                                     "div",
                                     {
                                       staticClass:
-                                        "flex-none text-blue-500 pr-3 md:hidden block"
+                                        "flex-none text-blue-500 pr-3"
                                     },
                                     [
                                       _c(
@@ -40401,6 +40425,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "div",
+                        { staticClass: "px-3" },
                         _vm._l(_vm.publication.comments, function(comment) {
                           return _c("comments-list", {
                             key: comment.id,
@@ -40411,15 +40436,20 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _vm.fetching
-                        ? _c("div", [_c("comment-skeleton")], 1)
+                        ? _c(
+                            "div",
+                            { staticClass: "px-3" },
+                            [_c("comment-skeleton")],
+                            1
+                          )
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.commentsNextPageLink
+                      _vm.commentsNextPageLink && !_vm.fetching
                         ? _c(
                             "div",
                             {
                               staticClass:
-                                "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-3",
+                                "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline p-3",
                               on: { click: _vm.fetchComments }
                             },
                             [
@@ -40558,7 +40588,7 @@ var render = function() {
                   ? _c("div", [_c("comment-skeleton")], 1)
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.commentsNextPageLink
+                _vm.commentsNextPageLink && !_vm.fetching
                   ? _c(
                       "div",
                       {

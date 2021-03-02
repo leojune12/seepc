@@ -89,7 +89,7 @@ class CommentController extends Controller
      */
     public function show_comments(Request $request)
     {
-        $comments = Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->whereNotIn('id', $request->current_comments_ids)->with(['user'])->withCount('replies')->orderByDesc('created_at')->simplePaginate(10);
+        $comments = Comment::where('commentable_type', 'App\Models\Publication\Publication')->where('commentable_id', $request->publication_id)->whereNotIn('id', $request->comments_ids)->with(['user'])->withCount('replies')->orderByDesc('created_at')->simplePaginate(10);
 
         $comments_with_links = CommentResource::collection($comments)->response()->getData(true);
 
@@ -105,10 +105,12 @@ class CommentController extends Controller
      */
     public function show_replies(Request $request)
     {
-        $replies = ReplyResource::collection(Comment::where('commentable_type', 'App\Models\Publication\Comment')->where('commentable_id', $request->comment_id)->with(['user'])->get());
+        $replies = Comment::where('commentable_type', 'App\Models\Publication\Comment')->where('commentable_id', $request->comment_id)->whereNotIn('id', $request->replies_ids)->with(['user'])->orderByDesc('created_at')->simplePaginate(10);
+
+        $replies_with_links = ReplyResource::collection($replies)->response()->getData(true);
 
         return response()->json([
-            'replies' => $replies
+            'replies' => $replies_with_links
         ]);
     }
 }

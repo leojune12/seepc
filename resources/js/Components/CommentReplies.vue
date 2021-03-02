@@ -1,22 +1,6 @@
 <template>
     <div>
         <div
-            v-if="showReplyLoader"
-        >
-            <comment-skeleton
-                :reply="true"
-            />
-        </div>
-        <div
-            v-else
-        >
-            <replies-list
-                v-for="reply in comment.replies"
-                :key="reply.id"
-                :reply="reply"
-            />
-        </div>
-        <div
             v-if="$page.props.user"
             class="flex h-9 mt-1"
         >
@@ -56,6 +40,22 @@
                 </div>
             </div>
         </div>
+        <replies-list
+            v-for="reply in comment.replies"
+            :key="reply.id"
+            :reply="reply"
+        />
+        <comment-skeleton
+            v-if="fetching"
+            :reply="true"
+        />
+        <div
+            v-if="repliesNextPageLink && !fetching"
+            class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline py-2"
+            @click="fetchReplies"
+        >
+            Show more replies
+        </div>
     </div>
 </template>
 
@@ -77,14 +77,23 @@
             ftpUrl() {
                 return this.$store.state.ftpUrl
             },
+
+            getIds () {
+                let ids = []
+                this.comment.replies.forEach((item, index) => {
+                    ids.push(item.id)
+                })
+                return ids
+            }
         },
         data () {
             return {
                 reply: '',
-                showReplyLoader: true,
+                fetching: false,
                 replies: [],
                 replyPlaceholder: 'Reply...',
-                sending: false
+                sending: false,
+                repliesNextPageLink: null
             }
         },
         mounted() {
@@ -135,24 +144,30 @@
 
             fetchReplies() {
                 if (this.comment.replies_count) {
+
+                    this.fetching = true
+
                     axios.post(this.route('publications.comment.reply.show'), {
+                        replies_ids: this.getIds,
                         comment_id: this.comment.id
                     })
                         .then(response => {
+                            this.repliesNextPageLink = response.data.replies.links.next
+
                             this.setPublicationCommentReplies({
                                 publication_id: this.comment.publication_id,
                                 comment_id: this.comment.id,
-                                replies: response.data.replies
+                                replies: response.data.replies.data
                             })
                         })
-                        .catch(function (error) {
+                        .catch(error => {
                             console.log(error);
                         })
                         .finally(() => {
-                            this.showReplyLoader = false
+                            this.fetching = false
                         })
                 } else {
-                    this.showReplyLoader = false
+                    this.fetching = false
                 }
             },
         }
