@@ -87,7 +87,9 @@
             ...mapActions([
                 'setPublications',
                 'setPublicationLikes',
-                'setPublicationShow'
+                'setPublicationShow',
+                'addPublicationComment',
+                'addPublicationCommentReply'
             ]),
 
             goBack() {
@@ -108,11 +110,17 @@
                 Echo.channel('publications')
                     .listen('PublicationLiked', (incomingData) => {
                         let data = {
-                            currentUserId: this.$page.props.user.id,
+                            currentUserId: this.$page.props.user ? this.$page.props.user.id : null,
                             data: incomingData
                         }
                         this.setPublicationLikes(data)
-                    });
+                    })
+                    .listen('PublicationCommentAdded', (incomingData) => {
+                        this.addPublicationComment(incomingData)
+                    })
+                    .listen('PublicationCommentReplyAdded', (incomingData) => {
+                        this.addPublicationCommentReply(incomingData)
+                    })
             },
         },
         beforeDestroy() {

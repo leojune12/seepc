@@ -7191,7 +7191,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     this.listenForUpdates();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)(['setPublications', 'setPublicationLikes', 'setPublicationShow'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)(['setPublications', 'setPublicationLikes', 'setPublicationShow', 'addPublicationComment', 'addPublicationCommentReply'])), {}, {
     goBack: function goBack() {
       this.$inertia.get(this.route('publications'));
     },
@@ -7210,11 +7210,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
         var data = {
-          currentUserId: _this3.$page.props.user.id,
+          currentUserId: _this3.$page.props.user ? _this3.$page.props.user.id : null,
           data: incomingData
         };
 
         _this3.setPublicationLikes(data);
+      }).listen('PublicationCommentAdded', function (incomingData) {
+        _this3.addPublicationComment(incomingData);
+      }).listen('PublicationCommentReplyAdded', function (incomingData) {
+        _this3.addPublicationCommentReply(incomingData);
       });
     }
   }),
@@ -40540,8 +40544,8 @@ var render = function() {
             ? _c(
                 "div",
                 {
-                  staticClass: "flex h-9 pt-3",
-                  class: { "pb-3": !_vm.publication.comments_count }
+                  staticClass: "flex h-9 mt-3",
+                  class: { "mb-3": !_vm.publication.comments_count }
                 },
                 [
                   _c("div", { staticClass: "flex-none mr-2" }, [
@@ -40650,8 +40654,8 @@ var render = function() {
             ? _c(
                 "div",
                 {
-                  staticClass: "pb-3",
-                  class: { "pt-3": !_vm.$page.props.user }
+                  staticClass: "mb-3",
+                  class: { "mt-3": !_vm.$page.props.user }
                 },
                 [
                   _vm._l(_vm.publication.comments, function(comment) {
