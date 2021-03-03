@@ -106,64 +106,70 @@
         </div>
         <!-- Desktop View -->
         <div v-else>
-            <div class="border-t border-gray-300"></div>
-            <div class="py-3">
-                <div
-                    v-if="$page.props.user"
-                    class="flex h-9"
-                >
-                    <div class="flex-none mr-2">
-                        <img
-                            :src="getProfilePhoto()"
-                            alt="profile photo"
-                            class="w-9 h-9 rounded-full object-cover border border-gray-300"
-                        >
-                    </div>
-                    <div class="flex-1 bg-gray-100 rounded-2xl flex items-center">
-                        <div class="flex-1">
-                            <form @submit.prevent="saveComment">
-                                <input
-                                    type="text"
-                                    class="w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm"
-                                    :placeholder="commentPlaceholder"
-                                    v-model="comment"
-                                    :disabled="sending"
-                                >
-                            </form>
-                        </div>
-                        <div
-                            class="flex-none text-blue-500 pr-3 md:hidden block"
-                        >
-                            <span
-                                class="cursor-pointer"
-                                @click="saveComment"
-                            >
-                                <svg
-                                    style="width:24px;height:24px"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+            <div
+                v-if="$page.props.user || publication.comments_count"
+                class="border-t border-gray-300"
+            ></div>
+            <div
+                v-if="$page.props.user"
+                class="flex h-9 mt-3"
+                :class="{ 'mb-3' : !publication.comments_count }"
+            >
+                <div class="flex-none mr-2">
+                    <img
+                        :src="getProfilePhoto()"
+                        alt="profile photo"
+                        class="w-9 h-9 rounded-full object-cover border border-gray-300"
+                    >
                 </div>
-                <div>
-                    <comments-list
-                        v-for="comment in publication.comments"
-                        :key="comment.id"
-                        :comment="comment"
-                    />
-                    <div v-if="fetching">
-                        <comment-skeleton />
+                <div class="flex-1 bg-gray-100 rounded-2xl flex items-center">
+                    <div class="flex-1">
+                        <form @submit.prevent="saveComment">
+                            <input
+                                type="text"
+                                class="w-full border-none focus:ring-0 focus:border-none px-3 resize-none overflow-y-hidden py-1 bg-transparent text-sm"
+                                :placeholder="commentPlaceholder"
+                                v-model="comment"
+                                :disabled="sending"
+                            >
+                        </form>
                     </div>
                     <div
-                        v-if="commentsNextPageLink && !fetching"
-                        class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline"
-                        @click="fetchComments"
+                        class="flex-none text-blue-500 pr-3 md:hidden block"
                     >
-                        Show more comments
+                        <span
+                            class="cursor-pointer"
+                            @click="saveComment"
+                        >
+                            <svg
+                                style="width:24px;height:24px"
+                                viewBox="0 0 24 24"
+                            >
+                                <path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                            </svg>
+                        </span>
                     </div>
+                </div>
+            </div>
+            <div
+                v-if="publication.comments_count"
+                class="mb-3"
+                :class="{'mt-3' : !$page.props.user}"
+            >
+                <comments-list
+                    v-for="comment in publication.comments"
+                    :key="comment.id"
+                    :comment="comment"
+                />
+                <div v-if="fetching">
+                    <comment-skeleton />
+                </div>
+                <div
+                    v-if="commentsNextPageLink && !fetching"
+                    class="font-bold text-sm text-gray-500 cursor-pointer hover:underline inline"
+                    @click="fetchComments"
+                >
+                    Show more comments
                 </div>
             </div>
         </div>

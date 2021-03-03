@@ -2755,6 +2755,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -40526,11 +40532,18 @@ var render = function() {
           1
         )
       : _c("div", [
-          _c("div", { staticClass: "border-t border-gray-300" }),
+          _vm.$page.props.user || _vm.publication.comments_count
+            ? _c("div", { staticClass: "border-t border-gray-300" })
+            : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "py-3" }, [
-            _vm.$page.props.user
-              ? _c("div", { staticClass: "flex h-9" }, [
+          _vm.$page.props.user
+            ? _c(
+                "div",
+                {
+                  staticClass: "flex h-9 pt-3",
+                  class: { "pb-3": !_vm.publication.comments_count }
+                },
+                [
                   _c("div", { staticClass: "flex-none mr-2" }, [
                     _c("img", {
                       staticClass:
@@ -40629,42 +40642,48 @@ var render = function() {
                       )
                     ]
                   )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c(
-              "div",
-              [
-                _vm._l(_vm.publication.comments, function(comment) {
-                  return _c("comments-list", {
-                    key: comment.id,
-                    attrs: { comment: comment }
-                  })
-                }),
-                _vm._v(" "),
-                _vm.fetching
-                  ? _c("div", [_c("comment-skeleton")], 1)
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.commentsNextPageLink && !_vm.fetching
-                  ? _c(
-                      "div",
-                      {
-                        staticClass:
-                          "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline",
-                        on: { click: _vm.fetchComments }
-                      },
-                      [
-                        _vm._v(
-                          "\n                    Show more comments\n                "
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ],
-              2
-            )
-          ])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.publication.comments_count
+            ? _c(
+                "div",
+                {
+                  staticClass: "pb-3",
+                  class: { "pt-3": !_vm.$page.props.user }
+                },
+                [
+                  _vm._l(_vm.publication.comments, function(comment) {
+                    return _c("comments-list", {
+                      key: comment.id,
+                      attrs: { comment: comment }
+                    })
+                  }),
+                  _vm._v(" "),
+                  _vm.fetching
+                    ? _c("div", [_c("comment-skeleton")], 1)
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.commentsNextPageLink && !_vm.fetching
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "font-bold text-sm text-gray-500 cursor-pointer hover:underline inline",
+                          on: { click: _vm.fetchComments }
+                        },
+                        [
+                          _vm._v(
+                            "\n                Show more comments\n            "
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ],
+                2
+              )
+            : _vm._e()
         ])
   ])
 }
