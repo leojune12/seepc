@@ -1,6 +1,6 @@
 <template>
     <app-layout>
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto py-3 md:py-6 px-0 lg:px-8">
             <jet-form-section @submitted="publish">
                 <template #title>
                     Publish your PC setup
@@ -11,33 +11,12 @@
                 </template>
 
                 <template #form>
-                    <div class="col-span-6 sm:col-span-4">
-                        <jet-label for="specs" value="SELECT SPECS TO INCLUDE" />
-                        <div id="specs" class="flex flex-wrap mt-2">
-                            <span v-for="specs in addSpecs" :class="[ specs.show ? 'bg-blue-600 text-white' : 'bg-white text-blue-700' ]" class="flex py-1 px-3 rounded-full mr-1 mb-2 cursor-pointer border border-blue-500" type="button" @click="removeSpecs(specs.name)">
-                                <!-- Plus -->
-                                <svg v-if="!specs.show" style="width:18px;height:18px" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-                                </svg>
-                                <!-- Close -->
-                                <svg v-else style="width:18px;height:18px" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
-                                </svg>
-                                <span class="text-sm font-bold uppercase">
-                                    {{ specs.name }}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
+
+                    <!-- Description -->
                     <div class="col-span-6 sm:col-span-4">
                         <jet-label for="description" value="DESCRIPTION" />
-                        <textarea name="description" id="description" rows="4" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full" v-model="form.description" required placeholder="Say something about your PC..."></textarea>
+                        <textarea name="description" id="description" rows="4" class="border border-gray-300 focus:border-gray-400 rounded-xl focus:ring-0 shadow-sm mt-1 w-full resize-none" v-model="form.description" required placeholder="Say something about your PC..."></textarea>
                         <jet-input-error :message="form.errors.description" class="mt-2" />
-                    </div>
-                    <div v-for="specs in addSpecs" class="col-span-6 sm:col-span-4" v-show="specs.show">
-                        <jet-label :for="specs.name" class="uppercase" :value="specs.name" />
-                        <jet-input type="text" class="mt-1 block w-full" v-model="form[specs.name]" />
-                        <jet-input-error :message="form.errors[specs.name]" class="mt-2" />
                     </div>
 
                     <!-- Photo -->
@@ -51,20 +30,103 @@
                             @change="updatePhotoPreview"
                         >
 
-                        <jet-label for="photo" value="PHOTO" />
-
                         <!-- New Photo Preview -->
-                        <div class="mt-2" v-show="photoPreview">
-                            <img :src="photoPreview" alt="photo" class="object-contain w-full h-80">
+                        <div class="mb-2" v-show="photoPreview">
+                            <jet-label for="photo" value="PHOTO" />
+                            <img
+                                :src="photoPreview"
+                                alt="photo"
+                                class="object-contain w-full h-80 border bg-gray-900 rounded-xl shadow-sm mt-1 md:cursor-pointer"
+                                @click="selectNewPhoto"
+                            >
                         </div>
 
-                        <jet-secondary-button class="mt-2 mr-2" type="button" @click.native.prevent="selectNewPhoto">
-                            Select A New Photo
-                        </jet-secondary-button>
+                        <!-- New Photo Button -->
+                        <div
+                            class="mt-1 rounded-full border border-gray-300 h-10 md:cursor-pointer flex items-center justify-center hover:bg-gray-100 md:w-52 shadow-sm text-gray-800"
+                            @click="selectNewPhoto"
+                        >
+                            <span class="text-gray-500 mr-1">
+                                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z" />
+                                </svg>
+                            </span>
+                            <span>Select a photo</span>
+                        </div>
 
                         <label for="photo" class="text-red-500 block mt-1 text-sm" v-show="photoError">Photo is required</label>
 
                         <jet-input-error :message="form.errors.photo" class="mt-2" />
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-4">
+                        <jet-label for="specs" value="SELECT SPECS TO INCLUDE" />
+                        <div
+                            id="specs"
+                            class="flex flex-wrap mt-2"
+                        >
+                            <span
+                                v-for="specs in addSpecs"
+                                :key="specs.name"
+                                :class="[ specs.show ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-blue-700 hover:bg-blue-100' ]"
+                                class="flex px-3 rounded-full mr-1 mb-1 md:cursor-pointer border border-blue-600 h-7 items-center shadow-sm"
+                                type="button"
+                                @click="removeSpecs(specs.name)"
+                            >
+                                <!-- Plus -->
+                                <!--<svg v-if="!specs.show" style="width:18px;height:18px" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                                </svg>
+                                &lt;!&ndash; Close &ndash;&gt;
+                                <svg v-else style="width:18px;height:18px" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                </svg>-->
+                                <span class="text-xs font-medium uppercase">
+                                    {{ specs.name }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <!-- Specifications selected -->
+                        <div class="mt-3">
+                            <transition-group
+                                enter-active-class="transition ease-in duration-100"
+                                enter-class="opacity-0"
+                                enter-to-class="opacity-100"
+                                leave-active-class="transition ease-in duration-100"
+                                leave-class="opacity-100"
+                                leave-to-class="opacity-0"
+                            >
+                                <div
+                                    v-for="specs in addSpecs"
+                                    :key="specs.name"
+                                    v-show="specs.show"
+                                    class="mb-2"
+                                >
+                                    <label :for="specs.name" class="uppercase font-medium text-gray-600 text-xs">
+                                        {{ specs.name }}
+                                    </label>
+                                    <div
+                                        class="flex items-center justify-center px-3 border border-gray-300 mt-1 focus:border-gray-400 rounded-xl shadow-sm"
+                                    >
+                                        <input
+                                            type="text"
+                                            class="flex-1 border-none focus:border-none focus:ring-0 pl-0 pr-3"
+                                            v-model="form[specs.name]"
+                                        />
+                                        <span
+                                            class="flex-none md:cursor-pointer rounded-full hover:bg-gray-100 w-7 h-7 text-gray-600 flex items-center justify-center"
+                                            @click="removeSpecs(specs.name)"
+                                        >
+                                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                                <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <jet-input-error :message="form.errors[specs.name]" class="mt-2" />
+                                </div>
+                            </transition-group>
+                        </div>
                     </div>
                 </template>
 
@@ -73,7 +135,11 @@
                         Published.
                     </jet-action-message>
 
-                    <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <jet-button
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        class="bg-blue-600 hover:bg-blue-700"
+                    >
                         Publish
                     </jet-button>
                 </template>
@@ -182,15 +248,19 @@
             },
 
             updatePhotoPreview() {
-                const reader = new FileReader();
+                if (this.$refs.photo.files[0]) {
+                    const reader = new FileReader();
 
-                reader.onload = (e) => {
-                    this.photoPreview = e.target.result;
-                };
+                    reader.onload = (e) => {
+                        this.photoPreview = e.target.result;
+                    };
 
-                reader.readAsDataURL(this.$refs.photo.files[0]);
+                    reader.readAsDataURL(this.$refs.photo.files[0]);
 
-                this.photoError = false
+                    this.photoError = false
+                } else {
+                    this.photoPreview = null
+                }
             },
 
             removeSpecs(specsName) {
