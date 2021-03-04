@@ -132,6 +132,10 @@ let mutations = {
         }
     },
 
+    updateUserAuthorizationMutation (state, payload) {
+        state.userAuthorization = payload
+    }
+
 }
 
 export default mutations

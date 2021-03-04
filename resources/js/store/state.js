@@ -5,7 +5,12 @@ let state = {
     publicationShow: null,
     scrollPublications: false,
     publicationsPage: 1,
-    loginMessage: null
+    loginMessage: null,
+
+    userAuthorization: {
+        firstVisit: true,
+        status: false
+    }
 }
 
 export default state

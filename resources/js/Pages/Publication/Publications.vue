@@ -17,7 +17,10 @@
                     :key="publication.id"
                 />
 
-                <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+                <infinite-loading
+                    :identifier="userStatusUpdate"
+                    @infinite="infiniteHandler"
+                >
                     <div slot="spinner">
                         <publication-skeleton-card />
                     </div>
@@ -74,11 +77,44 @@
 
             lastShowedPublicationId () {
                 return this.$store.state.lastShowedPublicationId
+            },
+
+            userAuthorization () {
+                return this.$store.state.userAuthorization
+            },
+
+            getIds () {
+                let ids = []
+                this.publicationsFromStore.forEach((item, index) => {
+                    ids.push(item.id)
+                })
+                return ids
+            },
+
+            userStatus () {
+                return !!this.$page.props.user
+            }
+        },
+
+        watch: {
+            userStatus: function () {
+                this.resetPublications()
+            }
+        },
+
+        data () {
+            return {
+                userStatusUpdate: !!this.$page.props.user
             }
         },
 
         mounted () {
+            // scroll to center of publication image
             this.scroll()
+
+            this.checkUser()
+
+            // add event listeners to pusher channel
             this.listenForUpdates()
         },
 
@@ -93,7 +129,8 @@
                 'setPublicationsPage',
                 'setPublicationLikes',
                 'addPublicationComment',
-                'addPublicationCommentReply'
+                'addPublicationCommentReply',
+                'updateUserAuthorization'
             ]),
 
             scroll () {
@@ -119,12 +156,11 @@
                 }
 
                 axios.post(this.route('publications.get-publications'), {
-                    page: this.page,
+                    publications_ids: this.getIds,
                     first_item_created_at: firstItem.created_at
                 })
                     .then(response => {
                         if (response.data.publications.length) {
-                            this.page++
                             this.publicationsFromStore.push(...response.data.publications)
                             $state.loaded()
                         } else {
@@ -153,10 +189,38 @@
                     })
             },
 
-            scrollToTop() {
+            scrollToTop () {
                 document.body.scrollTop = 0; // For Safari
                 document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-            }
+            },
+
+            async resetPublications () {
+                // wait until finish updating values
+                await new Promise((resolve) => {
+                    this.setPublications([])
+                    this.updateUserAuthorization({
+                        firstVisit: false,
+                        status: !!this.$page.props.user
+                    })
+                    resolve()
+                })
+
+                // update value to reset the vue infinite loader component
+                this.userStatusUpdate = !!this.$page.props.user
+            },
+
+            checkUser () {
+                if (this.userAuthorization.firstVisit) {
+                    this.updateUserAuthorization({
+                        firstVisit: false,
+                        status: !!this.$page.props.user
+                    })
+                } else {
+                    if (this.userAuthorization.status !== !!this.$page.props.user) {
+                        this.resetPublications()
+                    }
+                }
+            },
         },
 
         beforeDestroy() {

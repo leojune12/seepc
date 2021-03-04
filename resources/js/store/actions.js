@@ -41,6 +41,10 @@ let actions = {
 
     addPublicationCommentReply ({commit}, payload) {
         commit('addPublicationCommentReplyMutation', payload)
+    },
+
+    updateUserAuthorization ({commit}, payload) {
+        commit('updateUserAuthorizationMutation', payload)
     }
 }
 

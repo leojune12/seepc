@@ -140,8 +140,10 @@ class PublicationController extends Controller
             $first_item_created_at = now();
         }
 
+        $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
+
         return response()->json([
-            'publications' => PublicationResource::collection(Publication::where('created_at', '<=', $first_item_created_at)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5)),
+            'publications' => PublicationResource::collection($publications),
         ]);
     }
 
