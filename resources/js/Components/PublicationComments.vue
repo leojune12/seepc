@@ -3,10 +3,10 @@
         <!-- Mobile View -->
         <div v-if="window.width < 768 && inShowComponent">
             <transition
-                enter-active-class="transform transition ease-in duration-300"
+                enter-active-class="transform transition duration-300"
                 enter-class="translate-y-full"
                 enter-to-class="translate-y-0"
-                leave-active-class="transform transition ease-in duration-300"
+                leave-active-class="transform transition duration-300"
                 leave-class="translate-y-0"
                 leave-to-class="translate-y-full"
             >
@@ -19,7 +19,7 @@
                             <div class="flex items-center">
                                 <span
                                     class="rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2"
-                                    v-on:click="$emit('hide-comments')"
+                                    @click="closeComments"
                                 >
                                     <!-- left arrow -->
                                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -312,6 +312,13 @@
                     this.fetching = false
                 }
             },
+
+            closeComments () {
+                this.animate = false
+                setTimeout(() => {
+                    this.$emit('hide-comments')
+                }, 300)
+            }
         },
         destroyed() {
             window.removeEventListener('resize', this.handleResize);

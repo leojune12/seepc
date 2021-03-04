@@ -2888,6 +2888,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {
         this.fetching = false;
       }
+    },
+    closeComments: function closeComments() {
+      var _this3 = this;
+
+      this.animate = false;
+      setTimeout(function () {
+        _this3.$emit('hide-comments');
+      }, 300);
     }
   }),
   destroyed: function destroyed() {
@@ -41129,12 +41137,10 @@ var render = function() {
               "transition",
               {
                 attrs: {
-                  "enter-active-class":
-                    "transform transition ease-in duration-300",
+                  "enter-active-class": "transform transition duration-300",
                   "enter-class": "translate-y-full",
                   "enter-to-class": "translate-y-0",
-                  "leave-active-class":
-                    "transform transition ease-in duration-300",
+                  "leave-active-class": "transform transition duration-300",
                   "leave-class": "translate-y-0",
                   "leave-to-class": "translate-y-full"
                 }
@@ -41168,11 +41174,7 @@ var render = function() {
                               {
                                 staticClass:
                                   "rounded-full hover:bg-gray-100 w-9 h-9 flex justify-center items-center mr-2",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.$emit("hide-comments")
-                                  }
-                                }
+                                on: { click: _vm.closeComments }
                               },
                               [
                                 _c(
