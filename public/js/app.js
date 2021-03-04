@@ -7065,10 +7065,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     scroll: function scroll() {
       var _this = this;
 
-      var promise = new Promise(function (myResolve, myReject) {
-        myResolve();
-      });
-      promise.then(function () {
+      Promise.resolve().then(function () {
         if (_this.lastShowedPublicationId) {
           document.getElementById('publication_' + _this.lastShowedPublicationId).scrollIntoView({
             block: "center"

@@ -134,16 +134,11 @@
             ]),
 
             scroll () {
-                let promise = new Promise(function(myResolve, myReject) {
-                    myResolve();
-                });
-
-                promise
-                    .then(() => {
-                        if (this.lastShowedPublicationId) {
-                            document.getElementById('publication_'+this.lastShowedPublicationId).scrollIntoView({block: "center"})
-                        }
-                    })
+                Promise.resolve().then(() => {
+                    if (this.lastShowedPublicationId) {
+                        document.getElementById('publication_' + this.lastShowedPublicationId).scrollIntoView({block: "center"})
+                    }
+                })
             },
 
             infiniteHandler($state) {
