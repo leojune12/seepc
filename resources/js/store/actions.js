@@ -11,10 +11,6 @@ let actions = {
         commit('setScrollPublicationsMutation', payload)
     },
 
-    setPublicationsPage ({commit}, payload) {
-        commit('setPublicationsPageMutation', payload)
-    },
-
     setPublicationLikes ({commit}, payload) {
         commit('setPublicationLikesMutation', payload)
     },

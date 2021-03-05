@@ -11,10 +11,6 @@ let mutations = {
         state.scrollPublications = payload
     },
 
-    setPublicationsPageMutation (state, payload) {
-        state.publicationsPage = payload
-    },
-
     setPublicationShowMutation (state, payload) {
         state.publicationShow = payload
     },
