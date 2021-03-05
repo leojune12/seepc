@@ -155,11 +155,13 @@
             ]),
 
             scroll () {
-                Promise.resolve().then(() => {
-                    if (this.lastShowedPublicationId) {
-                        document.getElementById('publication_' + this.lastShowedPublicationId).scrollIntoView({block: "center"})
-                    }
-                })
+                let publicationCard = document.getElementById('publication_' + this.lastShowedPublicationId)
+
+                if (publicationCard) {
+                    Promise.resolve().then(() => {
+                        publicationCard.scrollIntoView({block: "center"})
+                    })
+                }
             },
 
             infiniteHandler($state) {

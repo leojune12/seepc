@@ -7199,18 +7199,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply', 'updateUserAuthorization', 'updateReloadAllPublications', 'updateReloadMyPublications'])), {}, {
     scroll: function scroll() {
-      var _this = this;
+      var publicationCard = document.getElementById('publication_' + this.lastShowedPublicationId);
 
-      Promise.resolve().then(function () {
-        if (_this.lastShowedPublicationId) {
-          document.getElementById('publication_' + _this.lastShowedPublicationId).scrollIntoView({
+      if (publicationCard) {
+        Promise.resolve().then(function () {
+          publicationCard.scrollIntoView({
             block: "center"
           });
-        }
-      });
+        });
+      }
     },
     infiniteHandler: function infiniteHandler($state) {
-      var _this2 = this;
+      var _this = this;
 
       var firstItem = {
         created_at: null
@@ -7226,9 +7226,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         get_my_publications: this.get_my_publications
       }).then(function (response) {
         if (response.data.publications.length) {
-          var _this2$publicationsFr;
+          var _this$publicationsFro;
 
-          (_this2$publicationsFr = _this2.publicationsFromStore).push.apply(_this2$publicationsFr, _toConsumableArray(response.data.publications));
+          (_this$publicationsFro = _this.publicationsFromStore).push.apply(_this$publicationsFro, _toConsumableArray(response.data.publications));
 
           $state.loaded();
         } else {
@@ -7239,19 +7239,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     listenForUpdates: function listenForUpdates() {
-      var _this3 = this;
+      var _this2 = this;
 
       Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
         var data = {
-          currentUserId: _this3.$page.props.user ? _this3.$page.props.user.id : null,
+          currentUserId: _this2.$page.props.user ? _this2.$page.props.user.id : null,
           data: incomingData
         };
 
-        _this3.setPublicationLikes(data);
+        _this2.setPublicationLikes(data);
       }).listen('PublicationCommentAdded', function (incomingData) {
-        _this3.addPublicationComment(incomingData);
+        _this2.addPublicationComment(incomingData);
       }).listen('PublicationCommentReplyAdded', function (incomingData) {
-        _this3.addPublicationCommentReply(incomingData);
+        _this2.addPublicationCommentReply(incomingData);
       });
     },
     scrollToTop: function scrollToTop() {
@@ -7260,7 +7260,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     },
     resetPublications: function resetPublications() {
-      var _this4 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -7269,11 +7269,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               case 0:
                 _context.next = 2;
                 return new Promise(function (resolve) {
-                  _this4.setPublications([]);
+                  _this3.setPublications([]);
 
-                  _this4.updateUserAuthorization({
+                  _this3.updateUserAuthorization({
                     firstVisit: false,
-                    status: !!_this4.$page.props.user
+                    status: !!_this3.$page.props.user
                   });
 
                   resolve();
@@ -7283,7 +7283,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _context.next = 4;
                 return new Promise(function (resolve) {
                   // update value to reset the vue infinite loader component
-                  _this4.userStatusUpdate = Date.now();
+                  _this3.userStatusUpdate = Date.now();
                   resolve();
                 });
 
