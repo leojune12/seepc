@@ -20,6 +20,11 @@ let state = {
         firstVisit: true,
         status: false
     },
+
+    // flag to reload all loaded publications
+    reloadAllPublications: true,
+    // flag to reload my loaded publications
+    reloadMyPublications: true
 }
 
 export default state

@@ -41,7 +41,15 @@ let actions = {
 
     updateUserAuthorization ({commit}, payload) {
         commit('updateUserAuthorizationMutation', payload)
-    }
+    },
+
+    updateReloadAllPublications ({commit}, payload) {
+        commit('updateReloadAllPublicationsMutations', payload)
+    },
+
+    updateReloadMyPublications ({commit}, payload) {
+        commit('updateReloadMyPublicationsMutations', payload)
+    },
 }
 
 export default actions

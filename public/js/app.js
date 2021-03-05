@@ -7123,6 +7123,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     InfiniteLoading: (vue_infinite_loading__WEBPACK_IMPORTED_MODULE_1___default()),
     PublicationSkeletonCard: _Components_PublicationSkeletonCard__WEBPACK_IMPORTED_MODULE_5__.default
   },
+  props: {
+    get_my_publications: {
+      type: Boolean,
+      "default": false
+    }
+  },
   computed: {
     publicationsFromStore: {
       get: function get() {
@@ -7130,14 +7136,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       },
       set: function set(value) {
         this.setPublications(value);
-      }
-    },
-    page: {
-      get: function get() {
-        return this.$store.state.publicationsPage;
-      },
-      set: function set(value) {
-        this.setPublicationsPage(value);
       }
     },
     scrollPublications: function scrollPublications() {
@@ -7158,6 +7156,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     userStatus: function userStatus() {
       return !!this.$page.props.user;
+    },
+    reloadAllPublications: {
+      get: function get() {
+        return this.$store.state.reloadAllPublications;
+      },
+      set: function set(payload) {
+        this.updateReloadAllPublications(payload);
+      }
+    },
+    reloadMyPublications: {
+      get: function get() {
+        return this.$store.state.reloadMyPublications;
+      },
+      set: function set(payload) {
+        this.updateReloadMyPublications(payload);
+      }
     }
   },
   watch: {
@@ -7167,12 +7181,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      userStatusUpdate: !!this.$page.props.user
+      userStatusUpdate: Date.now()
     };
   },
   mounted: function mounted() {
-    // scroll to center of publication image
-    this.scroll();
+    // check if to reset currently loaded publications
+    this.checkPublicationsFlag(); // scroll to center of publication image
+
+    this.scroll(); // check if user changed authorization(logged in or logged out)
+
     this.checkUser(); // add event listeners to pusher channel
 
     this.listenForUpdates();
@@ -7180,7 +7197,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     this.scrollToTop();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationsPage', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply', 'updateUserAuthorization'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_6__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply', 'updateUserAuthorization', 'updateReloadAllPublications', 'updateReloadMyPublications'])), {}, {
     scroll: function scroll() {
       var _this = this;
 
@@ -7205,7 +7222,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       axios.post(this.route('publications.get-publications'), {
         publications_ids: this.getIds,
-        first_item_created_at: firstItem.created_at
+        first_item_created_at: firstItem.created_at,
+        get_my_publications: this.get_my_publications
       }).then(function (response) {
         if (response.data.publications.length) {
           var _this2$publicationsFr;
@@ -7262,10 +7280,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
 
               case 2:
-                // update value to reset the vue infinite loader component
-                _this4.userStatusUpdate = !!_this4.$page.props.user;
+                _context.next = 4;
+                return new Promise(function (resolve) {
+                  // update value to reset the vue infinite loader component
+                  _this4.userStatusUpdate = Date.now();
+                  resolve();
+                });
 
-              case 3:
+              case 4:
               case "end":
                 return _context.stop();
             }
@@ -7281,6 +7303,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       } else {
         if (this.userAuthorization.status !== !!this.$page.props.user) {
+          this.resetPublications();
+        }
+      }
+    },
+    checkPublicationsFlag: function checkPublicationsFlag() {
+      // check if in all-publications page or my-publications page
+      if (this.get_my_publications) {
+        // my-publications
+        if (this.reloadMyPublications) {
+          this.reloadMyPublications = false;
+          this.reloadAllPublications = true;
+          this.resetPublications();
+        }
+      } else {
+        // all-publications
+        if (this.reloadAllPublications) {
+          this.reloadAllPublications = false;
+          this.reloadMyPublications = true;
           this.resetPublications();
         }
       }
@@ -7778,41 +7818,45 @@ var actions = {
     var commit = _ref3.commit;
     commit('setScrollPublicationsMutation', payload);
   },
-  setPublicationsPage: function setPublicationsPage(_ref4, payload) {
+  setPublicationLikes: function setPublicationLikes(_ref4, payload) {
     var commit = _ref4.commit;
-    commit('setPublicationsPageMutation', payload);
-  },
-  setPublicationLikes: function setPublicationLikes(_ref5, payload) {
-    var commit = _ref5.commit;
     commit('setPublicationLikesMutation', payload);
   },
-  setPublicationComments: function setPublicationComments(_ref6, payload) {
-    var commit = _ref6.commit;
+  setPublicationComments: function setPublicationComments(_ref5, payload) {
+    var commit = _ref5.commit;
     commit('setPublicationCommentsMutation', payload);
   },
-  addPublicationComment: function addPublicationComment(_ref7, payload) {
-    var commit = _ref7.commit;
+  addPublicationComment: function addPublicationComment(_ref6, payload) {
+    var commit = _ref6.commit;
     commit('addPublicationCommentMutation', payload);
   },
-  setPublicationShow: function setPublicationShow(_ref8, payload) {
-    var commit = _ref8.commit;
+  setPublicationShow: function setPublicationShow(_ref7, payload) {
+    var commit = _ref7.commit;
     commit('setPublicationShowMutation', payload);
   },
-  setLoginMessage: function setLoginMessage(_ref9, payload) {
-    var commit = _ref9.commit;
+  setLoginMessage: function setLoginMessage(_ref8, payload) {
+    var commit = _ref8.commit;
     commit('setLoginMessageMutation', payload);
   },
-  setPublicationCommentReplies: function setPublicationCommentReplies(_ref10, payload) {
-    var commit = _ref10.commit;
+  setPublicationCommentReplies: function setPublicationCommentReplies(_ref9, payload) {
+    var commit = _ref9.commit;
     commit('setPublicationCommentRepliesMutation', payload);
   },
-  addPublicationCommentReply: function addPublicationCommentReply(_ref11, payload) {
-    var commit = _ref11.commit;
+  addPublicationCommentReply: function addPublicationCommentReply(_ref10, payload) {
+    var commit = _ref10.commit;
     commit('addPublicationCommentReplyMutation', payload);
   },
-  updateUserAuthorization: function updateUserAuthorization(_ref12, payload) {
-    var commit = _ref12.commit;
+  updateUserAuthorization: function updateUserAuthorization(_ref11, payload) {
+    var commit = _ref11.commit;
     commit('updateUserAuthorizationMutation', payload);
+  },
+  updateReloadAllPublications: function updateReloadAllPublications(_ref12, payload) {
+    var commit = _ref12.commit;
+    commit('updateReloadAllPublicationsMutations', payload);
+  },
+  updateReloadMyPublications: function updateReloadMyPublications(_ref13, payload) {
+    var commit = _ref13.commit;
+    commit('updateReloadMyPublicationsMutations', payload);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -7901,9 +7945,6 @@ var mutations = {
   },
   setScrollPublicationsMutation: function setScrollPublicationsMutation(state, payload) {
     state.scrollPublications = payload;
-  },
-  setPublicationsPageMutation: function setPublicationsPageMutation(state, payload) {
-    state.publicationsPage = payload;
   },
   setPublicationShowMutation: function setPublicationShowMutation(state, payload) {
     state.publicationShow = payload;
@@ -8026,6 +8067,12 @@ var mutations = {
   },
   updateUserAuthorizationMutation: function updateUserAuthorizationMutation(state, payload) {
     state.userAuthorization = payload;
+  },
+  updateReloadAllPublicationsMutations: function updateReloadAllPublicationsMutations(state, payload) {
+    state.reloadAllPublications = payload;
+  },
+  updateReloadMyPublicationsMutations: function updateReloadMyPublicationsMutations(state, payload) {
+    state.reloadMyPublications = payload;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -8044,17 +8091,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var state = {
+  // FPT url of media storage
   ftpUrl: 'https://webdevstacks.000webhostapp.com/',
+  // id of the last publication visited
   lastShowedPublicationId: null,
-  publications: [],
   publicationShow: null,
+  // publications currently loaded
+  publications: [],
+  // flag if to scroll to a certain image in publications
   scrollPublications: false,
-  publicationsPage: 1,
+  // message for guest user in login page
   loginMessage: null,
   userAuthorization: {
     firstVisit: true,
     status: false
-  }
+  },
+  // flag to reload all loaded publications
+  reloadAllPublications: true,
+  // flag to reload my loaded publications
+  reloadMyPublications: true
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
 
@@ -44869,12 +44924,12 @@ var render = function() {
                   "inertia-link",
                   {
                     class: [
-                      _vm.route().current("dashboard")
+                      _vm.route().current("my-publications")
                         ? _vm.activeLink
                         : _vm.hoverClass,
                       _vm.linkClass
                     ],
-                    attrs: { href: _vm.route("dashboard") }
+                    attrs: { href: _vm.route("my-publications") }
                   },
                   [
                     _c("span", { class: _vm.iconClass }, [

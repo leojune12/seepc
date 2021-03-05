@@ -130,7 +130,15 @@ let mutations = {
 
     updateUserAuthorizationMutation (state, payload) {
         state.userAuthorization = payload
-    }
+    },
+
+    updateReloadAllPublicationsMutations (state, payload) {
+        state.reloadAllPublications = payload
+    },
+
+    updateReloadMyPublicationsMutations (state, payload) {
+        state.reloadMyPublications = payload
+    },
 
 }
 

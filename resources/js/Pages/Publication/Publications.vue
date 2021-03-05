@@ -52,6 +52,12 @@
             InfiniteLoading,
             PublicationSkeletonCard
         },
+        props: {
+            get_my_publications: {
+                type: Boolean,
+                default: false
+            }
+        },
         computed: {
             publicationsFromStore: {
                 get: function () {
@@ -59,15 +65,6 @@
                 },
                 set: function (value) {
                     this.setPublications(value)
-                }
-            },
-
-            page: {
-                get: function () {
-                    return this.$store.state.publicationsPage
-                },
-                set: function (value) {
-                    this.setPublicationsPage(value)
                 }
             },
 
@@ -93,7 +90,26 @@
 
             userStatus () {
                 return !!this.$page.props.user
+            },
+
+            reloadAllPublications: {
+                get () {
+                    return this.$store.state.reloadAllPublications
+                },
+                set (payload) {
+                    this.updateReloadAllPublications(payload)
+                }
+            },
+
+            reloadMyPublications: {
+                get () {
+                    return this.$store.state.reloadMyPublications
+                },
+                set (payload) {
+                    this.updateReloadMyPublications(payload)
+                }
             }
+
         },
 
         watch: {
@@ -104,14 +120,18 @@
 
         data () {
             return {
-                userStatusUpdate: !!this.$page.props.user
+                userStatusUpdate: Date.now()
             }
         },
 
         mounted () {
+            // check if to reset currently loaded publications
+            this.checkPublicationsFlag()
+
             // scroll to center of publication image
             this.scroll()
 
+            // check if user changed authorization(logged in or logged out)
             this.checkUser()
 
             // add event listeners to pusher channel
@@ -126,11 +146,12 @@
             ...mapActions([
                 'setPublications',
                 'setScrollPublications',
-                'setPublicationsPage',
                 'setPublicationLikes',
                 'addPublicationComment',
                 'addPublicationCommentReply',
-                'updateUserAuthorization'
+                'updateUserAuthorization',
+                'updateReloadAllPublications',
+                'updateReloadMyPublications',
             ]),
 
             scroll () {
@@ -152,7 +173,8 @@
 
                 axios.post(this.route('publications.get-publications'), {
                     publications_ids: this.getIds,
-                    first_item_created_at: firstItem.created_at
+                    first_item_created_at: firstItem.created_at,
+                    get_my_publications: this.get_my_publications
                 })
                     .then(response => {
                         if (response.data.publications.length) {
@@ -191,7 +213,7 @@
 
             async resetPublications () {
                 // wait until finish updating values
-                await new Promise((resolve) => {
+                await new Promise(resolve => {
                     this.setPublications([])
                     this.updateUserAuthorization({
                         firstVisit: false,
@@ -200,8 +222,12 @@
                     resolve()
                 })
 
-                // update value to reset the vue infinite loader component
-                this.userStatusUpdate = !!this.$page.props.user
+                await new Promise(resolve => {
+                    // update value to reset the vue infinite loader component
+                    this.userStatusUpdate = Date.now()
+
+                    resolve()
+                })
             },
 
             checkUser () {
@@ -216,6 +242,28 @@
                     }
                 }
             },
+
+            checkPublicationsFlag () {
+                // check if in all-publications page or my-publications page
+                if (this.get_my_publications) {
+                    // my-publications
+                    if (this.reloadMyPublications) {
+                        this.reloadMyPublications = false
+                        this.reloadAllPublications = true
+
+                        this.resetPublications()
+                    }
+                } else {
+                    // all-publications
+                    if (this.reloadAllPublications) {
+                        this.reloadAllPublications = false
+                        this.reloadMyPublications = true
+
+                        this.resetPublications()
+                    }
+                }
+            }
+
         },
 
         beforeDestroy() {

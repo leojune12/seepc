@@ -134,13 +134,14 @@ class PublicationController extends Controller
      */
     public function get_publications(Request $request)
     {
-        $first_item_created_at = $request->first_item_created_at;
+        $first_item_created_at = $request->first_item_created_at ? $request->first_item_created_at : now();
 
-        if ($first_item_created_at == null) {
-            $first_item_created_at = now();
+        if ($request->get_my_publications == true) {
+            // check if to get only logged in user's publications
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', Auth::id())->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
+        } else {
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
         }
-
-        $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
 
         return response()->json([
             'publications' => PublicationResource::collection($publications),

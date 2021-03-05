@@ -19,6 +19,12 @@ Route::get('/', function () {
 
 Route::get('/publications', [PublicationController::class, 'index'])->name('publications');
 
+Route::get('/my-publications', function () {
+    return Inertia::render('Publication/Publications', [
+        'get_my_publications' => true
+    ]);
+})->name('my-publications');
+
 Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->name('publications.show');
 
 Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
