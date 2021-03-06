@@ -5,7 +5,7 @@
         </div>
 
         <!-- Full Screen Dropdown Overlay -->
-        <div v-show="open" class="fixed inset-0 z-40" @click="open = false">
+        <div v-show="open" class="fixed inset-0 z-30" @click="open = false">
         </div>
 
         <transition
@@ -16,7 +16,7 @@
             leave-class="transform opacity-100 scale-100"
             leave-to-class="transform opacity-0 scale-95">
             <div v-show="open"
-                    class="absolute z-50 mt-2 rounded-md shadow-lg"
+                    class="absolute z-40 mt-2 rounded-md shadow-lg"
                     :class="[widthClass, alignmentClasses]"
                     style="display: none;"
                     @click="open = false">
