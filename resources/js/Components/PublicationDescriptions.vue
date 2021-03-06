@@ -24,6 +24,7 @@
                 </div>
             </div>
             <actions
+                v-if="!!$page.props.user"
                 :publication="publication"
             />
         </div>
