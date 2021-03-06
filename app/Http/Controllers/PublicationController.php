@@ -47,7 +47,7 @@ class PublicationController extends Controller
     {
         Validator::make($request->all(), [
             'user_id' => ['required', 'integer'],
-            'photo' => ['required', 'image', 'max:1024'],
+            'photo' => ['required', 'image', 'max:2048'],
             'description' => ['required', 'string', 'max:255'],
             'motherboard' => ['nullable', 'string', 'max:255'],
             'cpu' => ['nullable', 'string', 'max:255'],
