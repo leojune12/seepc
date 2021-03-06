@@ -19,12 +19,6 @@ Route::get('/', function () {
 
 Route::get('/publications', [PublicationController::class, 'index'])->name('publications');
 
-Route::get('/my-publications', function () {
-    return Inertia::render('Publication/Publications', [
-        'get_my_publications' => true
-    ]);
-})->name('my-publications');
-
 Route::get('/publications/show/{id}', [PublicationController::class, 'show'])->name('publications.show');
 
 Route::post('/publications/get-publications', [PublicationController::class, 'get_publications'])->name('publications.get-publications');
@@ -34,9 +28,16 @@ Route::post('/publications/comment/show}', [CommentController::class, 'show_comm
 Route::post('/publications/comment/reply/show', [CommentController::class, 'show_replies'])->name('publications.comment.reply.show');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/my-publications', function () {
+        return Inertia::render('Publication/Publications', [
+            'get_my_publications' => true
+        ]);
+    })->name('my-publications');
 
     Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 
