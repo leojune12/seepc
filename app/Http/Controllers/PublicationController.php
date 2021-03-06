@@ -169,9 +169,9 @@ class PublicationController extends Controller
 
         if ($request->get_my_publications == true) {
             // check if to get only logged in user's publications
-            $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', Auth::id())->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', Auth::id())->whereNotIn('id', $request->publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
         } else {
-            $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user','likes'])->withCount('comments')->orderByDesc('created_at')->simplePaginate(5);
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
         }
 
         return response()->json([
