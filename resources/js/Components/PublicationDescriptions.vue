@@ -4,14 +4,14 @@
         :class="[ inShowComponent ? 'md:text-gray-800 text-gray-200' : 'text-gray-800' ]"
     >
         <div class="flex flex-row py-3 items-center">
-            <div class="mr-2">
+            <div class="mr-2 flex-none">
                 <img
                     :src="getProfilePhoto()"
                     alt="profile photo"
                     class="w-10 h-10 rounded-full object-cover border border-gray-300"
                 >
             </div>
-            <div>
+            <div class="flex-1">
                 <div
                     class="font-bold md:text-base text-sm"
                 >
@@ -23,6 +23,9 @@
                     {{ getDateTime(publication.created_at) }}
                 </div>
             </div>
+            <actions
+                :publication="publication"
+            />
         </div>
         <div
             class="space-y-6 overflow-y-auto"
@@ -51,16 +54,26 @@
 </template>
 
 <script>
+    import JetDropdown from "@/Jetstream/Dropdown"
+    import JetDropdownLink from "@/Jetstream/DropdownLink";
+    import Actions from "@/Components/PublicationCard/Actions";
+
     export default {
         name: "PublicationDescriptions",
+        components: {
+            JetDropdown,
+            JetDropdownLink,
+            Actions
+        },
         props: {
             publication: {
                 type: Object
             },
+
             inShowComponent: {
                 type: Boolean,
                 default: false
-            }
+            },
         },
         computed: {
             ftpUrl () {

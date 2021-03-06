@@ -189,3 +189,17 @@ c
 3resources/js/Components/PublicationSkeletonCard.vue,c\9\c99880b1c79ab39cabc8f1b1d97bbe26c312177e
 X
 (app/Http/Resources/CommentCollection.php,5\a\5a65b182941163ba9733ee7efc783de212569ce0
+W
+'resources/js/Components/AppLogoName.vue,c\6\c665372e599a220c3f0f6f3e615b1b94535f8038
+P
+ resources/js/Layouts/Sidebar.vue,a\a\aa2737fd1dff7a6c23aa695f11c7ac6ae8c81ccd
+m
+=resources/js/Components/PublicationCard/DeletePublication.vue,b\0\b07fca95849c6b39c4fe2ede5368545710464d1c
+]
+-resources/js/Pages/Profile/DeleteUserForm.vue,c\b\cb402fc27ea9978167e076d48dbdd047757c8860
+V
+&resources/js/Jetstream/DialogModal.vue,6\4\64cf0e68f483b9705eab8df221bec5c868fae98c
+Q
+!resources/js/Components/Modal.vue,1\c\1c16521134a0bbb6748083ddbd36b2feb572acfc
+c
+3resources/js/Components/PublicationCard/Actions.vue,8\4\84a55608b290c7ee0710414b40074040c91cca72

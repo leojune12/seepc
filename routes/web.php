@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::post('/publications/store', [PublicationController::class, 'store'])->name('publications.store');
 
+    Route::delete('/publications/delete', [PublicationController::class, 'destroy'])->name('publications.destroy');
 
     Route::post('/publications/like', [PublicationController::class, 'like'])->name('publications.like');
 

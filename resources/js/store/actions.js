@@ -50,6 +50,10 @@ let actions = {
     updateReloadMyPublications ({commit}, payload) {
         commit('updateReloadMyPublicationsMutations', payload)
     },
+
+    deletePublication ({commit}, payload) {
+        commit('deletePublicationMutation', payload)
+    }
 }
 
 export default actions

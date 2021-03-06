@@ -152,6 +152,7 @@
                 'updateUserAuthorization',
                 'updateReloadAllPublications',
                 'updateReloadMyPublications',
+                'deletePublication',
             ]),
 
             scroll () {
@@ -205,6 +206,9 @@
                     })
                     .listen('PublicationCommentReplyAdded', (incomingData) => {
                         this.addPublicationCommentReply(incomingData)
+                    })
+                    .listen('PublicationDeleted', (incomingData) => {
+                        this.deletePublication(incomingData.publication_id)
                     })
             },
 

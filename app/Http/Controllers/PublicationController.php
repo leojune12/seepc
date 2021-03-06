@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PublicationDeleted;
 use App\Events\PublicationLiked;
 use App\Http\Resources\PublicationResource;
+use App\Models\Publication\Comment;
 use App\Models\Publication\Like;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
@@ -124,9 +126,38 @@ class PublicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $publication = Publication::find($request->publication_id);
+
+        // check if publication exists
+        if (isset($publication)) {
+            // get comments
+            $comments = $publication->comments;
+            // if has comments
+            if (isset($comments)) {
+                foreach ($comments as $comment) {
+                    // get replies
+                    $replies = $comment->replies;
+                    // if has replies
+                    if (isset($replies)) {
+                        Comment::destroy($replies->modelKeys());
+                    }
+                }
+
+                Comment::destroy($comments->modelKeys());
+            }
+
+            // delete photo
+            Storage::disk('ftp')->delete($publication->photo_path);
+
+            $publication->delete();
+
+            // broadcast to others
+            broadcast(new PublicationDeleted($publication->id))->toOthers();
+        }
+
+        return redirect()->route('publications');
     }
 
     /**

@@ -140,6 +140,16 @@ let mutations = {
         state.reloadMyPublications = payload
     },
 
+    deletePublicationMutation (state, payload) {
+        if (!!state.publications.length) {
+            const index = state.publications.findIndex(publication => publication.id === payload)
+
+            if (index > -1) {
+                state.publications.splice(index, 1)
+            }
+        }
+    }
+
 }
 
 export default mutations
