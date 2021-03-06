@@ -24,7 +24,7 @@
                 </div>
             </div>
             <actions
-                v-if="!!$page.props.user"
+                v-if="showActions"
                 :publication="publication"
             />
         </div>
@@ -84,6 +84,14 @@
             descriptionArray () {
                 return this.publication.description.split('\n')
             },
+
+            showActions () {
+                if (this.$page.props.user) {
+                    return this.$page.props.user.id === this.publication.user.id
+                } else {
+                    return false
+                }
+            }
         },
         methods: {
             getProfilePhoto () {
