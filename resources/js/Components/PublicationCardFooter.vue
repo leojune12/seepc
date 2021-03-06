@@ -31,6 +31,7 @@
         <div class="flex py-1">
             <div
                 class="h-9 rounded flex-1 hover:bg-gray-100 md:cursor-pointer flex items-center justify-center"
+                :class="{ 'hover:bg-gray-700 hover:md:bg-gray-100' : inShowComponent }"
                 @click="like"
             >
                 <div

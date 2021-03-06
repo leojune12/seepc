@@ -195,7 +195,6 @@
             listenForUpdates () {
                 Echo.channel('publications')
                     .listen('PublicationLiked', (incomingData) => {
-                        console.log(incomingData)
                         let data = {
                             currentUserId: this.$page.props.user ? this.$page.props.user.id : null,
                             data: incomingData
