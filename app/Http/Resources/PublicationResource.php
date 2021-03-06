@@ -7,6 +7,7 @@ use App\Models\Publication\Like;
 use App\Models\Publication\Specification;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use function PHPUnit\Framework\isEmpty;
 
 class PublicationResource extends JsonResource
 {
@@ -27,7 +28,7 @@ class PublicationResource extends JsonResource
             // 'likes_count' => count(LikeResource::collection($this->likes)),
             'likes_count' => $this->likes_count,
             // 'liked' => LikeResource::collection($this->likes)->contains('user_id', Auth::id()),
-            'liked' => Like::where('publication_id', $this->id)->where('user_id', $this->user->id)->first() ? true : false,
+            'liked' => Like::where('publication_id', $this->id)->where('user_id', Auth::id())->get()->isNotEmpty(),
             'comments_count' => $this->comments_count,
             'comments' => [],
             'created_at' => $this->created_at,

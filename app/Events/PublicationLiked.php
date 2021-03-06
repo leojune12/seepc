@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Http\Resources\LikeResource;
+use App\Models\Publication\Like;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -28,7 +29,7 @@ class PublicationLiked implements ShouldBroadcast
     {
         $this->publication_id = $publication->id;
         $this->likes_count = count($publication->likes);
-        $this->liked = LikeResource::collection($publication->likes)->contains('user_id', Auth::id());
+        $this->liked = Like::where('publication_id', $publication->id)->where('user_id', Auth::id())->get()->isNotEmpty();
         $this->current_user_id = Auth::id();
     }
 
