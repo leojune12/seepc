@@ -8,7 +8,7 @@
 
             <div class="w-full">
                 <!-- Navbar -->
-                <nav class="bg-white border-b border-gray-200 sticky top-0 left-72 z-20 w-full">
+                <nav class="bg-white border-b border-gray-200 sticky top-0 left-72 z-50 w-full">
                     <!-- Primary Navigation Menu -->
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between md:justify-end items-center h-16">
@@ -105,6 +105,9 @@
                             <div class="mt-3 space-y-1">
                                 <jet-responsive-nav-link :href="route('publications')" :active="route().current('publications')">
                                     Publications
+                                </jet-responsive-nav-link>
+                                <jet-responsive-nav-link :href="route('my-publications')" :active="route().current('my-publications')">
+                                    My Publications
                                 </jet-responsive-nav-link>
                                 <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
                                     Profile
