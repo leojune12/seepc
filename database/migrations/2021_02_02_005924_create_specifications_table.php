@@ -24,7 +24,7 @@ class CreateSpecificationsTable extends Migration
             $table->string('display', 255)->nullable();
             $table->string('keyboard', 255)->nullable();
             $table->string('mouse', 255)->nullable();
-            $table->timestampsTz();
+            $table->timestamps();
 
             $table->foreign('publication_id')
                 ->references('id')

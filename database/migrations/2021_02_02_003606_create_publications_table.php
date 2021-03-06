@@ -18,7 +18,7 @@ class CreatePublicationsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->text('photo_path');
             $table->string('description', 255);
-            $table->timestampsTz();
+            $table->timestamps();
 
             $table->foreign('user_id')
                 ->references('id')
