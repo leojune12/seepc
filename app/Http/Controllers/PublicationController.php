@@ -198,7 +198,9 @@ class PublicationController extends Controller
 
         $publication = Publication::find($request->publication_id);
 
-        broadcast(new PublicationLiked($publication))->toOthers();
+        if (isset($publication)) {
+            broadcast(new PublicationLiked($publication))->toOthers();
+        }
 
         $likes_count = count($publication->likes);
 
@@ -219,13 +221,14 @@ class PublicationController extends Controller
 
         $like = Like::where('user_id', $request->user_id)->where('publication_id', $request->publication_id);
 
-        if (isset($like)) {
-            $like->delete();
-        }
-
         $publication = Publication::find($request->publication_id);
 
-        broadcast(new PublicationLiked($publication))->toOthers();
+        if (isset($like) || isset($publication)) {
+
+            $like->delete();
+
+            broadcast(new PublicationLiked($publication))->toOthers();
+        }
 
         $likes_count = count($publication->likes);
 

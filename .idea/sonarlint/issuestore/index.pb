@@ -201,3 +201,7 @@ c
 3resources/js/Components/PublicationCard/Actions.vue,8\4\84a55608b290c7ee0710414b40074040c91cca72
 Q
 !app/Events/PublicationDeleted.php,e\e\ee1cd87c2526614571f7ddfb70cb034ab0b94c3a
+>
+custom_php.ini,2\a\2a687585ad9e43abb7fcb6e5805f88e4ce0dc4da
+9
+	.htaccess,f\1\f14dd8fe84b7e99eb63debbf029152463832e7ad
