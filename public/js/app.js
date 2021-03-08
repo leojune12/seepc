@@ -4080,6 +4080,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -7102,6 +7103,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7125,7 +7139,6 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       form: this.$inertia.form({
-        _method: 'POST',
         user_id: this.$page.props.user.id,
         photo: null,
         description: null,
@@ -7138,48 +7151,24 @@ __webpack_require__.r(__webpack_exports__);
         keyboard: null,
         mouse: null
       }),
-      addSpecs: {
-        motherboard: {
-          show: false,
-          name: 'motherboard'
-        },
-        cpu: {
-          show: false,
-          name: 'cpu'
-        },
-        ram: {
-          show: false,
-          name: 'ram'
-        },
-        graphics: {
-          show: false,
-          name: 'graphics'
-        },
-        storage: {
-          show: false,
-          name: 'storage'
-        },
-        display: {
-          show: false,
-          name: 'display'
-        },
-        keyboard: {
-          show: false,
-          name: 'keyboard'
-        },
-        mouse: {
-          show: false,
-          name: 'mouse'
-        }
+      specifications: {
+        motherboard: false,
+        cpu: false,
+        ram: false,
+        graphics: false,
+        storage: false,
+        display: false,
+        keyboard: false,
+        mouse: false
       },
       photoPreview: null,
-      photoError: false
+      photoNullError: null
     };
   },
   methods: {
     publish: function publish() {
       if (this.photoPreview !== null) {
-        this.photoError = false;
+        this.photoNullError = null;
 
         if (this.$refs.photo) {
           this.form.photo = this.$refs.photo.files[0];
@@ -7189,7 +7178,7 @@ __webpack_require__.r(__webpack_exports__);
           preserveScroll: true
         });
       } else {
-        this.photoError = true;
+        this.photoNullError = 'Photo is required';
       }
     },
     selectNewPhoto: function selectNewPhoto() {
@@ -7206,15 +7195,14 @@ __webpack_require__.r(__webpack_exports__);
         };
 
         reader.readAsDataURL(this.$refs.photo.files[0]);
-        this.photoError = false;
+        this.photoNullError = null;
       } else {
         this.photoPreview = null;
       }
     },
-    removeSpecs: function removeSpecs(specsName) {
-      var specs = this.addSpecs[specsName];
-      specs.show = !specs.show;
-      this.form[specsName] = null;
+    toggleSpecs: function toggleSpecs(name) {
+      this.specifications[name] = !this.specifications[name];
+      this.form[name] = null;
     }
   }
 });
@@ -38682,7 +38670,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=7684bf70&scoped=true& */ "./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true&");
+/* harmony import */ var _Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=7684bf70& */ "./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Publication/Create.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
@@ -38694,11 +38682,11 @@ __webpack_require__.r(__webpack_exports__);
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
   _Create_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
-  _Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  "7684bf70",
+  null,
   null
   
 )
@@ -40827,19 +40815,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true&":
-/*!**********************************************************************************************!*\
-  !*** ./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true& ***!
-  \**********************************************************************************************/
+/***/ "./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70& ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Create.vue?vue&type=template&id=7684bf70&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Create_vue_vue_type_template_id_7684bf70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Create.vue?vue&type=template&id=7684bf70& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&");
 
 
 /***/ }),
@@ -42693,7 +42681,7 @@ var render = function() {
       _c(
         "inertia-link",
         {
-          staticClass: "flex-none mr-2",
+          staticClass: "flex-none mr-2 cursor-default md:cursor-pointer",
           attrs: { href: _vm.route("profile.show") }
         },
         [
@@ -42717,7 +42705,7 @@ var render = function() {
         "inertia-link",
         {
           staticClass:
-            "border border-blue-100 rounded-full px-4 py-2 hover:bg-gray-100 flex-grow flex text-blue-500",
+            "border border-blue-100 rounded-full px-4 py-2 hover:bg-gray-100 flex-grow flex text-blue-500 cursor-default md:cursor-pointer",
           attrs: { href: _vm.route("publications.create") }
         },
         [
@@ -43938,7 +43926,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "md:grid md:grid-cols-3 md:gap-6" },
+    { staticClass: "md:grid md:grid-cols-4 md:gap-6" },
     [
       _c("jet-section-title", {
         scopedSlots: _vm._u(
@@ -43977,12 +43965,7 @@ var render = function() {
           [
             _c("div", { staticClass: "shadow overflow-hidden sm:rounded-md" }, [
               _c("div", { staticClass: "px-4 py-5 bg-white sm:p-6" }, [
-                _c(
-                  "div",
-                  { staticClass: "grid grid-cols-6 gap-6" },
-                  [_vm._t("form")],
-                  2
-                )
+                _c("div", { staticClass: "space-y-6" }, [_vm._t("form")], 2)
               ]),
               _vm._v(" "),
               _vm.hasActions
@@ -48812,10 +48795,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true&":
-/*!*************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&scoped=true& ***!
-  \*************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/Pages/Publication/Create.vue?vue&type=template&id=7684bf70& ***!
+  \*************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -48840,9 +48823,7 @@ var render = function() {
               key: "title",
               fn: function() {
                 return [
-                  _vm._v(
-                    "\n                Publish your PC setup\n            "
-                  )
+                  _vm._v("\n                Publish your PC\n            ")
                 ]
               },
               proxy: true
@@ -48852,7 +48833,7 @@ var render = function() {
               fn: function() {
                 return [
                   _vm._v(
-                    "\n                Post your PC specs and photo\n            "
+                    "\n                Post photo and specifications of your PC\n            "
                   )
                 ]
               },
@@ -48886,7 +48867,8 @@ var render = function() {
                           id: "description",
                           rows: "4",
                           required: "",
-                          placeholder: "Say something about your PC..."
+                          placeholder: "Say something about your PC...",
+                          disabled: _vm.form.processing
                         },
                         domProps: { value: _vm.form.description },
                         on: {
@@ -48942,19 +48924,22 @@ var render = function() {
                           _vm._v(" "),
                           _c("img", {
                             staticClass:
-                              "object-contain w-full h-80 border bg-gray-900 rounded-xl shadow-sm mt-1 md:cursor-pointer",
-                            attrs: { src: _vm.photoPreview, alt: "photo" },
-                            on: { click: _vm.selectNewPhoto }
+                              "object-contain w-full h-auto border bg-gray-900 rounded-xl shadow-sm mt-1 max-h-96",
+                            attrs: { src: _vm.photoPreview, alt: "photo" }
                           })
                         ],
                         1
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
+                        "button",
                         {
                           staticClass:
-                            "mt-1 rounded-full border border-gray-300 h-10 md:cursor-pointer flex items-center justify-center hover:bg-gray-100 md:w-52 shadow-sm text-gray-800",
+                            "mt-1 rounded-full border border-gray-300 h-10 md:cursor-pointer flex items-center justify-center hover:bg-gray-100 md:w-52 shadow-sm text-gray-800 md:cursor-pointer cursor-default focus:outline-none md:w-auto w-full px-5",
+                          attrs: {
+                            type: "button",
+                            disabled: _vm.form.processing
+                          },
                           on: { click: _vm.selectNewPhoto }
                         },
                         [
@@ -48981,26 +48966,14 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.photoError,
-                              expression: "photoError"
-                            }
-                          ],
-                          staticClass: "text-red-500 block mt-1 text-sm",
-                          attrs: { for: "photo" }
-                        },
-                        [_vm._v("Photo is required")]
-                      ),
-                      _vm._v(" "),
                       _c("jet-input-error", {
                         staticClass: "mt-2",
                         attrs: { message: _vm.form.errors.photo }
+                      }),
+                      _vm._v(" "),
+                      _c("jet-input-error", {
+                        staticClass: "mt-2",
+                        attrs: { message: _vm.photoNullError }
                       })
                     ],
                     1
@@ -49023,22 +48996,24 @@ var render = function() {
                           staticClass: "flex flex-wrap mt-2",
                           attrs: { id: "specs" }
                         },
-                        _vm._l(_vm.addSpecs, function(specs) {
+                        _vm._l(_vm.specifications, function(value, name) {
                           return _c(
-                            "span",
+                            "button",
                             {
-                              key: specs.name,
                               staticClass:
-                                "flex px-3 rounded-full mr-1 mb-1 md:cursor-pointer border border-blue-600 h-7 items-center shadow-sm",
+                                "flex px-3 rounded-full mr-1 mb-1 md:cursor-pointer cursor-default border border-blue-600 h-7 items-center shadow-sm focus:outline-none",
                               class: [
-                                specs.show
+                                value
                                   ? "bg-blue-600 text-white hover:bg-blue-700"
                                   : "bg-white text-blue-700 hover:bg-blue-100"
                               ],
-                              attrs: { type: "button" },
+                              attrs: {
+                                type: "button",
+                                disabled: _vm.form.processing
+                              },
                               on: {
                                 click: function($event) {
-                                  return _vm.removeSpecs(specs.name)
+                                  return _vm.toggleSpecs(name)
                                 }
                               }
                             },
@@ -49051,7 +49026,7 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                " +
-                                      _vm._s(specs.name) +
+                                      _vm._s(name) +
                                       "\n                            "
                                   )
                                 ]
@@ -49064,23 +49039,23 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticClass: "mt-3" },
+                        {},
                         [
                           _c(
                             "transition-group",
                             {
                               attrs: {
                                 "enter-active-class":
-                                  "transition ease-in duration-100",
+                                  "transition ease-in duration-300",
                                 "enter-class": "opacity-0",
                                 "enter-to-class": "opacity-100",
                                 "leave-active-class":
-                                  "transition ease-in duration-100",
+                                  "transition ease-in duration-300",
                                 "leave-class": "opacity-100",
                                 "leave-to-class": "opacity-0"
                               }
                             },
-                            _vm._l(_vm.addSpecs, function(specs) {
+                            _vm._l(_vm.specifications, function(value, name) {
                               return _c(
                                 "div",
                                 {
@@ -49088,12 +49063,12 @@ var render = function() {
                                     {
                                       name: "show",
                                       rawName: "v-show",
-                                      value: specs.show,
-                                      expression: "specs.show"
+                                      value: value,
+                                      expression: "value"
                                     }
                                   ],
-                                  key: specs.name,
-                                  staticClass: "mb-2"
+                                  key: name + "-key",
+                                  staticClass: "mb-2 mt-3"
                                 },
                                 [
                                   _c(
@@ -49101,12 +49076,12 @@ var render = function() {
                                     {
                                       staticClass:
                                         "uppercase font-medium text-gray-600 text-xs",
-                                      attrs: { for: specs.name }
+                                      attrs: { for: name }
                                     },
                                     [
                                       _vm._v(
                                         "\n                                    " +
-                                          _vm._s(specs.name) +
+                                          _vm._s(name) +
                                           "\n                                "
                                       )
                                     ]
@@ -49124,16 +49099,17 @@ var render = function() {
                                           {
                                             name: "model",
                                             rawName: "v-model",
-                                            value: _vm.form[specs.name],
-                                            expression: "form[specs.name]"
+                                            value: _vm.form[name],
+                                            expression: "form[name]"
                                           }
                                         ],
                                         staticClass:
                                           "flex-1 border-none focus:border-none focus:ring-0 pl-0 pr-3",
-                                        attrs: { type: "text" },
-                                        domProps: {
-                                          value: _vm.form[specs.name]
+                                        attrs: {
+                                          type: "text",
+                                          disabled: _vm.form.processing
                                         },
+                                        domProps: { value: _vm.form[name] },
                                         on: {
                                           input: function($event) {
                                             if ($event.target.composing) {
@@ -49141,7 +49117,7 @@ var render = function() {
                                             }
                                             _vm.$set(
                                               _vm.form,
-                                              specs.name,
+                                              name,
                                               $event.target.value
                                             )
                                           }
@@ -49149,13 +49125,17 @@ var render = function() {
                                       }),
                                       _vm._v(" "),
                                       _c(
-                                        "span",
+                                        "button",
                                         {
                                           staticClass:
-                                            "flex-none md:cursor-pointer rounded-full hover:bg-gray-100 w-7 h-7 text-gray-600 flex items-center justify-center",
+                                            "flex-none md:cursor-pointer cursor-default rounded-full hover:bg-gray-100 w-7 h-7 text-gray-600 flex items-center justify-center focus:outline-none",
+                                          attrs: {
+                                            type: "button",
+                                            disabled: _vm.form.processing
+                                          },
                                           on: {
                                             click: function($event) {
-                                              return _vm.removeSpecs(specs.name)
+                                              return _vm.toggleSpecs(name)
                                             }
                                           }
                                         },
@@ -49186,9 +49166,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("jet-input-error", {
                                     staticClass: "mt-2",
-                                    attrs: {
-                                      message: _vm.form.errors[specs.name]
-                                    }
+                                    attrs: { message: _vm.form.errors[name] }
                                   })
                                 ],
                                 1
@@ -49213,12 +49191,12 @@ var render = function() {
                   _c(
                     "jet-action-message",
                     {
-                      staticClass: "mr-3",
-                      attrs: { on: _vm.form.recentlySuccessful }
+                      staticClass: "mr-3 hidden md:block",
+                      attrs: { on: _vm.form.processing }
                     },
                     [
                       _vm._v(
-                        "\n                    Published.\n                "
+                        "\n                    Publishing...\n                "
                       )
                     ]
                   ),
@@ -49226,7 +49204,8 @@ var render = function() {
                   _c(
                     "jet-button",
                     {
-                      staticClass: "bg-blue-600 hover:bg-blue-700",
+                      staticClass:
+                        "bg-blue-600 hover:bg-blue-700 w-full md:w-auto flex items-center justify-center",
                       class: { "opacity-25": _vm.form.processing },
                       attrs: { disabled: _vm.form.processing }
                     },
