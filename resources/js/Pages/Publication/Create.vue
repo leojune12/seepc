@@ -170,6 +170,7 @@
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import { mapActions } from 'vuex'
 
     export default {
         name: "Create",
@@ -215,7 +216,14 @@
             }
         },
         methods: {
+            ...mapActions([
+                'setPublications',
+            ]),
+
             publish() {
+                // empty publications to update publications in Publications page
+                this.setPublications([])
+
                 if (this.photoPreview !== null) {
                     this.photoNullError = null
 
