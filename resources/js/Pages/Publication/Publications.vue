@@ -1,14 +1,22 @@
 <template>
     <app-layout>
         <div
-            class="flex justify-center tracking-tight"
+            class="flex flex-wrap justify-center md:justify-evenly"
         >
             <div
-                class="card-container w-full pt-0 pb-6 md:pt-6 space-y-6 md:space-y-4"
-                :class="{ 'pt-4' : !$page.props.user }"
-                style="max-width: 31rem;"
+                v-if="in_user_profile"
+                class="xl:w-96 pb-0 pt-7 container profile-container mb-6 md:mb-0"
             >
-                <publish-button v-if="$page.props.user" />
+                <profile-card
+                    :user="user_profile.data"
+                />
+            </div>
+
+            <div
+                class="container card-container pt-0 md:pt-6 pb-6 space-y-6 md:space-y-4 flex-none"
+                :class="[{ 'pt-4' : !$page.props.user }, { 'xl:mt-24' : in_user_profile }]"
+            >
+                <publish-button v-if="showPublishButton" />
 
                 <publication-card
                     v-for="publication in publicationsFromStore"
@@ -29,6 +37,11 @@
                             No more publications
                         </span>
                     </div>
+                    <div slot="no-results" class="text-gray-500 flex items-center justify-center">
+                        <span>
+                            No publications yet
+                        </span>
+                    </div>
                 </infinite-loading>
             </div>
         </div>
@@ -36,12 +49,13 @@
 </template>
 
 <script>
-    import InfiniteLoading from 'vue-infinite-loading';
+    import InfiniteLoading from 'vue-infinite-loading'
     import { mapActions } from 'vuex'
     import AppLayout from '@/Layouts/AppLayout'
-    import PublicationCard from "@/Components/PublicationCard";
-    import PublishButton from "@/Components/PublishButton";
-    import PublicationSkeletonCard from "@/Components/PublicationSkeletonCard";
+    import PublicationCard from "@/Components/PublicationCard"
+    import PublishButton from "@/Components/PublishButton"
+    import PublicationSkeletonCard from "@/Components/PublicationSkeletonCard"
+    import ProfileCard from "@/Components/Publication/ProfileCard"
 
     export default {
         name: "Publications",
@@ -50,12 +64,18 @@
             PublicationCard,
             PublishButton,
             InfiniteLoading,
-            PublicationSkeletonCard
+            PublicationSkeletonCard,
+            ProfileCard
         },
         props: {
-            get_my_publications: {
+            in_user_profile: {
                 type: Boolean,
                 default: false
+            },
+
+            user_profile: {
+                type: Object,
+                default: null
             }
         },
         computed: {
@@ -108,6 +128,22 @@
                 set (payload) {
                     this.updateReloadMyPublications(payload)
                 }
+            },
+
+            user_profile_id () {
+                return !!this.user_profile ? this.user_profile.data.id : null
+            },
+
+            showPublishButton () {
+                if (this.in_user_profile) {
+                    if (!!this.$page.props.user) {
+                        return this.$page.props.user.id === this.user_profile.data.id
+                    } else {
+                        return false
+                    }
+                } else {
+                    return !!this.$page.props.user
+                }
             }
 
         },
@@ -125,8 +161,8 @@
         },
 
         mounted () {
-            // check if to reset currently loaded publications
-            this.checkPublicationsFlag()
+            // reset publications
+            this.resetPublications()
 
             // scroll to center of publication image
             this.scroll()
@@ -150,8 +186,6 @@
                 'addPublicationComment',
                 'addPublicationCommentReply',
                 'updateUserAuthorization',
-                'updateReloadAllPublications',
-                'updateReloadMyPublications',
                 'deletePublication',
             ]),
 
@@ -177,7 +211,8 @@
                 axios.post(this.route('publications.get-publications'), {
                     publications_ids: this.getIds,
                     first_item_created_at: firstItem.created_at,
-                    get_my_publications: this.get_my_publications
+                    in_user_profile: this.in_user_profile,
+                    user_profile_id: this.user_profile_id
                 })
                     .then(response => {
                         if (response.data.publications.length) {
@@ -248,28 +283,6 @@
                     }
                 }
             },
-
-            checkPublicationsFlag () {
-                // check if in all-publications page or my-publications page
-                if (this.get_my_publications) {
-                    // my-publications
-                    if (this.reloadMyPublications) {
-                        this.reloadMyPublications = false
-                        this.reloadAllPublications = true
-
-                        this.resetPublications()
-                    }
-                } else {
-                    // all-publications
-                    if (this.reloadAllPublications) {
-                        this.reloadAllPublications = false
-                        this.reloadMyPublications = true
-
-                        this.resetPublications()
-                    }
-                }
-            }
-
         },
 
         beforeDestroy() {
@@ -279,9 +292,17 @@
 </script>
 
 <style scoped>
-    @media (min-width: 640px) {
+    @media (min-width: 1280px) {
+        .profile-container {
+            width: 24rem !important;
+        }
+
         .card-container {
             width: 31rem !important;
         }
+    }
+
+    .container {
+        max-width: 31rem !important;
     }
 </style>

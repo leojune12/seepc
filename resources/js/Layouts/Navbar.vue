@@ -2,11 +2,11 @@
     <nav class="bg-white border-b border-gray-200 sticky top-0 left-72 z-50 w-full">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between md:justify-end items-center h-16">
-                <div class="md:hidden">
+            <div class="flex justify-between lg:justify-end items-center h-16">
+                <div class="lg:hidden">
                     <app-logo-name />
                 </div>
-                <div v-if="$page.props.user" class="hidden md:flex md:items-center">
+                <div v-if="$page.props.user" class="hidden lg:flex lg:items-center">
                     <!-- Settings Dropdown -->
                     <div class="relative">
                         <jet-dropdown align="right" width="48">
@@ -35,7 +35,7 @@
                                 </div>
 
                                 <jet-dropdown-link :href="route('profile.show')">
-                                    Profile
+                                    Account
                                 </jet-dropdown-link>
 
                                 <div class="border-t border-gray-100"></div>
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div v-else class="hidden md:flex md:items-center">
+                <div v-else class="hidden lg:flex lg:items-center">
                     <inertia-link :href="route('login')" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 px-4 py-2 hover:bg-gray-100 rounded-md h-10">
                         Sign in
                     </inertia-link>
@@ -61,7 +61,7 @@
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-mr-2 flex items-center md:hidden">
+                <div class="-mr-2 flex items-center lg:hidden">
                     <span @click="showingNavigationDropdown = ! showingNavigationDropdown" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                             <path :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Responsive Navigation Menu -->
-        <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
+        <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="lg:hidden">
             <div v-if="$page.props.user" class="pt-4 pb-1 border-t border-gray-200">
                 <div class="flex items-center px-4">
                     <div v-if="$page.props.jetstream.managesProfilePhotos" class="flex-shrink-0 mr-3" >
@@ -90,11 +90,14 @@
                     <jet-responsive-nav-link :href="route('publications')" :active="route().current('publications')">
                         Publications
                     </jet-responsive-nav-link>
-                    <jet-responsive-nav-link :href="route('my-publications')" :active="route().current('my-publications')">
-                        My Publications
+                    <jet-responsive-nav-link
+                        :href="route('user.my-profile')"
+                        :active="route().current('user.my-profile')"
+                    >
+                        Profile
                     </jet-responsive-nav-link>
                     <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
-                        Profile
+                        Account
                     </jet-responsive-nav-link>
 
                     <!-- Authentication -->

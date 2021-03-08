@@ -43,14 +43,6 @@ let actions = {
         commit('updateUserAuthorizationMutation', payload)
     },
 
-    updateReloadAllPublications ({commit}, payload) {
-        commit('updateReloadAllPublicationsMutations', payload)
-    },
-
-    updateReloadMyPublications ({commit}, payload) {
-        commit('updateReloadMyPublicationsMutations', payload)
-    },
-
     deletePublication ({commit}, payload) {
         commit('deletePublicationMutation', payload)
     }

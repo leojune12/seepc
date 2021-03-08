@@ -21,17 +21,17 @@ Route::post('/publications/comment/show}', [CommentController::class, 'show_comm
 
 Route::post('/publications/comment/reply/show', [CommentController::class, 'show_replies'])->name('publications.comment.reply.show');
 
+// Show profile
+Route::get('/user/profile/{user}', [PublicationController::class, 'show_profile'])->name('user.profile');
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/my-publications', function () {
-        return Inertia::render('Publication/Publications', [
-            'get_my_publications' => true
-        ]);
-    })->name('my-publications');
+    // Show my profile
+    Route::get('/user/my-profile', [PublicationController::class, 'show_my_profile'])->name('user.my-profile');
 
     Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 

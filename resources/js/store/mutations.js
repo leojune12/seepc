@@ -132,14 +132,6 @@ let mutations = {
         state.userAuthorization = payload
     },
 
-    updateReloadAllPublicationsMutations (state, payload) {
-        state.reloadAllPublications = payload
-    },
-
-    updateReloadMyPublicationsMutations (state, payload) {
-        state.reloadMyPublications = payload
-    },
-
     deletePublicationMutation (state, payload) {
         if (!!state.publications.length) {
             const index = state.publications.findIndex(publication => publication.id === payload)

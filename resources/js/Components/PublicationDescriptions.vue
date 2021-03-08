@@ -5,17 +5,21 @@
     >
         <div class="flex flex-row py-3 items-center">
             <div class="mr-2 flex-none">
-                <img
-                    :src="getProfilePhoto()"
-                    alt="profile photo"
-                    class="w-10 h-10 rounded-full object-cover border border-gray-300"
-                >
+                <inertia-link :href="route('user.profile', publication.user.id)">
+                    <img
+                        :src="getProfilePhoto()"
+                        alt="profile photo"
+                        class="w-10 h-10 rounded-full object-cover border border-gray-300"
+                    >
+                </inertia-link>
             </div>
             <div class="flex-1">
                 <div
                     class="font-bold md:text-base text-sm"
                 >
-                    {{ publication.user.name }}
+                    <inertia-link :href="route('user.profile', publication.user.id)">
+                        {{ publication.user.name }}
+                    </inertia-link>
                 </div>
                 <div
                     class="md:text-sm text-xs font-semibold md:text-gray-500 text-gray-400"

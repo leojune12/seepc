@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Events\PublicationDeleted;
 use App\Events\PublicationLiked;
 use App\Http\Resources\PublicationResource;
+use App\Http\Resources\UserResource;
 use App\Models\Publication\Comment;
 use App\Models\Publication\Like;
 use App\Models\Publication\Publication;
 use App\Models\Publication\Specification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -98,6 +100,33 @@ class PublicationController extends Controller
     }
 
     /**
+     * Show user profile
+     */
+    public function show_profile(User $user)
+    {
+        if ($user->id == Auth::id()) {
+            // redirect to my-profile
+            return redirect()->route('user.my-profile');
+        }
+
+        return Inertia::render('Publication/Publications',[
+            'user_profile' => new UserResource($user),
+            'in_user_profile' => true
+        ]);
+    }
+
+    /**
+     * Show my profile
+     */
+    public function show_my_profile()
+    {
+        return Inertia::render('Publication/Publications',[
+            'user_profile' => new UserResource(Auth::user()),
+            'in_user_profile' => true
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -167,11 +196,17 @@ class PublicationController extends Controller
     {
         $first_item_created_at = $request->first_item_created_at ? $request->first_item_created_at : now();
 
-        if ($request->get_my_publications == true) {
-            // check if to get only logged in user's publications
-            $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', Auth::id())->whereNotIn('id', $request->publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
+        if (is_array($request->publications_ids)) {
+            $publications_ids = $request->publications_ids;
         } else {
-            $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $request->publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
+            $publications_ids = [];
+        }
+
+        if ($request->in_user_profile == true) {
+            // check if to get only logged in user's publications
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', $request->user_profile_id)->whereNotIn('id', $publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
+        } else {
+            $publications = Publication::where('created_at', '<=', $first_item_created_at)->whereNotIn('id', $publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
         }
 
         return response()->json([
