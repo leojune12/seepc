@@ -1,5 +1,5 @@
 <template>
-    <div class="md:grid md:grid-cols-3 md:gap-6">
+    <div class="md:grid md:grid-cols-4 md:gap-6">
         <jet-section-title>
             <template #title><slot name="title"></slot></template>
             <template #description><slot name="description"></slot></template>
@@ -9,7 +9,8 @@
             <form @submit.prevent="$emit('submitted')">
                 <div class="shadow overflow-hidden sm:rounded-md">
                     <div class="px-4 py-5 bg-white sm:p-6">
-                        <div class="grid grid-cols-6 gap-6">
+                        <!--<div class="grid grid-cols-6 gap-6">-->
+                        <div class="space-y-6">
                             <slot name="form"></slot>
                         </div>
                     </div>
