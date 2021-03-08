@@ -6922,7 +6922,7 @@ __webpack_require__.r(__webpack_exports__);
     deletePhoto: function deletePhoto() {
       var _this2 = this;
 
-      this.$inertia["delete"](route('current-user-photo.destroy'), {
+      this.$inertia["delete"](route('user.profile.delete-profile-photo'), {
         preserveScroll: true,
         onSuccess: function onSuccess() {
           return _this2.photoPreview = null;

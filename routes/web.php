@@ -2,18 +2,12 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    /*return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ])*/
-
     return Redirect::route('publications');
 });
 
@@ -52,4 +46,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/publications/comment/store', [CommentController::class, 'store'])->name('publications.comment.store');
 
     Route::post('/publications/comment/reply/store', [CommentController::class, 'store_reply'])->name('publications.comment.reply.store');
+
+    // Profile
+
+    Route::delete('/user/profile/delete-profile-photo', [UserController::class, 'delete_profile_photo'])->name('user.profile.delete-profile-photo');
 });
