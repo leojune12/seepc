@@ -2352,6 +2352,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2364,6 +2365,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   props: {
     publication: {
       type: Object
+    },
+    in_user_profile: {
+      type: Boolean,
+      "default": false
     }
   },
   computed: {
@@ -3206,6 +3211,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     inShowComponent: {
       type: Boolean,
       "default": false
+    },
+    in_user_profile: {
+      type: Boolean,
+      "default": false
     }
   },
   computed: {
@@ -3216,7 +3225,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return this.publication.description.split('\n');
     },
     showActions: function showActions() {
-      if (this.$page.props.user) {
+      if (this.$page.props.user && this.in_user_profile) {
         return this.$page.props.user.id === this.publication.user.id;
       } else {
         return false;
@@ -7666,6 +7675,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -41935,7 +41945,10 @@ var render = function() {
             },
             [
               _c("publication-descriptions", {
-                attrs: { publication: _vm.publication }
+                attrs: {
+                  publication: _vm.publication,
+                  in_user_profile: _vm.in_user_profile
+                }
               }),
               _vm._v(" "),
               _c("div", { staticClass: "relative" }, [
@@ -50433,7 +50446,10 @@ var render = function() {
                   }
                 ],
                 key: publication.id,
-                attrs: { publication: publication }
+                attrs: {
+                  publication: publication,
+                  in_user_profile: _vm.in_user_profile
+                }
               })
             }),
             _vm._v(" "),

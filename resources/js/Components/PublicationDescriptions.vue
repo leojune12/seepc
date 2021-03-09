@@ -81,6 +81,11 @@
                 type: Boolean,
                 default: false
             },
+
+            in_user_profile: {
+                type: Boolean,
+                default: false
+            },
         },
         computed: {
             ftpUrl () {
@@ -92,7 +97,7 @@
             },
 
             showActions () {
-                if (this.$page.props.user) {
+                if (this.$page.props.user && this.in_user_profile) {
                     return this.$page.props.user.id === this.publication.user.id
                 } else {
                     return false

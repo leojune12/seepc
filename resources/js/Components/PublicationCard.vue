@@ -13,6 +13,7 @@
         >
             <publication-descriptions
                 :publication="publication"
+                :in_user_profile="in_user_profile"
             />
             <div class="relative">
                 <div class="w-full h-80 animate-pulse">
@@ -49,7 +50,12 @@
         props: {
             publication: {
                 type: Object
-            }
+            },
+
+            in_user_profile: {
+                type: Boolean,
+                default: false
+            },
         },
         computed: {
             ftpUrl () {

@@ -23,6 +23,7 @@
                     v-show="publication"
                     :publication="publication"
                     :key="publication.id"
+                    :in_user_profile="in_user_profile"
                 />
 
                 <infinite-loading
