@@ -5,7 +5,10 @@
     >
         <div class="flex flex-row py-3 items-center">
             <div class="mr-2 flex-none">
-                <inertia-link :href="route('user.profile', publication.user.id)">
+                <inertia-link
+                    :href="route('user.profile', publication.user.id)"
+                    class="cursor-default md:cursor-pointer"
+                >
                     <img
                         :src="getProfilePhoto()"
                         alt="profile photo"
@@ -14,13 +17,12 @@
                 </inertia-link>
             </div>
             <div class="flex-1">
-                <div
-                    class="font-bold md:text-base text-sm"
+                <inertia-link
+                    :href="route('user.profile', publication.user.id)"
+                    class="cursor-default md:cursor-pointer font-bold md:text-base text-sm"
                 >
-                    <inertia-link :href="route('user.profile', publication.user.id)">
-                        {{ publication.user.name }}
-                    </inertia-link>
-                </div>
+                    {{ publication.user.name }}
+                </inertia-link>
                 <div
                     class="md:text-sm text-xs font-semibold md:text-gray-500 text-gray-400"
                 >

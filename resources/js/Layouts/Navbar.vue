@@ -91,8 +91,8 @@
                         Publications
                     </jet-responsive-nav-link>
                     <jet-responsive-nav-link
-                        :href="route('user.my-profile')"
-                        :active="route().current('user.my-profile')"
+                        :href="route('my-profile')"
+                        :active="route().current('my-profile')"
                     >
                         Profile
                     </jet-responsive-nav-link>

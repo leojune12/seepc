@@ -205,3 +205,13 @@ Q
 custom_php.ini,2\a\2a687585ad9e43abb7fcb6e5805f88e4ce0dc4da
 9
 	.htaccess,f\1\f14dd8fe84b7e99eb63debbf029152463832e7ad
+U
+%resources/js/Jetstream/InputError.vue,5\4\54600b526a0a876c223722ea46793cd0fe46cbe7
+X
+(resources/js/Jetstream/ActionMessage.vue,b\7\b758de4f93e96cb7e775d9eec9d94a72e331db6c
+W
+'app/Http/Controllers/UserController.php,7\d\7de9f5d267d12a172eff77837bcb8fb2e88564c2
+O
+resources/js/Layouts/Navbar.vue,3\b\3b1666a72ab307bfefaad3c963b0cddc1186d35a
+c
+3resources/js/Components/Publication/ProfileCard.vue,2\1\21a18013717c07e85ffb3b479c541a4271f29530

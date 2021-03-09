@@ -5,7 +5,7 @@
         >
             <div
                 v-if="in_user_profile"
-                class="xl:w-96 pb-0 pt-7 container profile-container mb-6 md:mb-0"
+                class="xl:w-96 pb-0 pt-4 container profile-container mb-6 md:mb-0"
             >
                 <profile-card
                     :user="user_profile.data"
@@ -13,7 +13,7 @@
             </div>
 
             <div
-                class="container card-container pt-0 md:pt-6 pb-6 space-y-6 md:space-y-4 flex-none"
+                class="container card-container pt-0 md:pt-4 pb-6 space-y-6 md:space-y-4 flex-none"
                 :class="[{ 'pt-4' : !$page.props.user }, { 'xl:mt-24' : in_user_profile }]"
             >
                 <publish-button v-if="showPublishButton" />

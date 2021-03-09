@@ -35,8 +35,8 @@
                 </inertia-link>
                 <inertia-link
                     v-if="!!$page.props.user"
-                    :href="route('user.my-profile')"
-                    :class="[ route().current('user.my-profile') ? activeLink : hoverClass, linkClass ]"
+                    :href="route('my-profile')"
+                    :class="[ route().current('my-profile') ? activeLink : hoverClass, linkClass ]"
                 >
                     <span :class="iconClass">
                         <svg style="width:24px;height:24px" viewBox="0 0 24 24">

@@ -106,7 +106,7 @@ class PublicationController extends Controller
     {
         if ($user->id == Auth::id()) {
             // redirect to my-profile
-            return redirect()->route('user.my-profile');
+            return redirect()->route('my-profile');
         }
 
         return Inertia::render('Publication/Publications',[

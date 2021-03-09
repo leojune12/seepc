@@ -3,11 +3,11 @@
         <div>
             <jet-dropdown>
                 <template #trigger>
-                        <span class="rounded-full hover:bg-gray-100 w-9 h-9 flex items-center justify-center text-gray-500 md:cursor-pointer">
-                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
-                            </svg>
-                        </span>
+                    <span class="rounded-full hover:bg-gray-100 w-9 h-9 flex items-center justify-center text-gray-500 md:cursor-pointer">
+                        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+                        </svg>
+                    </span>
                 </template>
                 <template #content>
                     <!-- Actions -->
@@ -31,7 +31,11 @@
             </jet-dropdown>
         </div>
         <!-- Delete Account Confirmation Modal -->
-        <dialog-modal :show="confirmingDeletion" @close="closeModal">
+        <dialog-modal
+            max-width="lg"
+            :show="confirmingDeletion"
+            @close="closeModal"
+        >
             <template #content>
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">

@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('dashboard');
 
     // Show my profile
-    Route::get('/user/my-profile', [PublicationController::class, 'show_my_profile'])->name('user.my-profile');
+    Route::get('/my-profile', [PublicationController::class, 'show_my_profile'])->name('my-profile');
 
     Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 
