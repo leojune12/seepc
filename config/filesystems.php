@@ -54,10 +54,10 @@ return [
 
         'ftp' => [
             'driver' => 'ftp',
-            'host' => 'files.000webhost.com',
+            'host' => env('FTP_HOST'),
             'username' => env('FTP_USERNAME'),
             'password' => env('FTP_PASSWORD'),
-            'root' => 'public_html',
+            'root' => env('FTP_ROOT'),
 
             // Optional FTP Settings...
             // 'port' => 21,
