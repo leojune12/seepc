@@ -20,6 +20,11 @@ let state = {
         firstVisit: true,
         status: false
     },
+
+    currentRoute: {
+        route: null,
+        params: null
+    }
 }
 
 export default state

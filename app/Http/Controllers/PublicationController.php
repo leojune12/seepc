@@ -111,7 +111,7 @@ class PublicationController extends Controller
 
         return Inertia::render('Publication/Publications',[
             'user_profile' => new UserResource($user),
-            'in_user_profile' => true
+            //'in_user_profile' => true
         ]);
     }
 
@@ -122,7 +122,7 @@ class PublicationController extends Controller
     {
         return Inertia::render('Publication/Publications',[
             'user_profile' => new UserResource(Auth::user()),
-            'in_user_profile' => true
+            //'in_user_profile' => true
         ]);
     }
 
@@ -190,7 +190,7 @@ class PublicationController extends Controller
     }
 
     /**
-     * Get Publications
+     * Fetch Publications
      */
     public function get_publications(Request $request)
     {
@@ -202,7 +202,7 @@ class PublicationController extends Controller
             $publications_ids = [];
         }
 
-        if ($request->in_user_profile == true) {
+        if ($request->user_profile_id != null) {
             // check if to get only logged in user's publications
             $publications = Publication::where('created_at', '<=', $first_item_created_at)->where('user_id', $request->user_profile_id)->whereNotIn('id', $publications_ids)->with(['specification', 'user'])->withCount('comments', 'likes')->orderByDesc('created_at')->simplePaginate(5);
         } else {

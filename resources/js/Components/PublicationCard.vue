@@ -86,14 +86,13 @@
             },
 
             visitPublication (id) {
+                let vm = this
                 let promise = new Promise(function(myResolve, myReject) {
+                    vm.setLastShowedPublicationId(vm.publication.id)
                     myResolve();
                 });
 
                 promise
-                    .then(() => {
-                        this.setLastShowedPublicationId(this.publication.id)
-                    })
                     .then(() => {
                         this.$inertia.get('/publications/show/'+id)
                     })

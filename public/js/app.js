@@ -2394,12 +2394,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     visitPublication: function visitPublication(id) {
       var _this = this;
 
+      var vm = this;
       var promise = new Promise(function (myResolve, myReject) {
+        vm.setLastShowedPublicationId(vm.publication.id);
         myResolve();
       });
       promise.then(function () {
-        _this.setLastShowedPublicationId(_this.publication.id);
-      }).then(function () {
         _this.$inertia.get('/publications/show/' + id);
       });
     },
@@ -7781,27 +7781,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     userStatus: function userStatus() {
       return !!this.$page.props.user;
     },
-    reloadAllPublications: {
-      get: function get() {
-        return this.$store.state.reloadAllPublications;
-      },
-      set: function set(payload) {
-        this.updateReloadAllPublications(payload);
-      }
-    },
-    reloadMyPublications: {
-      get: function get() {
-        return this.$store.state.reloadMyPublications;
-      },
-      set: function set(payload) {
-        this.updateReloadMyPublications(payload);
-      }
-    },
     user_profile_id: function user_profile_id() {
       return !!this.user_profile ? this.user_profile.data.id : null;
     },
     showPublishButton: function showPublishButton() {
-      if (this.in_user_profile) {
+      if (!!this.user_profile) {
         if (!!this.$page.props.user) {
           return this.$page.props.user.id === this.user_profile.data.id;
         } else {
@@ -7810,6 +7794,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {
         return !!this.$page.props.user;
       }
+    },
+    currentRoute: function currentRoute() {
+      return this.$store.state.currentRoute;
     }
   },
   watch: {
@@ -7823,8 +7810,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   mounted: function mounted() {
-    // reset publications
-    this.resetPublications(); // scroll to center of publication image
+    // check if to reset publications
+    this.checkRoute(); // scroll to center of publication image
 
     this.scroll(); // check if user changed authorization(logged in or logged out)
 
@@ -7835,7 +7822,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     this.scrollToTop();
   },
-  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply', 'updateUserAuthorization', 'deletePublication'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_7__.mapActions)(['setPublications', 'setScrollPublications', 'setPublicationLikes', 'addPublicationComment', 'addPublicationCommentReply', 'updateUserAuthorization', 'deletePublication', 'setCurrentRoute'])), {}, {
     scroll: function scroll() {
       var publicationCard = document.getElementById('publication_' + this.lastShowedPublicationId);
 
@@ -7861,7 +7848,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       axios.post(this.route('publications.get-publications'), {
         publications_ids: this.getIds,
         first_item_created_at: firstItem.created_at,
-        in_user_profile: this.in_user_profile,
+        //in_user_profile: this.in_user_profile,
         user_profile_id: this.user_profile_id
       }).then(function (response) {
         if (response.data.publications.length) {
@@ -7947,6 +7934,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.resetPublications();
         }
       }
+    },
+    checkRoute: function checkRoute() {
+      // routes that are using Publications component
+      var publicationRoutes = ['publications', 'my-profile', 'user.profile']; // reset if routes has changed
+
+      if (publicationRoutes.includes(this.route().current())) {
+        if (this.currentRoute.route !== this.route().current()) {
+          this.resetPublications();
+        }
+      } // save current route to store
+
+
+      this.setCurrentRoute({
+        route: this.route().current(),
+        params: !!this.route().params.user ? this.route().params.user : null
+      });
     }
   }),
   beforeDestroy: function beforeDestroy() {
@@ -8050,6 +8053,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.setPublicationShow(this.publication.data);
         return this.publication.data;
       }
+    },
+    previousRoute: function previousRoute() {
+      return this.$store.state.currentRoute;
     }
   },
   data: function data() {
@@ -8062,7 +8068,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)(['setPublications', 'setPublicationLikes', 'setPublicationShow', 'addPublicationComment', 'addPublicationCommentReply'])), {}, {
     goBack: function goBack() {
-      this.$inertia.get(this.route('publications'));
+      if (!!this.previousRoute.route) {
+        if (!!this.previousRoute.params) {
+          this.$inertia.get(this.route(this.previousRoute.route, this.previousRoute.params));
+        } else {
+          this.$inertia.get(this.route(this.previousRoute.route));
+        }
+      } else {
+        this.$inertia.get(this.route('publications'));
+      }
     },
     toggleShowDescription: function toggleShowDescription() {
       var _this2 = this;
@@ -8072,9 +8086,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, 200);
     },
     listenForUpdates: function listenForUpdates() {
-      this.listenForLikes();
-    },
-    listenForLikes: function listenForLikes() {
       var _this3 = this;
 
       Echo.channel('publications').listen('PublicationLiked', function (incomingData) {
@@ -8476,6 +8487,10 @@ var actions = {
   deletePublication: function deletePublication(_ref12, payload) {
     var commit = _ref12.commit;
     commit('deletePublicationMutation', payload);
+  },
+  setCurrentRoute: function setCurrentRoute(_ref13, payload) {
+    var commit = _ref13.commit;
+    commit('setCurrentRouteMutation', payload);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (actions);
@@ -8697,6 +8712,9 @@ var mutations = {
         state.publications.splice(index, 1);
       }
     }
+  },
+  setCurrentRouteMutation: function setCurrentRouteMutation(state, payload) {
+    state.currentRoute = payload;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mutations);
@@ -8729,6 +8747,10 @@ var state = {
   userAuthorization: {
     firstVisit: true,
     status: false
+  },
+  currentRoute: {
+    route: null,
+    params: null
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (state);
@@ -50410,7 +50432,7 @@ var render = function() {
       "div",
       { staticClass: "flex flex-wrap justify-center md:justify-evenly" },
       [
-        _vm.in_user_profile
+        !!_vm.user_profile
           ? _c(
               "div",
               {
@@ -50429,7 +50451,7 @@ var render = function() {
               "container card-container pt-0 md:pt-4 pb-6 space-y-6 md:space-y-4 flex-none",
             class: [
               { "pt-4": !_vm.$page.props.user },
-              { "xl:mt-24": _vm.in_user_profile }
+              { "xl:mt-24": !!_vm.user_profile }
             ]
           },
           [
@@ -50448,7 +50470,7 @@ var render = function() {
                 key: publication.id,
                 attrs: {
                   publication: publication,
-                  in_user_profile: _vm.in_user_profile
+                  in_user_profile: !!_vm.user_profile
                 }
               })
             }),

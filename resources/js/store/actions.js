@@ -45,6 +45,10 @@ let actions = {
 
     deletePublication ({commit}, payload) {
         commit('deletePublicationMutation', payload)
+    },
+
+    setCurrentRoute ({commit}, payload) {
+        commit('setCurrentRouteMutation', payload)
     }
 }
 

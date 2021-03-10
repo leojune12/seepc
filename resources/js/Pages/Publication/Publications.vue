@@ -4,7 +4,7 @@
             class="flex flex-wrap justify-center md:justify-evenly"
         >
             <div
-                v-if="in_user_profile"
+                v-if="!!user_profile"
                 class="xl:w-96 pb-0 pt-4 container profile-container mb-6 md:mb-0"
             >
                 <profile-card
@@ -14,7 +14,7 @@
 
             <div
                 class="container card-container pt-0 md:pt-4 pb-6 space-y-6 md:space-y-4 flex-none"
-                :class="[{ 'pt-4' : !$page.props.user }, { 'xl:mt-24' : in_user_profile }]"
+                :class="[{ 'pt-4' : !$page.props.user }, { 'xl:mt-24' : !!user_profile }]"
             >
                 <publish-button v-if="showPublishButton" />
 
@@ -23,7 +23,7 @@
                     v-show="publication"
                     :publication="publication"
                     :key="publication.id"
-                    :in_user_profile="in_user_profile"
+                    :in_user_profile="!!user_profile"
                 />
 
                 <infinite-loading
@@ -113,30 +113,12 @@
                 return !!this.$page.props.user
             },
 
-            reloadAllPublications: {
-                get () {
-                    return this.$store.state.reloadAllPublications
-                },
-                set (payload) {
-                    this.updateReloadAllPublications(payload)
-                }
-            },
-
-            reloadMyPublications: {
-                get () {
-                    return this.$store.state.reloadMyPublications
-                },
-                set (payload) {
-                    this.updateReloadMyPublications(payload)
-                }
-            },
-
             user_profile_id () {
                 return !!this.user_profile ? this.user_profile.data.id : null
             },
 
             showPublishButton () {
-                if (this.in_user_profile) {
+                if (!!this.user_profile) {
                     if (!!this.$page.props.user) {
                         return this.$page.props.user.id === this.user_profile.data.id
                     } else {
@@ -145,7 +127,11 @@
                 } else {
                     return !!this.$page.props.user
                 }
-            }
+            },
+
+            currentRoute () {
+                return this.$store.state.currentRoute
+            },
 
         },
 
@@ -162,8 +148,8 @@
         },
 
         mounted () {
-            // reset publications
-            this.resetPublications()
+            // check if to reset publications
+            this.checkRoute()
 
             // scroll to center of publication image
             this.scroll()
@@ -188,6 +174,7 @@
                 'addPublicationCommentReply',
                 'updateUserAuthorization',
                 'deletePublication',
+                'setCurrentRoute'
             ]),
 
             scroll () {
@@ -212,7 +199,7 @@
                 axios.post(this.route('publications.get-publications'), {
                     publications_ids: this.getIds,
                     first_item_created_at: firstItem.created_at,
-                    in_user_profile: this.in_user_profile,
+                    //in_user_profile: this.in_user_profile,
                     user_profile_id: this.user_profile_id
                 })
                     .then(response => {
@@ -284,6 +271,24 @@
                     }
                 }
             },
+
+            checkRoute () {
+                // routes that are using Publications component
+                const publicationRoutes = ['publications', 'my-profile', 'user.profile']
+
+                // reset if routes has changed
+                if (publicationRoutes.includes(this.route().current())) {
+                    if (this.currentRoute.route !== this.route().current()) {
+                        this.resetPublications()
+                    }
+                }
+
+                // save current route to store
+                this.setCurrentRoute({
+                    route: this.route().current(),
+                    params: !!this.route().params.user ? this.route().params.user : null
+                })
+            }
         },
 
         beforeDestroy() {

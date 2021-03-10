@@ -73,16 +73,23 @@
                     this.setPublicationShow(this.publication.data)
                     return this.publication.data
                 }
+            },
+
+            previousRoute () {
+                return this.$store.state.currentRoute
             }
         },
+
         data () {
             return {
                 showDescription: true,
             }
         },
+
         mounted() {
             this.listenForUpdates()
         },
+
         methods: {
             ...mapActions([
                 'setPublications',
@@ -93,7 +100,15 @@
             ]),
 
             goBack() {
-                this.$inertia.get(this.route('publications'))
+                if (!!this.previousRoute.route) {
+                    if (!!this.previousRoute.params) {
+                        this.$inertia.get(this.route(this.previousRoute.route, this.previousRoute.params))
+                    } else {
+                        this.$inertia.get(this.route(this.previousRoute.route))
+                    }
+                } else {
+                    this.$inertia.get(this.route('publications'))
+                }
             },
 
             toggleShowDescription () {
@@ -103,10 +118,6 @@
             },
 
             listenForUpdates () {
-                this.listenForLikes()
-            },
-
-            listenForLikes () {
                 Echo.channel('publications')
                     .listen('PublicationLiked', (incomingData) => {
                         let data = {
@@ -123,6 +134,7 @@
                     })
             },
         },
+
         beforeDestroy() {
             Echo.leaveChannel('publications')
         }

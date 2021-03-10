@@ -140,6 +140,10 @@ let mutations = {
                 state.publications.splice(index, 1)
             }
         }
+    },
+
+    setCurrentRouteMutation (state, payload) {
+        state.currentRoute = payload
     }
 
 }
