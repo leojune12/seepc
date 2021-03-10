@@ -187,7 +187,6 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    user_id: this.$page.props.user.id,
                     photo: null,
                     description: null,
                     motherboard: null,

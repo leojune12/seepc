@@ -48,7 +48,6 @@ class PublicationController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'user_id' => ['required', 'integer'],
             'photo' => ['required', 'image', 'max:2048'],
             'description' => ['required', 'string', 'max:255'],
             'motherboard' => ['nullable', 'string', 'max:255'],
@@ -64,7 +63,7 @@ class PublicationController extends Controller
         $photo_path = Storage::disk('ftp')->put('/publications', $request['photo']);
 
         $publication = Publication::create([
-            'user_id' => $request->user_id,
+            'user_id' => Auth::id(),
             'photo_path' => $photo_path,
             'description' => $request->description
         ]);
