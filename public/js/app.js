@@ -42129,10 +42129,12 @@ var render = function() {
           "div",
           {
             staticClass:
-              "h-9 rounded flex-1 hover:bg-gray-100 md:cursor-pointer flex items-center justify-center",
-            class: {
-              "hover:bg-gray-700 hover:md:bg-gray-100": _vm.inShowComponent
-            },
+              "h-9 rounded flex-1 md:cursor-pointer flex items-center justify-center",
+            class: [
+              _vm.inShowComponent
+                ? "md:hover:bg-gray-100 hover:bg-black"
+                : "hover:bg-gray-100"
+            ],
             on: { click: _vm.like }
           },
           [
