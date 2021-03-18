@@ -49366,20 +49366,6 @@ var render = function() {
           "div",
           { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" },
           [
-            _vm.$page.props.jetstream.canUpdateProfileInformation
-              ? _c(
-                  "div",
-                  [
-                    _c("update-profile-information-form", {
-                      attrs: { user: _vm.$page.props.user }
-                    }),
-                    _vm._v(" "),
-                    _c("jet-section-border")
-                  ],
-                  1
-                )
-              : _vm._e(),
-            _vm._v(" "),
             _vm.$page.props.jetstream.canUpdatePassword
               ? _c(
                   "div",
