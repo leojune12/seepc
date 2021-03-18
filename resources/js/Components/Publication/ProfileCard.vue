@@ -11,7 +11,10 @@
                 </div>
             </div>
         </div>
-        <div class="absolute top-28 right-3 z-40">
+        <div
+            v-if="showActions"
+            class="absolute top-28 right-3 z-40"
+        >
             <jet-dropdown>
                 <template #trigger>
                     <button
@@ -273,6 +276,15 @@
                 } else {
                     return false
                 }
+            },
+
+            showActions () {
+                /*if (this.$page.props.user && this.in_user_profile) {
+                    return this.$page.props.user.id === this.publication.user.id
+                } else {
+                    return false
+                }*/
+                return !!this.$page.props.user && this.$page.props.user.id === this.user.id
             }
         },
 

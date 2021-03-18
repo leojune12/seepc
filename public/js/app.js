@@ -3608,6 +3608,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3636,6 +3639,14 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         return false;
       }
+    },
+    showActions: function showActions() {
+      /*if (this.$page.props.user && this.in_user_profile) {
+          return this.$page.props.user.id === this.publication.user.id
+      } else {
+          return false
+      }*/
+      return !!this.$page.props.user && this.$page.props.user.id === this.user.id;
     }
   },
   data: function data() {
@@ -43475,91 +43486,26 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "absolute top-28 right-3 z-40" },
-        [
-          _c("jet-dropdown", {
-            scopedSlots: _vm._u([
-              {
-                key: "trigger",
-                fn: function() {
-                  return [
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "rounded-full hover:bg-gray-100 md:cursor-pointer cursor-default text-gray-500 p-2 focus:outline-none",
-                        attrs: { type: "button" }
-                      },
-                      [
-                        _c(
-                          "svg",
-                          {
-                            staticStyle: { width: "24px", height: "24px" },
-                            attrs: { viewBox: "0 0 24 24" }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                fill: "currentColor",
-                                d:
-                                  "M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
-                              }
-                            })
-                          ]
-                        )
-                      ]
-                    )
-                  ]
-                },
-                proxy: true
-              },
-              {
-                key: "content",
-                fn: function() {
-                  return [
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer cursor-default flex justify-start items-center",
-                        on: { click: _vm.confirmUpdateProfileInformation }
-                      },
-                      [
-                        _c("span", { staticClass: "mr-2 text-gray-500" }, [
+      _vm.showActions
+        ? _c(
+            "div",
+            { staticClass: "absolute top-28 right-3 z-40" },
+            [
+              _c("jet-dropdown", {
+                scopedSlots: _vm._u(
+                  [
+                    {
+                      key: "trigger",
+                      fn: function() {
+                        return [
                           _c(
-                            "svg",
+                            "button",
                             {
-                              staticStyle: { width: "24px", height: "24px" },
-                              attrs: { viewBox: "0 0 24 24" }
+                              staticClass:
+                                "rounded-full hover:bg-gray-100 md:cursor-pointer cursor-default text-gray-500 p-2 focus:outline-none",
+                              attrs: { type: "button" }
                             },
                             [
-                              _c("path", {
-                                attrs: {
-                                  fill: "currentColor",
-                                  d:
-                                    "M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z"
-                                }
-                              })
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("span", [_vm._v("Update Profile")])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    !!_vm.user.profile_photo_path
-                      ? _c(
-                          "button",
-                          {
-                            staticClass:
-                              "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer cursor-default flex justify-start items-center",
-                            on: { click: _vm.confirmPhotoRemoving }
-                          },
-                          [
-                            _c("span", { staticClass: "mr-2 text-gray-500" }, [
                               _c(
                                 "svg",
                                 {
@@ -43574,26 +43520,112 @@ var render = function() {
                                     attrs: {
                                       fill: "currentColor",
                                       d:
-                                        "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"
+                                        "M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
                                     }
                                   })
                                 ]
                               )
-                            ]),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Delete Photo")])
-                          ]
-                        )
-                      : _vm._e()
-                  ]
-                },
-                proxy: true
-              }
-            ])
-          })
-        ],
-        1
-      ),
+                            ]
+                          )
+                        ]
+                      },
+                      proxy: true
+                    },
+                    {
+                      key: "content",
+                      fn: function() {
+                        return [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer cursor-default flex justify-start items-center",
+                              on: { click: _vm.confirmUpdateProfileInformation }
+                            },
+                            [
+                              _c(
+                                "span",
+                                { staticClass: "mr-2 text-gray-500" },
+                                [
+                                  _c(
+                                    "svg",
+                                    {
+                                      staticStyle: {
+                                        width: "24px",
+                                        height: "24px"
+                                      },
+                                      attrs: { viewBox: "0 0 24 24" }
+                                    },
+                                    [
+                                      _c("path", {
+                                        attrs: {
+                                          fill: "currentColor",
+                                          d:
+                                            "M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z"
+                                        }
+                                      })
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("Update Profile")])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          !!_vm.user.profile_photo_path
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer cursor-default flex justify-start items-center",
+                                  on: { click: _vm.confirmPhotoRemoving }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    { staticClass: "mr-2 text-gray-500" },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          staticStyle: {
+                                            width: "24px",
+                                            height: "24px"
+                                          },
+                                          attrs: { viewBox: "0 0 24 24" }
+                                        },
+                                        [
+                                          _c("path", {
+                                            attrs: {
+                                              fill: "currentColor",
+                                              d:
+                                                "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"
+                                            }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("span", [_vm._v("Delete Photo")])
+                                ]
+                              )
+                            : _vm._e()
+                        ]
+                      },
+                      proxy: true
+                    }
+                  ],
+                  null,
+                  false,
+                  2156134628
+                )
+              })
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "h-24" }),
       _vm._v(" "),
