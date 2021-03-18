@@ -2734,6 +2734,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2775,6 +2776,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.deletePublication(_this.publication.id);
         }
       });
+    },
+    editPublication: function editPublication() {
+      this.$inertia.get(route('my-profile.publications.edit', this.publication.id));
     }
   })
 });
@@ -7533,6 +7537,33 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -7554,35 +7585,91 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_5__.default,
     JetSecondaryButton: _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_7__.default
   },
+  props: {
+    publication: {
+      type: Object,
+      "default": null
+    }
+  },
+  computed: {
+    ftpUrl: function ftpUrl() {
+      return this.$store.state.ftpUrl;
+    },
+    form: function form() {
+      if (!!this.publication) {
+        return this.$inertia.form({
+          currentPhotoPath: this.publication.data.photo_path,
+          photo: null,
+          description: this.publication.data.description,
+          motherboard: this.publication.data.specifications.motherboard,
+          cpu: this.publication.data.specifications.cpu,
+          ram: this.publication.data.specifications.ram,
+          graphics: this.publication.data.specifications.graphics,
+          storage: this.publication.data.specifications.storage,
+          display: this.publication.data.specifications.display,
+          keyboard: this.publication.data.specifications.keyboard,
+          mouse: this.publication.data.specifications.mouse
+        });
+      } else {
+        return this.$inertia.form({
+          photo: null,
+          description: null,
+          motherboard: null,
+          cpu: null,
+          ram: null,
+          graphics: null,
+          storage: null,
+          display: null,
+          keyboard: null,
+          mouse: null
+        });
+      }
+    },
+    specificationValues: function specificationValues() {
+      if (!!this.publication) {
+        return {
+          // motherboard: !!this.publication ? !!this.publication.data.specifications.motherboard : false,
+          motherboard: !!this.publication.data.specifications.motherboard,
+          cpu: !!this.publication.data.specifications.cpu,
+          ram: !!this.publication.data.specifications.ram,
+          graphics: !!this.publication.data.specifications.graphics,
+          storage: !!this.publication.data.specifications.storage,
+          display: !!this.publication.data.specifications.display,
+          keyboard: !!this.publication.data.specifications.keyboard,
+          mouse: !!this.publication.data.specifications.mouse
+        };
+      } else {
+        return {
+          motherboard: false,
+          cpu: false,
+          ram: false,
+          graphics: false,
+          storage: false,
+          display: false,
+          keyboard: false,
+          mouse: false
+        };
+      }
+    }
+  },
   data: function data() {
     return {
-      form: this.$inertia.form({
-        photo: null,
-        description: null,
-        motherboard: null,
-        cpu: null,
-        ram: null,
-        graphics: null,
-        storage: null,
-        display: null,
-        keyboard: null,
-        mouse: null
-      }),
-      specifications: {
-        motherboard: false,
-        cpu: false,
-        ram: false,
-        graphics: false,
-        storage: false,
-        display: false,
-        keyboard: false,
-        mouse: false
-      },
       photoPreview: null,
-      photoNullError: null
+      photoNullError: null,
+      specifications: null
     };
   },
+  mounted: function mounted() {
+    this.specifications = this.specificationValues;
+  },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_8__.mapActions)(['setPublications'])), {}, {
+    submitForm: function submitForm() {
+      if (!!this.publication) {
+        this.updatePublication();
+      } else {
+        this.publish();
+      }
+    },
     publish: function publish() {
       // empty publications to update publications in Publications page
       this.setPublications([]);
@@ -7594,12 +7681,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.form.photo = this.$refs.photo.files[0];
         }
 
-        this.form.post(route('publications.store'), {
-          preserveScroll: true
-        });
+        this.$inertia.post(route('publications.store'), this.form);
       } else {
         this.photoNullError = 'Photo is required';
       }
+    },
+    updatePublication: function updatePublication() {
+      this.setPublications([]);
+
+      if (this.photoPreview !== null) {
+        if (this.$refs.photo) {
+          this.form.photo = this.$refs.photo.files[0];
+        }
+      }
+
+      this.form.publication_id = this.publication.data.id;
+      this.$inertia.post(route('publications.update'), this.form);
     },
     selectNewPhoto: function selectNewPhoto() {
       this.$refs.photo.click();
@@ -42415,7 +42512,8 @@ var render = function() {
                       "div",
                       {
                         staticClass:
-                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer"
+                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer",
+                        on: { click: _vm.editPublication }
                       },
                       [_vm._v("\n                    Edit\n                ")]
                     ),
@@ -50000,13 +50098,17 @@ var render = function() {
       { staticClass: "max-w-7xl mx-auto py-3 md:py-6 px-0 lg:px-8" },
       [
         _c("jet-form-section", {
-          on: { submitted: _vm.publish },
+          on: { submitted: _vm.submitForm },
           scopedSlots: _vm._u([
             {
               key: "title",
               fn: function() {
                 return [
-                  _vm._v("\n                Publish your PC\n            ")
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(!!_vm.publication ? "Update" : "Publish") +
+                      " your PC\n            "
+                  )
                 ]
               },
               proxy: true
@@ -50016,7 +50118,9 @@ var render = function() {
               fn: function() {
                 return [
                   _vm._v(
-                    "\n                Post photo and specifications of your PC\n            "
+                    "\n                " +
+                      _vm._s(!!_vm.publication ? "Update" : "Publish") +
+                      " photo and specifications of your PC\n            "
                   )
                 ]
               },
@@ -50113,6 +50217,19 @@ var render = function() {
                         ],
                         1
                       ),
+                      _vm._v(" "),
+                      !_vm.photoPreview && !!_vm.form.currentPhotoPath
+                        ? _c("div", { staticClass: "mb-2" }, [
+                            _c("img", {
+                              staticClass:
+                                "object-contain w-full h-auto border bg-gray-900 rounded-xl shadow-sm mt-1 max-h-96",
+                              attrs: {
+                                src: _vm.ftpUrl + _vm.form.currentPhotoPath,
+                                alt: "photo"
+                              }
+                            })
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
                       _c(
                         "button",
@@ -50372,27 +50489,72 @@ var render = function() {
               fn: function() {
                 return [
                   _c(
-                    "jet-action-message",
-                    {
-                      staticClass: "mr-3 hidden md:block",
-                      attrs: { on: _vm.form.processing }
-                    },
+                    "div",
+                    { staticClass: "sm:flex sm:flex-row-reverse w-full" },
                     [
-                      _vm._v(
-                        "\n                    Publishing...\n                "
+                      _c(
+                        "jet-action-message",
+                        {
+                          staticClass: "mr-3 hidden md:block",
+                          attrs: { on: _vm.form.processing }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(
+                                !!_vm.publication
+                                  ? "Updating..."
+                                  : "Publishing..."
+                              ) +
+                              "\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "jet-button",
+                        {
+                          staticClass:
+                            "bg-blue-600 hover:bg-blue-700 w-full md:w-auto flex items-center justify-center sm:block block-inline",
+                          class: { "opacity-25": _vm.form.processing },
+                          attrs: { disabled: _vm.form.processing }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(!!_vm.publication ? "Update" : "Publish") +
+                              "\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "inertia-link",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !!_vm.publication,
+                              expression: "!!publication"
+                            }
+                          ],
+                          staticClass:
+                            "flex items-center px-4 py-2 bg-white border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 sm:mr-3 mt-3 sm:mt-0 text-gray-700 border border-gray-300 shadow-sm sm:block block-inline justify-center",
+                          class: { "opacity-25": _vm.form.processing },
+                          attrs: {
+                            href: _vm.route("my-profile"),
+                            disabled: _vm.form.processing
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Cancel\n                    "
+                          )
+                        ]
                       )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "jet-button",
-                    {
-                      staticClass:
-                        "bg-blue-600 hover:bg-blue-700 w-full md:w-auto flex items-center justify-center",
-                      class: { "opacity-25": _vm.form.processing },
-                      attrs: { disabled: _vm.form.processing }
-                    },
-                    [_vm._v("\n                    Publish\n                ")]
+                    ],
+                    1
                   )
                 ]
               },

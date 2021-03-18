@@ -2,14 +2,14 @@
     <app-layout>
         <div class="max-w-7xl mx-auto py-3 md:py-6 px-0 lg:px-8">
             <jet-form-section
-                @submitted="publish"
+                @submitted="submitForm"
             >
                 <template #title>
-                    Publish your PC
+                    {{ !!publication ? 'Update' : 'Publish' }} your PC
                 </template>
 
                 <template #description>
-                    Post photo and specifications of your PC
+                    {{ !!publication ? 'Update' : 'Publish' }} photo and specifications of your PC
                 </template>
 
                 <template #form>
@@ -42,10 +42,25 @@
                         >
 
                         <!-- New Photo Preview -->
-                        <div class="mb-2" v-show="photoPreview">
+                        <div
+                            class="mb-2"
+                            v-show="photoPreview"
+                        >
                             <jet-label for="photo" value="PHOTO" />
                             <img
                                 :src="photoPreview"
+                                alt="photo"
+                                class="object-contain w-full h-auto border bg-gray-900 rounded-xl shadow-sm mt-1 max-h-96"
+                            >
+                        </div>
+
+                        <!-- Current Photo -->
+                        <div
+                            class="mb-2"
+                            v-if="!photoPreview && !!form.currentPhotoPath"
+                        >
+                            <img
+                                :src="ftpUrl+form.currentPhotoPath"
                                 alt="photo"
                                 class="object-contain w-full h-auto border bg-gray-900 rounded-xl shadow-sm mt-1 max-h-96"
                             >
@@ -140,21 +155,33 @@
                 </template>
 
                 <template #actions>
-                    <!--<jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                        Published.
-                    </jet-action-message>-->
+                    <div class="sm:flex sm:flex-row-reverse w-full">
+                        <!--<jet-action-message :on="form.recentlySuccessful" class="mr-3">
+                            Published.
+                        </jet-action-message>-->
 
-                    <jet-action-message :on="form.processing" class="mr-3 hidden md:block">
-                        Publishing...
-                    </jet-action-message>
+                        <jet-action-message :on="form.processing" class="mr-3 hidden md:block">
+                            {{ !!publication ? 'Updating...' : 'Publishing...' }}
+                        </jet-action-message>
 
-                    <jet-button
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        class="bg-blue-600 hover:bg-blue-700 w-full md:w-auto flex items-center justify-center"
-                    >
-                        Publish
-                    </jet-button>
+                        <jet-button
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                            class="bg-blue-600 hover:bg-blue-700 w-full md:w-auto flex items-center justify-center sm:block block-inline"
+                        >
+                            {{ !!publication ? 'Update' : 'Publish' }}
+                        </jet-button>
+
+                        <inertia-link
+                            v-show="!!publication"
+                            :href="route('my-profile')"
+                            class="flex items-center px-4 py-2 bg-white border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-100 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 sm:mr-3 mt-3 sm:mt-0 text-gray-700 border border-gray-300 shadow-sm sm:block block-inline justify-center"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                        >
+                            Cancel
+                        </inertia-link>
+                    </div>
                 </template>
             </jet-form-section>
         </div>
@@ -174,6 +201,7 @@
 
     export default {
         name: "Create",
+
         components: {
             AppLayout,
             JetActionMessage,
@@ -184,40 +212,102 @@
             JetLabel,
             JetSecondaryButton,
         },
-        data() {
-            return {
-                form: this.$inertia.form({
-                    photo: null,
-                    description: null,
-                    motherboard: null,
-                    cpu: null,
-                    ram: null,
-                    graphics: null,
-                    storage: null,
-                    display: null,
-                    keyboard: null,
-                    mouse: null,
-                }),
 
-                specifications: {
-                    motherboard: false,
-                    cpu: false,
-                    ram: false,
-                    graphics: false,
-                    storage: false,
-                    display: false,
-                    keyboard: false,
-                    mouse: false,
-                },
-
-                photoPreview: null,
-                photoNullError: null
+        props: {
+            publication: {
+                type: Object,
+                default: null
             }
         },
+
+        computed: {
+            ftpUrl () {
+                return this.$store.state.ftpUrl
+            },
+
+            form () {
+                if (!!this.publication) {
+                    return this.$inertia.form({
+                        currentPhotoPath: this.publication.data.photo_path,
+                        photo: null,
+                        description: this.publication.data.description,
+                        motherboard: this.publication.data.specifications.motherboard,
+                        cpu: this.publication.data.specifications.cpu,
+                        ram: this.publication.data.specifications.ram,
+                        graphics: this.publication.data.specifications.graphics,
+                        storage: this.publication.data.specifications.storage,
+                        display: this.publication.data.specifications.display,
+                        keyboard: this.publication.data.specifications.keyboard,
+                        mouse: this.publication.data.specifications.mouse,
+                    })
+                } else {
+                    return this.$inertia.form({
+                        photo: null,
+                        description: null,
+                        motherboard: null,
+                        cpu: null,
+                        ram: null,
+                        graphics: null,
+                        storage: null,
+                        display: null,
+                        keyboard: null,
+                        mouse: null,
+                    })
+                }
+            },
+
+            specificationValues () {
+                if (!!this.publication) {
+                    return {
+                        // motherboard: !!this.publication ? !!this.publication.data.specifications.motherboard : false,
+                        motherboard: !!this.publication.data.specifications.motherboard,
+                        cpu: !!this.publication.data.specifications.cpu,
+                        ram: !!this.publication.data.specifications.ram,
+                        graphics: !!this.publication.data.specifications.graphics,
+                        storage: !!this.publication.data.specifications.storage,
+                        display: !!this.publication.data.specifications.display,
+                        keyboard: !!this.publication.data.specifications.keyboard,
+                        mouse: !!this.publication.data.specifications.mouse,
+                    }
+                } else {
+                    return {
+                        motherboard: false,
+                        cpu: false,
+                        ram: false,
+                        graphics: false,
+                        storage: false,
+                        display: false,
+                        keyboard: false,
+                        mouse: false,
+                    }
+                }
+            }
+        },
+
+        data() {
+            return {
+                photoPreview: null,
+                photoNullError: null,
+                specifications: null,
+            }
+        },
+
+        mounted () {
+            this.specifications = this.specificationValues
+        },
+
         methods: {
             ...mapActions([
                 'setPublications',
             ]),
+
+            submitForm () {
+                if (!!this.publication) {
+                    this.updatePublication()
+                } else {
+                    this.publish()
+                }
+            },
 
             publish() {
                 // empty publications to update publications in Publications page
@@ -230,12 +320,24 @@
                         this.form.photo = this.$refs.photo.files[0]
                     }
 
-                    this.form.post(route('publications.store'), {
-                        preserveScroll: true
-                    });
+                    this.$inertia.post(route('publications.store'), this.form);
                 } else {
                     this.photoNullError = 'Photo is required'
                 }
+            },
+
+            updatePublication () {
+                this.setPublications([])
+
+                if (this.photoPreview !== null) {
+                    if (this.$refs.photo) {
+                        this.form.photo = this.$refs.photo.files[0]
+                    }
+                }
+
+                this.form.publication_id = this.publication.data.id
+
+                this.$inertia.post(route('publications.update'), this.form);
             },
 
             selectNewPhoto() {

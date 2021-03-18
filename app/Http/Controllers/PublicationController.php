@@ -53,9 +53,9 @@ class PublicationController extends Controller
             'motherboard' => ['nullable', 'string', 'max:255'],
             'cpu' => ['nullable', 'string', 'max:255'],
             'ram' => ['nullable', 'string', 'max:255'],
-            'video_card' => ['nullable', 'string', 'max:255'],
+            'graphics' => ['nullable', 'string', 'max:255'],
             'storage' => ['nullable', 'string', 'max:255'],
-            'monitor' => ['nullable', 'string', 'max:255'],
+            'display' => ['nullable', 'string', 'max:255'],
             'keyboard' => ['nullable', 'string', 'max:255'],
             'mouse' => ['nullable', 'string', 'max:255'],
         ])->validate();
@@ -73,9 +73,9 @@ class PublicationController extends Controller
             'motherboard'=> $request->motherboard,
             'cpu' => $request->cpu,
             'ram' => $request->ram,
-            'video_card' => $request->graphics,
+            'graphics' => $request->graphics,
             'storage' => $request->storage,
-            'monitor' => $request->display,
+            'display' => $request->display,
             'keyboard' => $request->keyboard,
             'mouse' => $request->mouse
         ]);
@@ -110,7 +110,6 @@ class PublicationController extends Controller
 
         return Inertia::render('Publication/Publications',[
             'user_profile' => new UserResource($user),
-            //'in_user_profile' => true
         ]);
     }
 
@@ -121,19 +120,19 @@ class PublicationController extends Controller
     {
         return Inertia::render('Publication/Publications',[
             'user_profile' => new UserResource(Auth::user()),
-            //'in_user_profile' => true
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $publication
      */
-    public function edit($id)
+    public function edit(Publication $publication)
     {
-        //
+        return Inertia::render('Publication/Create', [
+           'publication' => new PublicationResource($publication)
+        ]);
     }
 
     /**
@@ -143,9 +142,59 @@ class PublicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'publication_id' => ['required'],
+            'photo' => ['nullable','image', 'max:2048'],
+            'description' => ['required', 'string', 'max:255'],
+            'motherboard' => ['nullable', 'string', 'max:255'],
+            'cpu' => ['nullable', 'string', 'max:255'],
+            'ram' => ['nullable', 'string', 'max:255'],
+            'graphics' => ['nullable', 'string', 'max:255'],
+            'storage' => ['nullable', 'string', 'max:255'],
+            'display' => ['nullable', 'string', 'max:255'],
+            'keyboard' => ['nullable', 'string', 'max:255'],
+            'mouse' => ['nullable', 'string', 'max:255'],
+        ])->validate();
+
+        $publication = Publication::find($request->publication_id);
+
+        // update publication
+        if ($request->photo != null) {
+            // delete old photo
+            Storage::disk('ftp')->delete($publication->photo_path);
+
+            // upload new photo
+            $photo_path = Storage::disk('ftp')->put('/publications', $request->photo);
+
+            $publication->update([
+                'photo_path' => $photo_path,
+                'description' => $request->description
+            ]);
+
+        } else {
+            $publication->update([
+                'description' => $request->description
+            ]);
+        }
+
+        $specification = Specification::where('publication_id', $publication->id)->first();
+
+        // update specifications
+        $specification->update([
+            'motherboard'=> $request->motherboard,
+            'cpu' => $request->cpu,
+            'ram' => $request->ram,
+            'graphics' => $request->graphics,
+            'storage' => $request->storage,
+            'display' => $request->display,
+            'keyboard' => $request->keyboard,
+            'mouse' => $request->mouse
+        ]);
+
+        return redirect()->route('my-profile');
+
     }
 
     /**

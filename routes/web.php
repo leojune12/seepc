@@ -33,9 +33,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Show my profile
     Route::get('/my-profile', [PublicationController::class, 'show_my_profile'])->name('my-profile');
 
+    // Edit Publication
+    Route::get('/my-profile/publications/edit/{publication}', [PublicationController::class, 'edit'])->name('my-profile.publications.edit');
+
     Route::get('/publications/create', [PublicationController::class, 'create'])->name('publications.create');
 
     Route::post('/publications/store', [PublicationController::class, 'store'])->name('publications.store');
+
+    Route::post('/publications/update', [PublicationController::class, 'update'])->name('publications.update');
 
     Route::delete('/publications/delete', [PublicationController::class, 'destroy'])->name('publications.destroy');
 
