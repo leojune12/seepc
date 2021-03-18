@@ -2735,6 +2735,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -42509,23 +42521,67 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c(
-                      "div",
+                      "button",
                       {
                         staticClass:
-                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer",
+                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out cursor-default md:cursor-pointer flex justify-start items-center",
+                        attrs: { type: "button" },
                         on: { click: _vm.editPublication }
                       },
-                      [_vm._v("\n                    Edit\n                ")]
+                      [
+                        _c("span", { staticClass: "mr-2 text-gray-500" }, [
+                          _c(
+                            "svg",
+                            {
+                              staticStyle: { width: "24px", height: "24px" },
+                              attrs: { viewBox: "0 0 24 24" }
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  fill: "currentColor",
+                                  d:
+                                    "M21 2H3C1.9 2 1 2.9 1 4V16C1 17.11 1.9 18 3 18H10V20H8V22H16V20H14V18H21C22.11 18 23 17.11 23 16V4C23 2.9 22.11 2 21 2M21 16H3V4H21V16M15.84 8.2L14.83 9.21L12.76 7.18L13.77 6.16C13.97 5.95 14.31 5.94 14.55 6.16L15.84 7.41C16.05 7.62 16.06 7.96 15.84 8.2M8 11.91L12.17 7.72L14.24 9.8L10.08 14H8V11.91Z"
+                                }
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [_vm._v("Edit")])
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
-                      "div",
+                      "button",
                       {
                         staticClass:
-                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out md:cursor-pointer",
+                          "block w-full px-4 py-2 text-sm leading-5 text-gray-700 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out cursor-default md:cursor-pointer flex justify-start items-center",
+                        attrs: { type: "button" },
                         on: { click: _vm.confirmDeletion }
                       },
-                      [_vm._v("\n                    Delete\n                ")]
+                      [
+                        _c("span", { staticClass: "mr-2 text-gray-500" }, [
+                          _c(
+                            "svg",
+                            {
+                              staticStyle: { width: "24px", height: "24px" },
+                              attrs: { viewBox: "0 0 24 24" }
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  fill: "currentColor",
+                                  d:
+                                    "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"
+                                }
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", [_vm._v("Delete")])
+                      ]
                     )
                   ]
                 },
