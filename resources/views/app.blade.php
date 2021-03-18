@@ -10,7 +10,7 @@
         <meta name="og:title" content="seePC">
         <meta name="og:description" content="Publish your PC. Let other developers see your work station.">
         <meta name="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/LCM%2BL_Working_Apple_I.jpg/800px-LCM%2BL_Working_Apple_I.jpg">
-        <meta name="og:url" content="https://seepc.herokuapp.com">
+        {{--<meta name="og:url" content="https://seepc.herokuapp.com">--}}
 
         <!-- Fonts -->
         {{--<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">--}}
