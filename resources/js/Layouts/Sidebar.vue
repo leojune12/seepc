@@ -10,7 +10,7 @@
 
             <!-- Navigation Links -->
             <div class="px-4 py-4 font-semibold text-gray-700">
-                <inertia-link
+                <!--<inertia-link
                     v-if="!!$page.props.user"
                     :href="route('dashboard')"
                     :class="[ route().current('dashboard') ? activeLink : hoverClass, linkClass ]"
@@ -21,7 +21,7 @@
                         </svg>
                     </span>
                     <span>Dashboard</span>
-                </inertia-link>
+                </inertia-link>-->
                 <inertia-link
                     :href="route('publications')"
                     :class="[ route().current('publications') ? activeLink : hoverClass, linkClass ]"

@@ -46729,43 +46729,6 @@ var render = function() {
           "div",
           { staticClass: "px-4 py-4 font-semibold text-gray-700" },
           [
-            !!_vm.$page.props.user
-              ? _c(
-                  "inertia-link",
-                  {
-                    class: [
-                      _vm.route().current("dashboard")
-                        ? _vm.activeLink
-                        : _vm.hoverClass,
-                      _vm.linkClass
-                    ],
-                    attrs: { href: _vm.route("dashboard") }
-                  },
-                  [
-                    _c("span", { class: _vm.iconClass }, [
-                      _c(
-                        "svg",
-                        {
-                          staticStyle: { width: "24px", height: "24px" },
-                          attrs: { viewBox: "0 0 24 24" }
-                        },
-                        [
-                          _c("path", {
-                            attrs: {
-                              fill: "currentColor",
-                              d:
-                                "M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z"
-                            }
-                          })
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("span", [_vm._v("Dashboard")])
-                  ]
-                )
-              : _vm._e(),
-            _vm._v(" "),
             _c(
               "inertia-link",
               {
