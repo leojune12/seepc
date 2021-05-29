@@ -60,7 +60,7 @@ class PublicationController extends Controller
             'mouse' => ['nullable', 'string', 'max:255'],
         ])->validate();
 
-        $photo_path = Storage::disk('public')->put('/storage/publications', $request['photo']);
+        $photo_path = Storage::disk('public')->put('/publications', $request['photo']);
 
         $publication = Publication::create([
             'user_id' => Auth::id(),
@@ -166,7 +166,7 @@ class PublicationController extends Controller
             Storage::disk('public')->delete($publication->photo_path);
 
             // upload new photo
-            $photo_path = Storage::disk('public')->put('/storage/publications', $request->photo);
+            $photo_path = Storage::disk('public')->put('/publications', $request->photo);
 
             $publication->update([
                 'photo_path' => $photo_path,

@@ -1,7 +1,7 @@
 let state = {
     // FPT url of media storage
     // ftpUrl: 'https://webdevstacks.000webhostapp.com/',
-    ftpUrl: '',
+    ftpUrl: 'storage',
 
     // id of the last publication visited
     lastShowedPublicationId: null,
