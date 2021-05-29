@@ -27,7 +27,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 
         if (isset($input['photo'])) {
             // $user->updateProfilePhoto($input['photo'])
-            $path = Storage::disk('public')->put('/profile-photos', $input['photo']);
+            $path = Storage::disk('public')->put('/storage/profile-photos', $input['photo']);
             if (isset($user->profile_photo_path)) {
                 Storage::disk('public')->delete($user->profile_photo_path);
             }
