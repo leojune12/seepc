@@ -95,7 +95,7 @@ class UserController extends Controller
 
         if ($user->profile_photo_path != null) {
             // delete photo
-            Storage::disk('ftp')->delete($user->profile_photo_path);
+            Storage::disk('public')->delete($user->profile_photo_path);
 
             $user->profile_photo_path = null;
 

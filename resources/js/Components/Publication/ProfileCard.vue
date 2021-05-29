@@ -4,7 +4,7 @@
             <div class="flex justify-center relative">
                 <div class="absolute top-0 left-0 w-full flex justify-center">
                     <img
-                        :src="[ user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+user.profile_photo_path : user.profile_photo_url ]"
+                        :src="[ user.profile_photo_path ? user.profile_photo_path : user.profile_photo_url ]"
                         :alt="user.name"
                         class="rounded-full h-48 w-48 object-cover border-4 border-white shadow"
                     >
@@ -121,7 +121,7 @@
                             <!-- Current Profile Photo -->
                             <img
                                 v-show="!photoPreview"
-                                :src="[ user.profile_photo_path ? 'https://webdevstacks.000webhostapp.com/'+user.profile_photo_path : user.profile_photo_url ]"
+                                :src="[ user.profile_photo_path ? user.profile_photo_path : user.profile_photo_url ]"
                                 :alt="user.name"
                                 class="rounded-full h-40 w-40 object-cover border-4 border-white shadow"
                             >
