@@ -6,7 +6,7 @@
                 :href="route('profile.show')"
                 class="flex-none mr-2 cursor-default md:cursor-pointer"
             >
-                <img class="h-10 w-10 rounded-full object-cover border border-gray-300" :src="[ $page.props.user.profile_photo_path ? $page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
+                <img class="h-10 w-10 rounded-full object-cover border border-gray-300" :src="[ $page.props.user.profile_photo_path ? '/storage/'+$page.props.user.profile_photo_path : $page.props.user.profile_photo_url ]" :alt="$page.props.user.name" />
             </inertia-link>
 
             <inertia-link
