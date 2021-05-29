@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Redirect::route('publications');
-});
+Route::get('/', [PublicationController::class, 'index']);
 
 Route::get('/publications', [PublicationController::class, 'index'])->name('publications');
 
